@@ -1,0 +1,13 @@
+/* src/index.css */
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+.background-image-div {
+  background-image: url("../src/assets/IIB-cover.png"); /* Update the path */
+  background-size: cover; /* Cover the entire area of the div */
+  background-position: center; /* Center the background image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  border-radius: 1%;
+}
