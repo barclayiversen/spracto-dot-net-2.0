@@ -115,9 +115,10 @@ func imagesHandler(w http.ResponseWriter, r *http.Request) {
 
 
 func main() {
-    err := godotenv.Load()
-    if err != nil {
-        log.Fatal("Error loading .env file")
+    if _, err := os.Stat(".env"); !os.IsNotExist(err) {
+        if err := godotenv.Load(); err != nil {
+            log.Fatal("Error loading .env file")
+        }
     }
 
     http.HandleFunc("/api/v1/tracks", corsMiddleware(tracksHandler))
