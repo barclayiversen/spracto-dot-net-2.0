@@ -14,6 +14,7 @@ const Releases = ({ tracks }) => {
           {tracks.map((track) => (
             <div key={track.id} className="w-full py-5 px-1">
               <iframe
+                title={track.id}
                 width="100%"
                 height="300"
                 scrolling="no"
