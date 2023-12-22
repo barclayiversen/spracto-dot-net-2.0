@@ -6,10 +6,57 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"cloud.google.com/go/datastore"
 	"github.com/joho/godotenv"
 )
+
+var (
+    // Global Datastore client
+    datastoreClient *datastore.Client
+)
+
+// func init() {
+    
+
+
+//     ctx := context.Background()
+//     projectID := os.Getenv("DATASTORE_PROJECT_ID")
+
+//     // Initialize the Datastore client
+//     var err error
+//     datastoreClient, err = datastore.NewClient(ctx, projectID)
+//     if err != nil {
+//         log.Fatalf("Failed to create Datastore client: %v", err)
+//     }
+// }
+
+func setup() {
+    // Load environment variables
+    if _, err := os.Stat(".env"); !os.IsNotExist(err) {
+        if err := godotenv.Load(); err != nil {
+            log.Fatal("Error loading .env file")
+        }
+    }
+
+    // Initialize the Datastore client
+    ctx := context.Background()
+    projectID := os.Getenv("DATASTORE_PROJECT_ID")
+    if projectID == "" {
+        log.Fatal("DATASTORE_PROJECT_ID environment variable not set")
+    }
+
+    var err error
+    datastoreClient, err = datastore.NewClient(ctx, projectID)
+    if err != nil {
+        log.Fatalf("Failed to create Datastore client: %v", err)
+    }
+}
+
+
+// ... (Your existing structs and middleware)
+
 
 type Track struct {
     TrackID  string `datastore:"id" json:"id"`
@@ -23,6 +70,7 @@ type Image struct {
 
 // corsMiddleware adds CORS headers to the response
 func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
+    log.Println("Middleware call...")
     return func(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Access-Control-Allow-Origin", "*") // Allow any origin
         w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
@@ -36,31 +84,27 @@ func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
     }
 }
 
-func tracksHandler(w http.ResponseWriter, r *http.Request) {
-    projectID := os.Getenv("DATASTORE_PROJECT_ID")
-    if projectID == "" {
-        http.Error(w, "Internal server error", http.StatusInternalServerError)
-        log.Println("DATASTORE_PROJECT_ID environment variable not set")
-        return
-    }
 
-    ctx := context.Background()
-    client, err := datastore.NewClient(ctx, projectID)
-    if err != nil {
-        http.Error(w, "Internal server error", http.StatusInternalServerError)
-        log.Printf("Failed to create Datastore client: %v", err)
-        return
-    }
-    defer client.Close()
+
+func tracksHandler(w http.ResponseWriter, r *http.Request) {
+    log.Println("track handler call...")
+
+    ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+    defer cancel()
 
     var tracks []Track
     query := datastore.NewQuery("track") // Assuming your entity is named "track"
-    _, err = client.GetAll(ctx, query, &tracks)
+    log.Println("track handler 3")
+    
+    // Use the global Datastore client
+    _, err := datastoreClient.GetAll(ctx, query, &tracks)
+    log.Println("track handler 4")
     if err != nil {
         http.Error(w, "Failed to fetch tracks", http.StatusInternalServerError)
         log.Printf("Failed to get tracks: %v", err)
         return
     }
+    log.Println("track handler 5")
 
     w.Header().Set("Content-Type", "application/json")
     if err := json.NewEncoder(w).Encode(tracks); err != nil {
@@ -68,30 +112,20 @@ func tracksHandler(w http.ResponseWriter, r *http.Request) {
         log.Printf("Error encoding JSON: %s", err)
         return
     }
+    log.Println("track handler 6")
 }
 
+
 func imagesHandler(w http.ResponseWriter, r *http.Request) {
-    ctx := context.Background()
-
-    // Create a client.
-    projectID := os.Getenv("DATASTORE_PROJECT_ID")
-    if projectID == "" {
-        http.Error(w, "DATASTORE_PROJECT_ID environment variable not set", http.StatusInternalServerError)
-        return
-    }
-
-    client, err := datastore.NewClient(ctx, projectID)
-    if err != nil {
-        http.Error(w, "Failed to create Datastore client", http.StatusInternalServerError)
-        log.Printf("Failed to create Datastore client: %v", err)
-        return
-    }
-    defer client.Close()
+    ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+    defer cancel()
 
     // Query Datastore for all `Image` entities.
     var images []Image
     query := datastore.NewQuery("image")
-    _, err = client.GetAll(ctx, query, &images)
+
+    // Use the global Datastore client
+    _, err := datastoreClient.GetAll(ctx, query, &images)
     if err != nil {
         http.Error(w, "Failed to fetch images", http.StatusInternalServerError)
         log.Printf("Failed to get images: %v", err)
@@ -114,12 +148,9 @@ func imagesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 
+
 func main() {
-    if _, err := os.Stat(".env"); !os.IsNotExist(err) {
-        if err := godotenv.Load(); err != nil {
-            log.Fatal("Error loading .env file")
-        }
-    }
+    setup()
 
     http.HandleFunc("/api/v1/tracks", corsMiddleware(tracksHandler))
     http.HandleFunc("/api/v1/images", corsMiddleware(imagesHandler))
