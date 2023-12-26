@@ -1,0 +1,61 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - dev
+    paths-ignore:
+      - "**.md"
+
+jobs:
+  build-and-deploy-frontend:
+    name: Build and Deploy Frontend
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' &&
+      contains(github.event.head_commit.modified, 'frontend/')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Frontend
+        run: npm i
+        working-directory: ./frontend
+
+      - name: Build Frontend
+        run: npm run build
+        working-directory: ./frontend
+
+      - name: Deploy Frontend
+        run: gcloud app deploy
+        working-directory: ./frontend
+
+  build-and-deploy-backend:
+    name: Build and Deploy Backend
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' &&
+      contains(github.event.head_commit.modified, 'backend/')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Build and Push Docker image
+        run: |
+          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE}}:$GITHUB_SHA
+        working-directory: ./backend
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy spracto-net-${{ secrets.GCP_SERVICE }} \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE}}:$GITHUB_SHA \
+            --region ${{ secrets.GCP_REGION }} \
+            --platform managed \
+            --allow-unauthenticated  # Remove this if you want authenticated access
+        working-directory: ./backend
