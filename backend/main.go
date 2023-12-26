@@ -17,21 +17,6 @@ var (
     datastoreClient *datastore.Client
 )
 
-// func init() {
-    
-
-
-//     ctx := context.Background()
-//     projectID := os.Getenv("DATASTORE_PROJECT_ID")
-
-//     // Initialize the Datastore client
-//     var err error
-//     datastoreClient, err = datastore.NewClient(ctx, projectID)
-//     if err != nil {
-//         log.Fatalf("Failed to create Datastore client: %v", err)
-//     }
-// }
-
 func setup() {
     // Load environment variables
     if _, err := os.Stat(".env"); !os.IsNotExist(err) {
@@ -54,9 +39,7 @@ func setup() {
     }
 }
 
-
 // ... (Your existing structs and middleware)
-
 
 type Track struct {
     TrackID  string `datastore:"id" json:"id"`
@@ -84,27 +67,25 @@ func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
     }
 }
 
-
-
 func tracksHandler(w http.ResponseWriter, r *http.Request) {
-    log.Println("track handler call...")
+
 
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     defer cancel()
 
     var tracks []Track
     query := datastore.NewQuery("track") // Assuming your entity is named "track"
-    log.Println("track handler 3")
+
     
     // Use the global Datastore client
     _, err := datastoreClient.GetAll(ctx, query, &tracks)
-    log.Println("track handler 4")
+
     if err != nil {
         http.Error(w, "Failed to fetch tracks", http.StatusInternalServerError)
         log.Printf("Failed to get tracks: %v", err)
         return
     }
-    log.Println("track handler 5")
+ 
 
     w.Header().Set("Content-Type", "application/json")
     if err := json.NewEncoder(w).Encode(tracks); err != nil {
@@ -112,9 +93,8 @@ func tracksHandler(w http.ResponseWriter, r *http.Request) {
         log.Printf("Error encoding JSON: %s", err)
         return
     }
-    log.Println("track handler 6")
+  
 }
-
 
 func imagesHandler(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -147,13 +127,11 @@ func imagesHandler(w http.ResponseWriter, r *http.Request) {
     }
 }
 
-
-
 func main() {
     setup()
 
-    http.HandleFunc("/api/v1/tracks", corsMiddleware(tracksHandler))
-    http.HandleFunc("/api/v1/images", corsMiddleware(imagesHandler))
+    http.HandleFunc("/v1/tracks", corsMiddleware(tracksHandler))
+    http.HandleFunc("/v1/images", corsMiddleware(imagesHandler))
     log.Println("Server starting on port 8080...")
     log.Fatal(http.ListenAndServe(":8080", nil))
 }
