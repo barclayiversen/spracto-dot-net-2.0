@@ -43,8 +43,6 @@ jobs:
           cd frontend
           npm install
           npm run build
-          rm -rf src
-          rm -rf node_modules
           gcloud app deploy app.yaml  -q
         # Add any other steps for frontend deployment
 
