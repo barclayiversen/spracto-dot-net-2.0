@@ -8,3 +8,7 @@ handlers:
   - url: /.*
     static_files: build/index.html
     upload: build/index.html
+
+env_variables:
+  REACT_APP_ENV: "PROD"
+  REACT_APP_BACKEND_URL: "https://api.spracto.net/v1"

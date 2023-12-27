@@ -14,7 +14,7 @@ const Index = () => {
   const backendURL =
     process.env.REACT_APP_ENV === "PROD"
       ? process.env.REACT_APP_BACKEND_URL
-      : "http://localhost:8080/api/v1";
+      : "https://api.spracto.net/v1";
   useEffect(() => {
     fetch(backendURL + "/tracks")
       .then((response) => response.json())

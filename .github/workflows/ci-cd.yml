@@ -11,9 +11,7 @@ jobs:
   build-and-deploy-frontend:
     name: Build and Deploy Frontend
     runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'push' &&
-      contains(github.event.head_commit.modified, 'frontend/')
+    if: github.event_name == 'push'
 
     steps:
       - name: Checkout code
@@ -35,7 +33,6 @@ jobs:
     name: Build and Deploy Backend
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
