@@ -45,7 +45,7 @@ jobs:
           npm run build
           rm -rf src
           rm -rf node_modules
-          gcloud app deploy app.yaml
+          gcloud app deploy app.yaml --region=${{ secrets.GCP_REGION }} -y
         # Add any other steps for frontend deployment
 
       # Backend Build and Deploy
