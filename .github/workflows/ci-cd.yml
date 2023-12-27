@@ -12,7 +12,9 @@ jobs:
   build-and-deploy-frontend:
     name: Build and Deploy Frontend
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'frontend/')
+    paths:
+      - "frontend/**"
+    # if: contains(github.event.head_commit.modified, 'frontend/')
 
     steps:
       - name: Set up Node.js

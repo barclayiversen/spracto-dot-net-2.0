@@ -6,7 +6,7 @@ const PhotoCarousel = ({ images }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 3000); // Change image every 3 seconds
+    }, 3200); // Change image every 3 seconds
 
     return () => clearTimeout(timer);
   }, [currentImageIndex, images.length]);
