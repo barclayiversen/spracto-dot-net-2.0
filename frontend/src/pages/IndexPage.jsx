@@ -11,10 +11,8 @@ const Index = () => {
   const [tracks, setTracks] = useState([]);
   const [images, setImages] = useState([]);
 
-  const backendURL =
-    process.env.REACT_APP_ENV === "PROD"
-      ? process.env.REACT_APP_BACKEND_URL
-      : "https://api.spracto.net/v1";
+  const backendURL = "https://api.spracto.net/v1";
+
   useEffect(() => {
     fetch(backendURL + "/tracks")
       .then((response) => response.json())
