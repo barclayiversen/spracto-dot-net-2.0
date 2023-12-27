@@ -14,6 +14,11 @@ jobs:
     if: github.event_name == 'push'
 
     steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18" # Set to your Node.js version
+
       - name: Checkout code
         uses: actions/checkout@v2
 
