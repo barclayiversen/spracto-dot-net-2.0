@@ -65,10 +65,15 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version:
-            "18"
+          node-version: "18"
 
-            # Frontend Build and Deploy
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      # Frontend Build and Deploy
       - name: Build and Deploy Frontend
         # if: steps.filter.outputs.frontend == 'true'
         run: |
