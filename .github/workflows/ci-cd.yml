@@ -4,41 +4,36 @@ on:
   push:
     branches:
       - dev
-    paths-ignore:
-      - "**.md"
 
 jobs:
-  build-and-deploy-frontend:
-    name: Build and Deploy Frontend
+  # Job to determine changes
+  changes:
     runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'push' &&
-      contains(github.event.head_commit.modified, 'frontend/')
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Install Frontend
-        run: npm i
-        working-directory: ./frontend
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          base: "refs/heads/dev"
+          filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'
 
-      - name: Build Frontend
-        run: npm run build
-        working-directory: ./frontend
-
-      - name: Deploy Frontend
-        run: gcloud app deploy
-        working-directory: ./frontend
-
+  # Job for Backend
   build-and-deploy-backend:
-    name: Build and Deploy Backend
+    needs: changes
+    if: ${{ needs.changes.outputs.backend == 'true' }}
     runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'push' &&
-      contains(github.event.head_commit.modified, 'backend/')
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v0.2.0
@@ -46,16 +41,44 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Build and Push Docker image
+      - name: Build and Deploy Backend
         run: |
-          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE}}:$GITHUB_SHA
-        working-directory: ./backend
-
-      - name: Deploy to Cloud Run
-        run: |
+          cd backend
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }} .
+          gcloud auth configure-docker
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}
           gcloud run deploy spracto-net-${{ secrets.GCP_SERVICE }} \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE}}:$GITHUB_SHA \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:latest \
             --region ${{ secrets.GCP_REGION }} \
             --platform managed \
-            --allow-unauthenticated  # Remove this if you want authenticated access
-        working-directory: ./backend
+            --allow-unauthenticated
+
+  # Job for Frontend
+  build-and-deploy-frontend:
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      # Frontend Build and Deploy
+      - name: Build and Deploy Frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
+          gcloud app deploy app.yaml  -q
+
+      # Add your steps for building and deploying the frontend
