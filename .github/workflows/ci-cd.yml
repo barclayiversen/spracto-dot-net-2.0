@@ -6,11 +6,13 @@ on:
       - dev
 
 jobs:
-  build-and-deploy:
+  # Job to determine changes
+  changes:
     runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
     steps:
-      - uses: actions/checkout@v3
-
       - uses: dorny/paths-filter@v2
         id: filter
         with:
@@ -20,33 +22,21 @@ jobs:
             frontend:
               - 'frontend/**'
 
-      # Set up Cloud SDK
+  # Job for Backend
+  build-and-deploy-backend:
+    needs: changes
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Set up Cloud SDK
-        if: steps.filter.outputs.frontend == 'true' || steps.filter.outputs.backend == 'true'
         uses: google-github-actions/setup-gcloud@v0.2.0
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          export_default_credentials: true
 
-      # Set up Node.js for Frontend
-      - name: Set up Node.js
-        if: steps.filter.outputs.frontend == 'true'
-        uses: actions/setup-node@v2
-        with:
-          node-version: "18"
-
-      # Frontend Build and Deploy
-      - name: Build and Deploy Frontend
-        if: steps.filter.outputs.frontend == 'true'
-        run: |
-          cd frontend
-          npm install
-          npm run build
-          gcloud app deploy app.yaml  -q
-        # Add any other steps for frontend deployment
-
-      # Backend Build and Deploy
       - name: Build and Deploy Backend
         if: steps.filter.outputs.backend == 'true'
         run: |
@@ -59,4 +49,29 @@ jobs:
             --region ${{ secrets.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated
-        # Add any other steps for backend deployment
+
+  # Job for Frontend
+  build-and-deploy-frontend:
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version:
+            "18"
+
+            # Frontend Build and Deploy
+      - name: Build and Deploy Frontend
+        if: steps.filter.outputs.frontend == 'true'
+        run: |
+          cd frontend
+          npm install
+          npm run build
+          gcloud app deploy app.yaml  -q
+
+      # Add your steps for building and deploying the frontend
