@@ -4,4 +4,4 @@ tmp
 steel-acumen.json
 *.tfvars
 infra/*
-.terraform
+.terraform*
