@@ -5,3 +5,4 @@ steel-acumen.json
 *.tfvars
 infra/*
 .terraform*
+scripts/
