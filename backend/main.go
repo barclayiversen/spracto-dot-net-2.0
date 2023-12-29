@@ -73,7 +73,7 @@ func tracksHandler(w http.ResponseWriter, r *http.Request) {
     defer cancel()
 
     var tracks []Track
-    query := datastore.NewQuery("track") // Assuming your entity is named "track"
+    query := datastore.NewQuery("track") 
     
     // Use the global Datastore client
     _, err := datastoreClient.GetAll(ctx, query, &tracks)
