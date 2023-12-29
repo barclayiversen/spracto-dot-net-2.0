@@ -20,7 +20,7 @@ const Index = () => {
         setTracks(data); // Assuming 'data' is an array of track objects
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [backendURL]);
 
   useEffect(() => {
     fetch(backendURL + "/images")
@@ -29,7 +29,7 @@ const Index = () => {
         setImages(data);
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [backendURL]);
 
   return (
     <>
