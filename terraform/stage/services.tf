@@ -22,3 +22,13 @@ resource "google_project_service" "storage_googleapis_com" {
   project = var.project_number
   service = "storage.googleapis.com"
 }
+
+resource "google_project_service" "containerregistry_googleapis_com" {
+  project = var.project_number
+  service = "containerregistry.googleapis.com"
+}
+
+resource "google_project_service" "cloudrun_googleapis_com" {
+  project = var.project_number
+  service = "run.googleapis.com"
+}
