@@ -32,3 +32,18 @@ resource "google_project_service" "cloudrun_googleapis_com" {
   project = var.project_number
   service = "run.googleapis.com"
 }
+
+resource "google_project_service" "cloudresourcemanager_googleapis_com" {
+  project = var.project_number
+  service = "cloudresourcemanager.googleapis.com"
+}
+
+resource "google_project_service" "sts_googleapis_com" {
+  project = var.project_number
+  service = "sts.googleapis.com"
+}
+
+resource "google_project_service" "iamcredentials_googleapis_com" {
+  project = var.project_number
+  service = "iamcredentials.googleapis.com"
+}
