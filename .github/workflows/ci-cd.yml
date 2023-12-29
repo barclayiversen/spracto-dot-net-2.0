@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - dev
+      - stage
 
 jobs:
   # Job to determine changes
@@ -19,7 +19,7 @@ jobs:
       - uses: dorny/paths-filter@v2
         id: filter
         with:
-          base: "refs/heads/dev"
+          base: "refs/heads/stage"
           filters: |
             backend:
               - 'backend/**'
@@ -31,15 +31,19 @@ jobs:
     needs: changes
     if: ${{ needs.changes.outputs.backend == 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0.2.0
+      - name: Authenticate to Google Cloud using Workload Identity Federation
+        uses: google-github-actions/auth@v1
         with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          create_credentials_file: true
+          workload_identity_provider: "${{ secrets.WIF_PROVIDER }}"
+          service_account: "${{ secrets.GCP_SA_EMAIL }}"
 
       - name: Build and Deploy Backend
         run: |
@@ -57,6 +61,9 @@ jobs:
   build-and-deploy-frontend:
     needs: changes
     if: ${{ needs.changes.outputs.frontend == 'true' }}
+    permissions:
+      contents: "read"
+      id-token: "write"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -67,11 +74,12 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0.2.0
+      - name: Authenticate to Google Cloud using Workload Identity Federation
+        uses: google-github-actions/auth@v1
         with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          create_credentials_file: true
+          workload_identity_provider: "${{ secrets.WIF_PROVIDER }}"
+          service_account: "${{ secrets.GCP_SA_EMAIL }}"
 
       # Frontend Build and Deploy
       - name: Build and Deploy Frontend
@@ -79,6 +87,4 @@ jobs:
           cd frontend
           npm install
           npm run build
-          gcloud app deploy app.yaml  -q
-
-      # Add your steps for building and deploying the frontend
+          gcloud app deploy app.yaml -q
