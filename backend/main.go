@@ -39,7 +39,7 @@ func setup() {
     }
 }
 
-// ... (Your existing structs and middleware)
+// structs and middleware
 
 type Track struct {
     TrackID  string `datastore:"id" json:"id"`
@@ -69,13 +69,11 @@ func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 
 func tracksHandler(w http.ResponseWriter, r *http.Request) {
 
-
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     defer cancel()
 
     var tracks []Track
-    query := datastore.NewQuery("track") // Assuming your entity is named "track"
-
+    query := datastore.NewQuery("track") 
     
     // Use the global Datastore client
     _, err := datastoreClient.GetAll(ctx, query, &tracks)
@@ -86,7 +84,6 @@ func tracksHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
  
-
     w.Header().Set("Content-Type", "application/json")
     if err := json.NewEncoder(w).Encode(tracks); err != nil {
         http.Error(w, "Error encoding JSON", http.StatusInternalServerError)

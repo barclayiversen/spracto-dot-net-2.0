@@ -11,7 +11,7 @@ const Index = () => {
   const [tracks, setTracks] = useState([]);
   const [images, setImages] = useState([]);
 
-  const backendURL = "https://api.spracto.net/v1";
+  const backendURL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     fetch(backendURL + "/tracks")
@@ -20,7 +20,7 @@ const Index = () => {
         setTracks(data); // Assuming 'data' is an array of track objects
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [backendURL]);
 
   useEffect(() => {
     fetch(backendURL + "/images")
@@ -29,7 +29,7 @@ const Index = () => {
         setImages(data);
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [backendURL]);
 
   return (
     <>
