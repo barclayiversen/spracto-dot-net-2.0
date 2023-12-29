@@ -2,3 +2,6 @@
 tmp
 .air*
 steel-acumen.json
+*.tfvars
+infra/*
+.terraform
