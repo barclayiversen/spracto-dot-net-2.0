@@ -55,7 +55,8 @@ jobs:
             --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:latest \
             --region ${{ secrets.GCP_REGION }} \
             --platform managed \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --set-env-vars=DATASTORE_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}
 
   # Job for Frontend
   build-and-deploy-frontend:
