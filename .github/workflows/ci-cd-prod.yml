@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - dev
+      - prod
 
 jobs:
   # Job to determine changes
@@ -19,7 +19,7 @@ jobs:
       - uses: dorny/paths-filter@v2
         id: filter
         with:
-          base: "refs/heads/dev"
+          base: "refs/heads/prod"
           filters: |
             backend:
               - 'backend/**'
@@ -31,32 +31,40 @@ jobs:
     needs: changes
     if: ${{ needs.changes.outputs.backend == 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0.2.0
+      - name: Authenticate to Google Cloud using Workload Identity Federation
+        uses: google-github-actions/auth@v1
         with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          create_credentials_file: true
+          workload_identity_provider: "${{ secrets.PROD_WIF_PROVIDER }}"
+          service_account: "${{ secrets.PROD_GCP_SA_EMAIL }}"
 
       - name: Build and Deploy Backend
         run: |
           cd backend
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }} .
+          docker build -t gcr.io/${{ secrets.PROD_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }} .
           gcloud auth configure-docker
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}
+          docker push gcr.io/${{ secrets.PROD_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}
           gcloud run deploy spracto-net-${{ secrets.GCP_SERVICE }} \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:latest \
+            --image gcr.io/${{ secrets.PROD_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:latest \
             --region ${{ secrets.GCP_REGION }} \
             --platform managed \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --set-env-vars=DATASTORE_PROJECT_ID=${{ secrets.PROD_GCP_PROJECT_ID }}
 
   # Job for Frontend
   build-and-deploy-frontend:
     needs: changes
     if: ${{ needs.changes.outputs.frontend == 'true' }}
+    permissions:
+      contents: "read"
+      id-token: "write"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -67,18 +75,19 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0.2.0
+      - name: Authenticate to Google Cloud using Workload Identity Federation
+        uses: google-github-actions/auth@v1
         with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          create_credentials_file: true
+          workload_identity_provider: "${{ secrets.PROD_WIF_PROVIDER }}"
+          service_account: "${{ secrets.PROD_GCP_SA_EMAIL }}"
 
       # Frontend Build and Deploy
       - name: Build and Deploy Frontend
         run: |
           cd frontend
           npm install
+          touch .env
+          echo "REACT_APP_BACKEND_URL=${{ secrets.PROD_BACKEND_URL }}" >> .env
           npm run build
-          gcloud app deploy app.yaml  -q
-
-      # Add your steps for building and deploying the frontend
+          gcloud app deploy app.yaml -q
