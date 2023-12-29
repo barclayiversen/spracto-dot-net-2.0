@@ -88,6 +88,6 @@ jobs:
           cd frontend
           npm install
           touch .env
-          echo "REACT_APP_BACKEND_URL=https://spracto-net-backend-yky6ntmydq-uw.a.run.app" >> .env
+          echo "REACT_APP_BACKEND_URL=${{ secrets.STAGE_BACKEND_URL }}" >> .env
           npm run build
           gcloud app deploy app.yaml -q
