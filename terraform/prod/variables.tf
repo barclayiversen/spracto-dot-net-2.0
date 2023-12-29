@@ -31,5 +31,5 @@ variable "spracto-net-backend-roles" {
 variable "spracto-net-gh-actions-roles" {
   description = "List of IAM roles for gh actions SA"
   type        = list(string)
-  default     = ["roles/appengine.deployer", "roles/appengine.appAdmin", "roles/cloudbuild.builds.editor", "roles/run.admin", "roles/iam.serviceAccountUser", "roles/storage.admin"]  # Example roles
+  default     = ["roles/appengine.deployer", "roles/appengine.appAdmin", "roles/cloudbuild.builds.editor", "roles/run.admin", "roles/iam.serviceAccountUser", "roles/storage.admin", "roles/iam.workloadIdentityUser"]  # Example roles
 }
