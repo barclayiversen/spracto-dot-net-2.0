@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 
 const PhotoCarousel = ({ images }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  const minSwipeDistance = 50;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -22,10 +26,34 @@ const PhotoCarousel = ({ images }) => {
     setCurrentImageIndex(newIndex);
   };
 
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStart - touchEnd > minSwipeDistance) {
+      goToNext();
+    }
+
+    if (touchEnd - touchStart > minSwipeDistance) {
+      goToPrevious();
+    }
+  };
+
   return (
     <div className="container bg-black mx-auto px-5">
-      <p className="font-bold text-white text-4xl">Gallery</p>
-      <div className="relative w-full max-h-full max-w-screen-lg mx-auto overflow-hidden">
+      <p className="font-bold text-white text-4xl pb-4">Gallery</p>
+      <div
+        className="relative w-full max-h-full max-w-screen-lg mx-auto overflow-hidden"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         <img
           src={images[currentImageIndex]}
           alt={`Slide ${currentImageIndex}`}

@@ -17,7 +17,7 @@ const Index = () => {
     fetch(backendURL + "/tracks")
       .then((response) => response.json())
       .then((data) => {
-        setTracks(data); // Assuming 'data' is an array of track objects
+        setTracks(data);
       })
       .catch((error) => console.error(error));
   }, [backendURL]);
@@ -30,6 +30,9 @@ const Index = () => {
       })
       .catch((error) => console.error(error));
   }, [backendURL]);
+
+  // Adjust this value as needed for your layout
+  const offsetValue = -100; // Example: -100 pixels
 
   return (
     <>
@@ -47,11 +50,11 @@ const Index = () => {
           className="absolute inset-0 m-auto w-auto h-40 z-0 animate-fade animate-duration-[3500ms]"
         />
 
-        {/* Wrapped icon with Link */}
         <Link
           to="content"
           smooth={true}
           duration={500}
+          offset={offsetValue}
           className="cursor-pointer"
         >
           <FontAwesomeIcon
@@ -62,16 +65,14 @@ const Index = () => {
         </Link>
       </div>
 
-      {/* Added id to target div */}
       <div
         id="content"
-        className="w-full h-auto bg-black text-white px-5 py-20 text-2xl font-sans  text-center justify-center"
+        className="w-full h-auto bg-black text-white px-5 py-20 text-2xl font-sans text-center justify-center mt-10"
       >
         Rootin' Tootin' Troubleshootin'! Spracto is just a dude trying to be a
         guy, man! He makes music from his apartment in San Francisco.
       </div>
       <Releases tracks={tracks} />
-
       <PhotoCarousel images={images} />
     </>
   );
