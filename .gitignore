@@ -6,3 +6,5 @@ steel-acumen.json
 infra/*
 .terraform*
 scripts/
+
+frontend-old
