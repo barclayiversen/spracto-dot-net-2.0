@@ -1,10 +1,10 @@
 import React from "react";
 
-function Footer() {
+const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-100 text-black p-10 md:flex md:justify-center md:items-center text-center mt-20">
+    <footer className="bg-gray-200 text-black p-20 md:flex md:justify-center md:items-center text-center">
       <div className="flex-1 md:border-r md:border-gray-400 md:order-1 font-bold">
         <p>
           Wanna hear about upcoming shows? Connect with Spracto on Instagram{" "}
@@ -23,6 +23,6 @@ function Footer() {
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;

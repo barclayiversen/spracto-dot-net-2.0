@@ -1,6 +1,29 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const PhotoCarousel = ({ images }) => {
+const PhotoCarousel: React.FC = () => {
+  const [images, setImages] = useState<string[]>([]); // Holds an array of image URLs
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(
+          process.env.NEXT_PUBLIC_API_ENDPOINT + "/images"
+        );
+        setImages(response.data);
+        setIsLoading(false);
+      } catch (error: any) {
+        setError(error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchImages();
+  }, []);
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
@@ -26,12 +49,12 @@ const PhotoCarousel = ({ images }) => {
     setCurrentImageIndex(newIndex);
   };
 
-  const handleTouchStart = (e) => {
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     setTouchStart(e.targetTouches[0].clientX);
-    setTouchEnd(e.targetTouches[0].clientX);
+    setTouchEnd(e.targetTouches[0].clientX); // Should this be setTouchStart?
   };
 
-  const handleTouchMove = (e) => {
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     setTouchEnd(e.targetTouches[0].clientX);
   };
 
@@ -46,8 +69,8 @@ const PhotoCarousel = ({ images }) => {
   };
 
   return (
-    <div className="container bg-black mx-auto px-5">
-      <p className="font-bold text-white text-4xl pb-4">Gallery</p>
+    <div className="bg-black mx-auto py-20 text-center">
+      <p className="font-bold text-white text-4xl pb-4 ">Gallery</p>
       <div
         className="relative w-full max-h-full max-w-screen-lg mx-auto overflow-hidden"
         onTouchStart={handleTouchStart}

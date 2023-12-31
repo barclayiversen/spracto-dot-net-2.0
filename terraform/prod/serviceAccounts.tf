@@ -11,3 +11,8 @@ resource "google_service_account" "spracto_net_backend" {
   project      = var.project-id
 }
 
+resource "google_service_account" "spracto_net_frontend" {
+  account_id   = "spracto-net-frontend"
+  display_name = "spracto-net-frontend"
+  project      = var.project-id
+}
