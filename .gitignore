@@ -8,6 +8,7 @@ infra/*
 .terraform*
 scripts/
 
+frontend/
 frontend-old
 frontend/steel-acumen-408407-16297685b4fe.json
 backend-old
