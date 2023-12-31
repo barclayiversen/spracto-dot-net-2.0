@@ -4,9 +4,6 @@ FROM node:20
 # Create and set the working directory in the container
 WORKDIR /app
 
-# Copy the JSON key file into the container
-COPY service-account.json /app
-
 # Copy package.json and package-lock.json to the container
 COPY package*.json ./
 
