@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const About: React.FC = () => {
   const [aboutContent, setAboutContent] = useState<string>("");
 
   useEffect(() => {
-    // Fetch the content from the /api/about endpoint
-    fetch("/api/about")
-      .then((response) => response.json())
-      .then((data) => {
+    // Fetch the content using Axios from the /api/about endpoint
+    axios
+      .get(process.env.NEXT_PUBLIC_API_ENDPOINT + "/about")
+      .then((response) => {
         // Set the fetched content in state
-        const content = data[0]["Content"];
+        const content = response.data[0]["Content"];
         setAboutContent(content);
       })
       .catch((error) => {
