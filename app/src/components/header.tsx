@@ -68,7 +68,7 @@ const Header: React.FC = () => {
         {isModalOpen && (
           <Modal
             close={() => setIsModalOpen(false)}
-            className="animate-fade animate-duration-[500ms]"
+            className="animate-fade-in-.2"
           >
             <nav className="flex flex-col items-center space-y-4">
               <a

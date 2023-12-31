@@ -29,7 +29,7 @@ const BackgroundVideoSection: React.FC = () => {
             alt="Logo"
             layout="fill"
             objectFit="contain"
-            className="animate-fade duration-3500"
+            className="animate-fade-in-2"
           />
         </div>
       </div>
