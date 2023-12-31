@@ -13,7 +13,7 @@ const PhotoCarousel: React.FC = () => {
         const response = await axios.get("/api/images"); // Suggested: Use a relative URL or environment variable
         setImages(response.data);
         setIsLoading(false);
-      } catch (error) {
+      } catch (error: any) {
         setError(error);
         setIsLoading(false);
       }
