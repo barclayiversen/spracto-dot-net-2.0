@@ -10,7 +10,9 @@ const PhotoCarousel: React.FC = () => {
     const fetchImages = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get("/api/images"); // Suggested: Use a relative URL or environment variable
+        const response = await axios.get(
+          process.env.NEXT_PUBLIC_API_ENDPOINT + "/images"
+        );
         setImages(response.data);
         setIsLoading(false);
       } catch (error: any) {

@@ -17,7 +17,9 @@ const Releases: React.FC = () => {
     const fetchTracks = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get("/api/tracks"); // Suggested: Use a relative URL or environment variable
+        const response = await axios.get(
+          process.env.NEXT_PUBLIC_API_ENDPOINT + "/tracks"
+        );
         setTracks(response.data);
         setIsLoading(false);
       } catch (error: any) {
