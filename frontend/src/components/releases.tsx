@@ -11,7 +11,7 @@ const Releases: React.FC = () => {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [areReleasesVisible, setAreReleasesVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null); // Suggested type for error state
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchTracks = async () => {
