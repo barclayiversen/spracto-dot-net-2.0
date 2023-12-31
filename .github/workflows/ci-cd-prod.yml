@@ -1,93 +1,93 @@
-name: CI/CD PROD
+# name: CI/CD PROD
 
-on:
-  push:
-    branches:
-      - prod
+# on:
+#   push:
+#     branches:
+#       - prod
 
-jobs:
-  # Job to determine changes
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      backend: ${{ steps.filter.outputs.backend }}
-      frontend: ${{ steps.filter.outputs.frontend }}
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+# jobs:
+#   # Job to determine changes
+#   changes:
+#     runs-on: ubuntu-latest
+#     outputs:
+#       backend: ${{ steps.filter.outputs.backend }}
+#       frontend: ${{ steps.filter.outputs.frontend }}
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v3
 
-      - uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          base: "refs/heads/prod"
-          filters: |
-            backend:
-              - 'backend/**'
-            frontend:
-              - 'frontend/**'
+#       - uses: dorny/paths-filter@v2
+#         id: filter
+#         with:
+#           base: "refs/heads/prod"
+#           filters: |
+#             backend:
+#               - 'backend/**'
+#             frontend:
+#               - 'frontend/**'
 
-  # Job for Backend
-  build-and-deploy-backend:
-    needs: changes
-    if: ${{ needs.changes.outputs.backend == 'true' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: "read"
-      id-token: "write"
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#   # Job for Backend
+#   build-and-deploy-backend:
+#     needs: changes
+#     if: ${{ needs.changes.outputs.backend == 'true' }}
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: "read"
+#       id-token: "write"
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Authenticate to Google Cloud using Workload Identity Federation
-        uses: google-github-actions/auth@v1
-        with:
-          create_credentials_file: true
-          workload_identity_provider: "${{ secrets.PROD_WIF_PROVIDER }}"
-          service_account: "${{ secrets.PROD_GCP_SA_EMAIL }}"
+#       - name: Authenticate to Google Cloud using Workload Identity Federation
+#         uses: google-github-actions/auth@v1
+#         with:
+#           create_credentials_file: true
+#           workload_identity_provider: "${{ secrets.PROD_WIF_PROVIDER }}"
+#           service_account: "${{ secrets.PROD_GCP_SA_EMAIL }}"
 
-      - name: Build and Deploy Backend
-        run: |
-          cd backend
-          docker build -t gcr.io/${{ secrets.PROD_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }} .
-          gcloud auth configure-docker
-          docker push gcr.io/${{ secrets.PROD_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}
-          gcloud run deploy spracto-net-${{ secrets.GCP_SERVICE }} \
-            --image gcr.io/${{ secrets.PROD_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:latest \
-            --region ${{ secrets.GCP_REGION }} \
-            --platform managed \
-            --allow-unauthenticated \
-            --set-env-vars=DATASTORE_PROJECT_ID=${{ secrets.PROD_GCP_PROJECT_ID }}
+#       - name: Build and Deploy Backend
+#         run: |
+#           cd backend
+#           docker build -t gcr.io/${{ secrets.PROD_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }} .
+#           gcloud auth configure-docker
+#           docker push gcr.io/${{ secrets.PROD_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}
+#           gcloud run deploy spracto-net-${{ secrets.GCP_SERVICE }} \
+#             --image gcr.io/${{ secrets.PROD_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:latest \
+#             --region ${{ secrets.GCP_REGION }} \
+#             --platform managed \
+#             --allow-unauthenticated \
+#             --set-env-vars=DATASTORE_PROJECT_ID=${{ secrets.PROD_GCP_PROJECT_ID }}
 
-  # Job for Frontend
-  build-and-deploy-frontend:
-    needs: changes
-    if: ${{ needs.changes.outputs.frontend == 'true' }}
-    permissions:
-      contents: "read"
-      id-token: "write"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#   # Job for Frontend
+#   build-and-deploy-frontend:
+#     needs: changes
+#     if: ${{ needs.changes.outputs.frontend == 'true' }}
+#     permissions:
+#       contents: "read"
+#       id-token: "write"
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: "18"
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: "18"
 
-      - name: Authenticate to Google Cloud using Workload Identity Federation
-        uses: google-github-actions/auth@v1
-        with:
-          create_credentials_file: true
-          workload_identity_provider: "${{ secrets.PROD_WIF_PROVIDER }}"
-          service_account: "${{ secrets.PROD_GCP_SA_EMAIL }}"
+#       - name: Authenticate to Google Cloud using Workload Identity Federation
+#         uses: google-github-actions/auth@v1
+#         with:
+#           create_credentials_file: true
+#           workload_identity_provider: "${{ secrets.PROD_WIF_PROVIDER }}"
+#           service_account: "${{ secrets.PROD_GCP_SA_EMAIL }}"
 
-      # Frontend Build and Deploy
-      - name: Build and Deploy Frontend
-        run: |
-          cd frontend
-          npm install
-          touch .env
-          echo "NEXT_PUBLIC_API_ENDPOINT=${{ secrets.PROD_BACKEND_URL }}" >> .env
-          npm run build
-          gcloud app deploy app.yaml -q
+#       # Frontend Build and Deploy
+#       - name: Build and Deploy Frontend
+#         run: |
+#           cd frontend
+#           npm install
+#           touch .env
+#           echo "NEXT_PUBLIC_API_ENDPOINT=${{ secrets.PROD_BACKEND_URL }}" >> .env
+#           npm run build
+#           gcloud app deploy app.yaml -q
