@@ -20,7 +20,7 @@ const Releases: React.FC = () => {
         const response = await axios.get("/api/tracks"); // Suggested: Use a relative URL or environment variable
         setTracks(response.data);
         setIsLoading(false);
-      } catch (error) {
+      } catch (error: any) {
         setError(error);
         setIsLoading(false);
       }
