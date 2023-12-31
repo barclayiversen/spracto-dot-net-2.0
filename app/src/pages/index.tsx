@@ -8,20 +8,6 @@ import Releases from "@/components/releases";
 import PhotoCarousel from "@/components/photoCarousel";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const loading = async () => {
-      setIsLoading(false);
-    };
-
-    loading();
-  }, []);
-
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
   return (
     <main>
       <Header />

@@ -1,5 +1,12 @@
-# name: CI/CD DEV
+name: CI/CD not-used
 
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  do-nothing:
+    runs-on: ubuntu-latest
 # on:
 #   push:
 #     branches:

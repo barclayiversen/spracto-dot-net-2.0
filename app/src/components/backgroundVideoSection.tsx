@@ -5,10 +5,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { Link, animateScroll as scroll } from "react-scroll";
 
-interface BackgroundVideoSectionProps {
-  offsetValue: number;
-}
-
 const BackgroundVideoSection: React.FC = () => {
   const offsetValue = -100; // Adjust this value as needed
 
