@@ -1,9 +1,8 @@
 // BackgroundVideoSection.tsx
 import Image from "next/image";
-// import { Link } from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { Link, animateScroll as scroll } from "react-scroll";
+import { Link } from "react-scroll";
 
 const BackgroundVideoSection: React.FC = () => {
   const offsetValue = -100; // Adjust this value as needed

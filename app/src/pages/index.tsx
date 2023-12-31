@@ -8,14 +8,28 @@ import Releases from "@/components/releases";
 import PhotoCarousel from "@/components/photoCarousel";
 
 export default function Home() {
+  const [isBackgroundLoaded, setIsBackgroundLoaded] = useState(false);
+
+  useEffect(() => {
+    // Set a delay for the loading state
+    const timer = setTimeout(() => {
+      setIsBackgroundLoaded(true);
+    }, 200); // Adjust this time as needed
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <main>
-      <Header />
-      <BackgroundVideoSection />
-      <AboutSection />
-      <Releases />
-      <PhotoCarousel />
-      <Footer />
-    </main>
+    <>
+      {!isBackgroundLoaded && <LoadingSpinner />}
+      <main style={{ display: isBackgroundLoaded ? "block" : "none" }}>
+        <Header />
+        <BackgroundVideoSection />
+        <AboutSection />
+        <Releases />
+        <PhotoCarousel />
+        <Footer />
+      </main>
+    </>
   );
 }
