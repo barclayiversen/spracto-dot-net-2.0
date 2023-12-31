@@ -1,35 +1,12 @@
-name: CI/CD STAGE
+name: CI/CD DEV
 
 on:
   push:
     branches:
-      - stage
-
+      - dev
 jobs:
-  # Job to determine changes
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      backend: ${{ steps.filter.outputs.backend }}
-      frontend: ${{ steps.filter.outputs.frontend }}
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          base: "refs/heads/stage"
-          filters: |
-            backend:
-              - 'backend/**'
-            frontend:
-              - 'frontend/**'
-
   # Job for Backend
-  build-and-deploy-backend:
-    needs: changes
-    if: ${{ needs.changes.outputs.backend == 'true' }}
+  build-and-deploy-app:
     runs-on: ubuntu-latest
     permissions:
       contents: "read"
@@ -45,9 +22,9 @@ jobs:
           workload_identity_provider: "${{ secrets.STAGE_WIF_PROVIDER }}"
           service_account: "${{ secrets.STAGE_GCP_SA_EMAIL }}"
 
-      - name: Build and Deploy Backend
+      - name: Build and Deploy App
         run: |
-          cd backend
+          cd app
           docker build -t gcr.io/${{ secrets.STAGE_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }} .
           gcloud auth configure-docker
           docker push gcr.io/${{ secrets.STAGE_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}

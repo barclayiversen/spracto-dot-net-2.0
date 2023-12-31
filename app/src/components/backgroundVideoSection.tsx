@@ -1,13 +1,8 @@
 // BackgroundVideoSection.tsx
 import Image from "next/image";
-// import { Link } from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { Link, animateScroll as scroll } from "react-scroll";
-
-interface BackgroundVideoSectionProps {
-  offsetValue: number;
-}
+import { Link } from "react-scroll";
 
 const BackgroundVideoSection: React.FC = () => {
   const offsetValue = -100; // Adjust this value as needed
@@ -29,7 +24,7 @@ const BackgroundVideoSection: React.FC = () => {
             alt="Logo"
             layout="fill"
             objectFit="contain"
-            className="animate-fade duration-3500"
+            className="animate-fade-in-2"
           />
         </div>
       </div>

@@ -1,10 +1,53 @@
 .env
+.env.local
 tmp
 .air*
-steel-acumen.json
+service-account.json
 *.tfvars
 infra/*
 .terraform*
 scripts/
 
+frontend/
 frontend-old
+frontend/steel-acumen-408407-16297685b4fe.json
+backend-old
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/app/node_modules
+/app/.pnp
+/app/pnp.js
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/app/coverage
+
+# next.js
+/app/.next/
+/app/out/
+
+# production
+/app/build
+
+# misc
+/app.DS_Store
+*.pem
+
+# debug
+/appnpm-debug.log*
+/appyarn-debug.log*
+/appyarn-error.log*
+
+# local env files
+/app.env*.local
+
+# vercel
+/app.vercel
+
+# typescript
+/app*.tsbuildinfo
+/appnext-env.d.ts

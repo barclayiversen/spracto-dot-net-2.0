@@ -17,9 +17,8 @@ const Releases: React.FC = () => {
     const fetchTracks = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(
-          process.env.NEXT_PUBLIC_API_ENDPOINT + "/tracks"
-        );
+        const response = await axios.get("/api/tracks");
+
         setTracks(response.data);
         setIsLoading(false);
       } catch (error: any) {
@@ -57,7 +56,7 @@ const Releases: React.FC = () => {
           areReleasesVisible && (
             <div
               id="releases"
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 "
             >
               {tracks.map((track) => (
                 <div key={track.id} className="w-full py-5 px-1">
