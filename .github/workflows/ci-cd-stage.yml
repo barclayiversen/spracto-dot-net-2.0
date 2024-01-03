@@ -1,4 +1,4 @@
-name: CI/CD STAGE
+name: CI/CD old
 
 on:
   push:
