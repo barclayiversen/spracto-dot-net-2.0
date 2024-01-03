@@ -4,16 +4,29 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-scroll";
 import { useLoadStatus } from "@/context/loadStatusContext";
-
+import React from "react";
+import Loading from "@/components/loading";
 const BackgroundVideoSection: React.FC = () => {
   const offsetValue = -100; // Adjust this value as needed
   const { updateLoadStatus } = useLoadStatus();
+  const [isVideoReady, setIsVideoReady] = React.useState(false);
+  const handleVideoLoad = () => {
+    setIsVideoReady(true);
+    updateLoadStatus("BackgroundVideo", true);
+  };
 
   return (
     <div className="relative w-full h-screen animate-fade-in-.5">
+      {!isVideoReady && (
+        <div className="absolute top-0 left-0 w-full h-screen">
+          <Loading />
+        </div>
+      )}
       <video
         src="/newbgvideo.mp4"
         autoPlay
+        preload="auto"
+        poster="/poster.png"
         loop
         muted
         className="absolute top-0 left-0 w-full h-screen object-cover brightness-75"
