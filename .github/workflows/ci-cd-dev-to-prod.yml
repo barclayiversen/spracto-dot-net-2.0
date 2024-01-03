@@ -1,4 +1,4 @@
-name: CI/CD not-used
+name: CI/CD new-prod
 on:
   push:
     branches:
