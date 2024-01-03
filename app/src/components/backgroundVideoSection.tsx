@@ -3,14 +3,12 @@ import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-scroll";
-import { useState, useEffect, useRef } from "react";
-import LoadingSpinner from "@/components/loading";
 
 const BackgroundVideoSection: React.FC = () => {
   const offsetValue = -100; // Adjust this value as needed
 
   return (
-    <div className="relative w-full h-screen">
+    <div className="relative w-full h-screen animate-fade-in-.5">
       <video
         src="/newbgvideo.mp4"
         autoPlay
