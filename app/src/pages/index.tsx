@@ -19,26 +19,26 @@ export default function Home() {
   useEffect(() => {
     if (allComponentsLoaded) {
       setStartAnimation(true);
-      setTimeout(() => setIsBackgroundLoaded(true), 30);
+      setTimeout(() => {
+        setIsBackgroundLoaded(true);
+      }, 500); // Match this duration with your CSS transition
     }
   }, [allComponentsLoaded]);
 
   return (
     <>
-      {!isBackgroundLoaded && (
-        <div
-          className={
-            startAnimation ? "opacity-0 transition-opacity duration-500" : ""
-          }
-        >
-          <LoadingSpinner />
-        </div>
-      )}
+      <div
+        className={`fixed inset-0 z-50 flex justify-center items-center transition-opacity duration-500 bg-black ${
+          startAnimation ? "opacity-0" : "opacity-100"
+        }`}
+        style={{ display: isBackgroundLoaded ? "none" : "flex" }}
+      >
+        <LoadingSpinner />
+      </div>
       <main
-        className={`${
+        className={`transition-opacity duration-500 ${
           isBackgroundLoaded ? "opacity-100" : "opacity-0"
-        } transition-opacity duration-500`}
-        style={{ display: isBackgroundLoaded ? "block" : "none" }}
+        }`}
       >
         <Header />
         <BackgroundVideoSection />

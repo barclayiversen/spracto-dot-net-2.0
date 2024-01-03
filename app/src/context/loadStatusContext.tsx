@@ -1,4 +1,4 @@
-// context/LoadStatusContext.tsx
+// context/loadStatusContext.tsx
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
 interface LoadStatusContextType {
