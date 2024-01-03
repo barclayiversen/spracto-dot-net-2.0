@@ -3,9 +3,11 @@ import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-scroll";
+import { useLoadStatus } from "@/context/loadStatusContext";
 
 const BackgroundVideoSection: React.FC = () => {
   const offsetValue = -100; // Adjust this value as needed
+  const { updateLoadStatus } = useLoadStatus();
 
   return (
     <div className="relative w-full h-screen animate-fade-in-.5">
@@ -15,6 +17,7 @@ const BackgroundVideoSection: React.FC = () => {
         loop
         muted
         className="absolute top-0 left-0 w-full h-screen object-cover brightness-75"
+        onLoadedData={() => updateLoadStatus("BackgroundVideo", true)}
       />
 
       <div className="absolute top-0 left-0 z-1 w-full h-screen flex justify-center items-center">

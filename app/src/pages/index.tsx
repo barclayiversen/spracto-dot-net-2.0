@@ -6,23 +6,22 @@ import BackgroundVideoSection from "@/components/backgroundVideoSection";
 import AboutSection from "@/components/about";
 import Releases from "@/components/releases";
 import PhotoCarousel from "@/components/photoCarousel";
+import { useLoadStatus } from "@/context/loadStatusContext";
 
 export default function Home() {
+  const { loadStatus } = useLoadStatus();
+  const allComponentsLoaded = Object.values(loadStatus).every(
+    (status) => status
+  );
   const [isBackgroundLoaded, setIsBackgroundLoaded] = useState(false);
   const [startAnimation, setStartAnimation] = useState(false);
 
   useEffect(() => {
-    // Simulate a loading process
-    const timer = setTimeout(() => {
-      setStartAnimation(true); // Start fade-out animation
-      // After animation duration, hide spinner and show content
-      setTimeout(() => {
-        setIsBackgroundLoaded(true);
-      }, 500); // Match this with your fade-out animation duration
-    }, 250); // Adjust this time as needed
-
-    return () => clearTimeout(timer);
-  }, []);
+    if (allComponentsLoaded) {
+      setStartAnimation(true);
+      setTimeout(() => setIsBackgroundLoaded(true), 30);
+    }
+  }, [allComponentsLoaded]);
 
   return (
     <>
