@@ -14,7 +14,7 @@ export default function Home() {
     // Set a delay for the loading state
     const timer = setTimeout(() => {
       setIsBackgroundLoaded(true);
-    }, 200); // Adjust this time as needed
+    }, 250); // Adjust this time as needed
 
     return () => clearTimeout(timer);
   }, []);
