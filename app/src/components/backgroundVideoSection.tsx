@@ -17,7 +17,7 @@ const BackgroundVideoSection: React.FC = () => {
         loop
         muted
         className="absolute top-0 left-0 w-full h-screen object-cover brightness-75"
-        onLoadedData={() => updateLoadStatus("BackgroundVideo", true)}
+        onLoad={() => updateLoadStatus("BackgroundVideo", true)}
       />
 
       <div className="absolute top-0 left-0 z-1 w-full h-screen flex justify-center items-center">
