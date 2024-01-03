@@ -36,7 +36,7 @@ export default function Home() {
         <LoadingSpinner />
       </div>
       <main
-        className={`transition-opacity duration-500 ${
+        className={`transition-opacity duration-500  ${
           isBackgroundLoaded ? "opacity-100" : "opacity-0"
         }`}
       >
