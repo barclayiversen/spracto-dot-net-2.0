@@ -3,7 +3,7 @@ name: CI/CD DEV
 on:
   push:
     branches:
-      - dev
+      - dev-cloud-run
 jobs:
   # Job for Backend
   build-and-deploy-app:
