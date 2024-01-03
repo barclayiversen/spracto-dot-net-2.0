@@ -3,6 +3,8 @@ import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-scroll";
+import { useState, useEffect, useRef } from "react";
+import LoadingSpinner from "@/components/loading";
 
 const BackgroundVideoSection: React.FC = () => {
   const offsetValue = -100; // Adjust this value as needed
