@@ -6,6 +6,8 @@ import BackgroundVideoSection from "@/components/backgroundVideoSection";
 import AboutSection from "@/components/about";
 import Releases from "@/components/releases";
 import PhotoCarousel from "@/components/photoCarousel";
+import UpcomingRelease from "@/components/upcomingRelease";
+import FeaturedRelease from "@/components/featuredRelease";
 import { useLoadStatus } from "@/context/loadStatusContext";
 
 export default function Home() {
@@ -36,13 +38,15 @@ export default function Home() {
         <LoadingSpinner />
       </div>
       <main
-        className={`transition-opacity duration-500  ${
+        className={`bg-black transition-opacity duration-500  ${
           isBackgroundLoaded ? "opacity-100" : "opacity-0"
         }`}
       >
         <Header />
         <BackgroundVideoSection />
         <AboutSection />
+        <FeaturedRelease />
+        <UpcomingRelease />
         <Releases />
         <PhotoCarousel />
         <Footer />

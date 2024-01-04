@@ -6,6 +6,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --initial-background-color: 0, 0, 0; /* Black background for loading */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,10 +19,29 @@
 
 body {
   color: rgb(var(--foreground-rgb));
+  background: rgb(
+    var(--initial-background-color)
+  ); /* Set initial background to black */
   background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+
+.aspect-ratio-box {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* 1:1 Aspect Ratio */
+}
+
+.aspect-ratio-box-inside {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
 }
