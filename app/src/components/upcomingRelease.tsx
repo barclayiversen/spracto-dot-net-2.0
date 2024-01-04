@@ -1,4 +1,3 @@
-// UpcomingRelease.tsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -8,7 +7,7 @@ interface UpcomingReleaseData {
   releaseDate: string;
 }
 
-const getFormattedReleaseDate = (dateString: any) => {
+const getFormattedReleaseDate = (dateString: string) => {
   const date = new Date(dateString);
   const monthNames = [
     "January",
@@ -41,7 +40,11 @@ const UpcomingRelease: React.FC = () => {
     const fetchUpcomingRelease = async () => {
       try {
         const response = await axios.get("/api/upcomingRelease");
-        setUpcomingRelease(response.data);
+        if (response.data && response.data.albumArtUrl) {
+          setUpcomingRelease(response.data);
+        } else {
+          setUpcomingRelease(null);
+        }
       } catch (err) {
         setError("Failed to load upcoming release.");
       } finally {
@@ -54,25 +57,20 @@ const UpcomingRelease: React.FC = () => {
 
   if (isLoading) return <p>Loading upcoming release...</p>;
   if (error) return <p>{error}</p>;
+  if (!upcomingRelease) return null; // Do not render if no release data
 
   return (
     <div className="upcoming-release-container py-10 px-5 text-center bg-black max-w-2xl mx-auto">
-      {upcomingRelease && (
-        <>
-          <h2 className="text-2xl font-bold mb-4 text-white">
-            Upcoming Release
-          </h2>
-          <img
-            src={upcomingRelease.albumArtUrl}
-            alt={`Album art for ${upcomingRelease.albumName}`}
-            className="mx-auto"
-          />
-          <p className="mt-3 text-lg">{upcomingRelease.albumName}</p>
-          <p className="text-sm text-white">
-            {getFormattedReleaseDate(upcomingRelease.releaseDate)}
-          </p>
-        </>
-      )}
+      <h2 className="text-2xl font-bold mb-4 text-white">Upcoming Release</h2>
+      <img
+        src={upcomingRelease.albumArtUrl}
+        alt={`Album art for ${upcomingRelease.albumName}`}
+        className="mx-auto"
+      />
+      <p className="mt-3 text-lg">{upcomingRelease.albumName}</p>
+      <p className="text-sm text-white">
+        {getFormattedReleaseDate(upcomingRelease.releaseDate)}
+      </p>
     </div>
   );
 };

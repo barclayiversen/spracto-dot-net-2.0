@@ -15,18 +15,13 @@ export default async function handler(
   const query = datastore.createQuery("featuredRelease").limit(1); // Assuming "featuredRelease" is your kind
 
   try {
-    console.log("3");
-
     const [featuredReleases] = await datastoreClient.runQuery(query);
     if (featuredReleases.length > 0) {
-      console.log("4");
-
       // Assuming the structure has a 'trackId' property
       const trackId = featuredReleases[0].id;
       const dlUrl = featuredReleases[0].dlUrl;
       const platform = featuredReleases[0].platform;
-      console.log(featuredReleases);
-      console.log("5  " + trackId);
+
       res
         .status(200)
         .json({ track_id: trackId, dlUrl: dlUrl, platform: platform });
