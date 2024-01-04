@@ -27,6 +27,10 @@ export default function Home() {
     }
   }, [allComponentsLoaded]);
 
+  const Divider = () => (
+    <hr className="border-t border-gray-700 mx-auto w-3/4 my-8" />
+  );
+
   return (
     <>
       <div
@@ -38,16 +42,21 @@ export default function Home() {
         <LoadingSpinner />
       </div>
       <main
-        className={`bg-black transition-opacity duration-500  ${
+        className={`bg-black transition-opacity duration-500 ${
           isBackgroundLoaded ? "opacity-100" : "opacity-0"
         }`}
       >
         <Header />
         <BackgroundVideoSection />
+
         <AboutSection />
+        <Divider />
         <FeaturedRelease />
+        <Divider />
         <UpcomingRelease />
+
         <Releases />
+
         <PhotoCarousel />
         <Footer />
       </main>
