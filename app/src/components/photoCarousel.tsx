@@ -67,8 +67,8 @@ const PhotoCarousel: React.FC = () => {
   };
 
   return (
-    <div className="bg-black mx-auto py-20 text-center">
-      <p className="font-bold text-white text-4xl pb-4 ">Gallery</p>
+    <div className="bg-black mx-auto pt-20 text-center">
+      <p className="font-bold text-white text-4xl pb-4 "></p>
       <div
         className="relative w-full max-h-full max-w-screen-lg mx-auto overflow-hidden"
         onTouchStart={handleTouchStart}
@@ -84,16 +84,12 @@ const PhotoCarousel: React.FC = () => {
         <button
           onClick={goToPrevious}
           className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2"
-        >
-          Prev
-        </button>
+        ></button>
 
         <button
           onClick={goToNext}
           className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2"
-        >
-          Next
-        </button>
+        ></button>
       </div>
     </div>
   );
