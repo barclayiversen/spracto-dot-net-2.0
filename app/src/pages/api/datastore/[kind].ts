@@ -11,15 +11,17 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log("1");
   try {
-    console.log("2", req.query);
-
     const kind = req.query.kind as string;
 
-    if (kind !== req.query.kind) {
-      console.log("3");
+    const allowedKinds = [
+      "track",
+      "image",
+      "upcomingRelease",
+      "featuredRelease",
+    ];
 
+    if (!allowedKinds.includes(kind)) {
       return res.status(400).json({ error: "Invalid kind" });
     }
 

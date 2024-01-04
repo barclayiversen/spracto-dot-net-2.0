@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import { getSession, useSession, signOut } from "next-auth/react";
-
+import UpcomingRelease from "@/components/upcomingRelease";
+import FeaturedRelease from "@/components/featuredRelease";
 // Define an interface for items
 interface Item {
   name: string;
@@ -29,6 +30,17 @@ const Admin = () => {
     { name: "Featured Release", kind: "featuredRelease" },
     { name: "Upcoming Release", kind: "upcomingRelease" },
   ];
+
+  const renderData = () => {
+    switch (selectedItem?.kind) {
+      case "upcomingRelease":
+        return <UpcomingRelease />;
+      case "featuredRelease":
+        return <FeaturedRelease />;
+      default:
+        return <pre>{JSON.stringify(data, null, 2)}</pre>;
+    }
+  };
 
   return (
     <div className="h-screen">
@@ -58,8 +70,7 @@ const Admin = () => {
           {selectedItem && (
             <div>
               <h2 className="text-xl mb-4">Data for {selectedItem.name}</h2>
-              {/* Render your data here */}
-              <pre>{JSON.stringify(data, null, 2)}</pre>
+              {renderData()}
             </div>
           )}
         </div>
