@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSoundcloud, faYoutube } from "@fortawesome/free-brands-svg-icons";
 
 const Releases: React.FC = () => {
-  const soundcloudUrl = "https://soundcloud.com/spracto"; // Your SoundCloud profile URL
+  const soundcloudUrl = "https://soundcloud.com/spracto/sets/free-downloads"; // Your SoundCloud profile URL
   const youtubeUrl = "https://youtube.com/spracto";
 
   return (
