@@ -1,3 +1,4 @@
+// pages/index.ts
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/loading";
 import Header from "@/components/header";
