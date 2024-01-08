@@ -81,7 +81,7 @@ const Admin = () => {
 
 export default Admin;
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps = async (context: any) => {
   const session = await getSession(context);
 
   if (!session) {

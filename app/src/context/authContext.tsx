@@ -1,6 +1,4 @@
-// context/authContext.tsx
-
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 type AuthContextType = {
   isAuthenticated: boolean;
@@ -10,7 +8,12 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>(null!);
 
-export const AuthProvider: React.FC = ({ children }) => {
+// Define the type for props
+type AuthProviderProps = {
+  children: ReactNode;
+};
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const login = () => setIsAuthenticated(true);
