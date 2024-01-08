@@ -1,9 +1,9 @@
-name: CI/CD dev
+name: CI/CD stage
 
 on:
   push:
     branches:
-      - dev-cloud-run
+      - stage
 jobs:
   # Job for Backend
   build-and-deploy-app:
