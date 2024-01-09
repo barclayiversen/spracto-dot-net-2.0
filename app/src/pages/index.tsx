@@ -1,14 +1,14 @@
 // pages/index.ts
 import React, { useState, useEffect } from "react";
-import LoadingSpinner from "@/components/loading";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
-import BackgroundVideoSection from "@/components/backgroundVideoSection";
-import AboutSection from "@/components/about";
-import Releases from "@/components/releases";
-import PhotoCarousel from "@/components/photoCarousel";
-import UpcomingRelease from "@/components/upcomingRelease";
-import FeaturedRelease from "@/components/featuredRelease";
+import LoadingSpinner from "@/components/home/loading";
+import Header from "@/components/home/header";
+import Footer from "@/components/home/footer";
+import BackgroundVideoSection from "@/components/home/backgroundVideoSection";
+import AboutSection from "@/components/home/about";
+import Releases from "@/components/home/releases";
+import PhotoCarousel from "@/components/home/photoCarousel";
+import UpcomingRelease from "@/components/home/upcomingRelease";
+import FeaturedRelease from "@/components/home/featuredRelease";
 import { useLoadStatus } from "@/context/loadStatusContext";
 
 export default function Home() {

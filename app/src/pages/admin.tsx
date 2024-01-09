@@ -2,10 +2,13 @@
 
 import React, { useState } from "react";
 import { getSession, useSession, signOut } from "next-auth/react";
-import UpcomingRelease from "@/components/upcomingRelease";
-import FeaturedRelease from "@/components/featuredRelease";
-import ItemList from "@/components/itemList";
-import DataDisplay from "@/components/dataDisplay";
+
+import ItemList from "@/components/admin/itemList";
+import DataDisplay from "@/components/admin/dataDisplay";
+import Modal from "@/components/home/modal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+
 // Define an interface for items
 interface Item {
   name: string;
@@ -13,6 +16,7 @@ interface Item {
 }
 
 const Admin = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,10 +43,17 @@ const Admin = () => {
     { name: "Featured Release", kind: "featuredRelease" },
     { name: "Upcoming Release", kind: "upcomingRelease" },
   ];
-
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
   return (
-    <div className="h-screen">
-      <div className="flex justify-end items-center bg-gray-800 p-4 text-white">
+    <div className="h-vh">
+      <div className="flex justify-between items-center bg-black p-4 text-white">
+        <button className="md:hidden" onClick={toggleModal}>
+          {/* Replace with a suitable icon */}
+          <FontAwesomeIcon icon={faBars} /> {/* Example using Font Awesome */}
+        </button>
+
         <button
           onClick={() => signOut()}
           className="px-4 py-2 bg-red-500 rounded hover:bg-red-700 transition duration-300"
@@ -50,11 +61,11 @@ const Admin = () => {
           Logout
         </button>
       </div>
-      <div className="flex h-full">
-        <div className="w-1/3 bg-gray-700 p-4 text-white overflow-y-auto">
+      <div className="flex h-full bg-red-200">
+        <div className="hidden md:block w-1/6 bg-gray-700 p-4 text-white ">
           <ItemList items={items} onItemSelect={handleItemClick} />
         </div>
-        <div className="flex-1 p-4">
+        <div className="flex-1 bg-gray-200">
           {selectedItem && (
             <DataDisplay
               selectedItem={selectedItem}
@@ -64,6 +75,17 @@ const Admin = () => {
           )}
         </div>
       </div>
+      {isModalOpen && (
+        <Modal close={toggleModal}>
+          <ItemList
+            items={items}
+            onItemSelect={(item) => {
+              handleItemClick(item);
+              toggleModal();
+            }}
+          />
+        </Modal>
+      )}
     </div>
   );
 };
