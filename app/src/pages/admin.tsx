@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { getSession, useSession, signOut } from "next-auth/react";
 import UpcomingRelease from "@/components/upcomingRelease";
 import FeaturedRelease from "@/components/featuredRelease";
+import ItemList from "@/components/itemList";
+import DataDisplay from "@/components/dataDisplay";
 // Define an interface for items
 interface Item {
   name: string;
@@ -13,15 +15,22 @@ interface Item {
 const Admin = () => {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleItemClick = async (item: Item) => {
     setSelectedItem(item);
+    setIsLoading(true); // Set loading to true before fetching data
 
-    // Fetch data from your API route which interacts with Google Cloud Datastore
-    const response = await fetch(`/api/datastore/${item.kind}`);
-    const result = await response.json();
-
-    setData(result);
+    try {
+      const response = await fetch(`/api/datastore/${item.kind}`);
+      const result = await response.json();
+      setData(result);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      // Handle error appropriately
+    } finally {
+      setIsLoading(false); // Set loading to false after fetching data
+    }
   };
 
   const items = [
@@ -30,17 +39,6 @@ const Admin = () => {
     { name: "Featured Release", kind: "featuredRelease" },
     { name: "Upcoming Release", kind: "upcomingRelease" },
   ];
-
-  const renderData = () => {
-    switch (selectedItem?.kind) {
-      case "upcomingRelease":
-        return <UpcomingRelease />;
-      case "featuredRelease":
-        return <FeaturedRelease />;
-      default:
-        return <pre>{JSON.stringify(data, null, 2)}</pre>;
-    }
-  };
 
   return (
     <div className="h-screen">
@@ -54,24 +52,15 @@ const Admin = () => {
       </div>
       <div className="flex h-full">
         <div className="w-1/3 bg-gray-700 p-4 text-white overflow-y-auto">
-          <ul>
-            {items.map((item) => (
-              <li
-                key={item.name}
-                className="mb-2 cursor-pointer"
-                onClick={() => handleItemClick(item)}
-              >
-                {item.name}
-              </li>
-            ))}
-          </ul>
+          <ItemList items={items} onItemSelect={handleItemClick} />
         </div>
         <div className="flex-1 p-4">
           {selectedItem && (
-            <div>
-              <h2 className="text-xl mb-4">Data for {selectedItem.name}</h2>
-              {renderData()}
-            </div>
+            <DataDisplay
+              selectedItem={selectedItem}
+              data={data}
+              isLoading={isLoading}
+            />
           )}
         </div>
       </div>
