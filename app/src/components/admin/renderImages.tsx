@@ -29,9 +29,10 @@ const RenderImages = ({ data }) => {
 
   const handleRemove = async (imageUrl) => {
     if (window.confirm("Are you sure you want to remove this image?")) {
+      console.log("IMIMIMIMIMIMIIMIM", imageUrl);
       // Call the remove API endpoint
       try {
-        const response = await fetch("/api/datastore/remove", {
+        const response = await fetch("/api/datastore/delete", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -50,8 +51,8 @@ const RenderImages = ({ data }) => {
   };
 
   return (
-    <div className="flex flex-col h-vh bg-red-200">
-      <div className="flex-grow overflow-hidden bg-green-800">
+    <div className="flex flex-col bg-red-400">
+      <div className="flex-grow overflow-hidden bg-green-400">
         {selectedImage && (
           <>
             <img

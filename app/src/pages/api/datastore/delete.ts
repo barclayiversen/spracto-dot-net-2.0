@@ -26,8 +26,8 @@ export default async function handler(
     const fileName = imageUrl.split("/").pop();
     await storage.bucket(bucketName).file(`PhotoCarousel/${fileName}`).delete();
 
-    // Query Datastore to find the entity with the given URL
-    const query = datastore.createQuery(kind).filter("imageUrl", "=", imageUrl);
+    // Query Datastore to find the entity with the normalized URL
+    const query = datastore.createQuery(kind).filter("url", "=", imageUrl);
     const [entities] = await datastore.runQuery(query);
     if (entities.length === 0) {
       throw new Error("No matching entity found in Datastore");

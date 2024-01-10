@@ -47,22 +47,22 @@ const Admin = () => {
     setIsModalOpen(!isModalOpen);
   };
   return (
-    <div className="h-vh">
-      <div className="flex justify-between items-center bg-black p-4 text-white">
-        <button className="md:hidden" onClick={toggleModal}>
-          {/* Replace with a suitable icon */}
-          <FontAwesomeIcon icon={faBars} /> {/* Example using Font Awesome */}
-        </button>
-
-        <button
-          onClick={() => signOut()}
-          className="px-4 py-2 bg-red-500 rounded hover:bg-red-700 transition duration-300"
-        >
-          Logout
-        </button>
+    <div className="h-screen flex flex-col">
+      <div className="bg-black p-4 text-white">
+        <div className="flex justify-between items-center">
+          <button className="md:hidden" onClick={toggleModal}>
+            <FontAwesomeIcon icon={faBars} />
+          </button>
+          <button
+            onClick={() => signOut()}
+            className="px-4 py-2 bg-red-500 rounded hover:bg-red-700 transition duration-300"
+          >
+            Logout
+          </button>
+        </div>
       </div>
-      <div className="flex h-full bg-red-200">
-        <div className="hidden md:block w-1/6 bg-gray-700 p-4 text-white ">
+      <div className="flex flex-1">
+        <div className="hidden md:block w-1/6 bg-gray-800 p-4 text-white">
           <ItemList items={items} onItemSelect={handleItemClick} />
         </div>
         <div className="flex-1 bg-gray-200">
