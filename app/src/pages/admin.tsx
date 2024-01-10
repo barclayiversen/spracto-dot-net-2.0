@@ -47,7 +47,7 @@ const Admin = () => {
     setIsModalOpen(!isModalOpen);
   };
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col ">
       <div className="bg-black p-4 text-white">
         <div className="flex justify-between items-center">
           <button className="md:hidden" onClick={toggleModal}>
@@ -65,7 +65,7 @@ const Admin = () => {
         <div className="hidden md:block w-1/6 bg-gray-800 p-4 text-white">
           <ItemList items={items} onItemSelect={handleItemClick} />
         </div>
-        <div className="flex-1 bg-gray-200">
+        <div className="flex-1 bg-black">
           {selectedItem && (
             <DataDisplay
               selectedItem={selectedItem}

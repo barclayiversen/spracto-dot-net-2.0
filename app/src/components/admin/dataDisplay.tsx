@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import RenderImages from "@/components/admin/renderImages";
 import UpcomingRelease from "@/components/home/upcomingRelease";
-import FeaturedRelease from "@/components/home/featuredRelease";
+import FeaturedReleaseEditor from "@/components/admin/featuredReleaseEditor";
 interface DataDisplayProps {
   selectedItem: Item;
   data: any;
@@ -21,7 +21,7 @@ const DataDisplay: React.FC<DataDisplayProps> = ({
     case "upcomingRelease":
       return <UpcomingRelease />;
     case "featuredRelease":
-      return <FeaturedRelease />;
+      return <FeaturedReleaseEditor />;
     case "image":
       return <RenderImages data={data} />;
 
