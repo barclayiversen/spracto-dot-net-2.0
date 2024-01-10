@@ -13,7 +13,7 @@ const Thumbnails = ({ data, onSelectImage }) => {
           alt={`Thumbnail ${index}`}
           className="w-24 h-24 m-2 cursor-pointer object-cover"
           onClick={() => {
-            onSelectImage(item.url);
+            onSelectImage(item);
           }}
         />
       ))}
@@ -21,11 +21,11 @@ const Thumbnails = ({ data, onSelectImage }) => {
   );
 };
 
-const ImageRemover = ({ onRemove, imageUrl }) => {
+const ImageRemover = ({ onRemove, item }) => {
   return (
     <button
       className="w-24 h-24 mr-2 flex justify-center items-center bg-red-200 cursor-pointer object-cover"
-      onClick={() => onRemove(imageUrl)}
+      onClick={() => onRemove(item)}
     >
       <span className="text-4xl text-gray-600">-</span> {/* Minus symbol */}
     </button>
@@ -53,15 +53,10 @@ const ImageUploader = ({ onFileChange }) => {
   );
 };
 
-const ImageManager = ({
-  selectedImage,
-  setSelectedImage,
-  handleFileChange,
-  data,
-}) => {
+const ImageManager = ({ selectedImage, setSelectedImage, data }) => {
   const [loading, setLoading] = useState(false);
 
-  const handleRemove = async (imageUrl) => {
+  const handleRemove = async (data) => {
     if (window.confirm("Are you sure you want to remove this image?")) {
       // Call the remove API endpoint
       try {
@@ -70,7 +65,7 @@ const ImageManager = ({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ imageUrl }),
+          body: JSON.stringify({ data }),
         });
         const result = await response.json();
 
@@ -83,6 +78,8 @@ const ImageManager = ({
   };
 
   const handleUpload = async (event) => {
+    // const [data, setData] = useState(false);
+
     const file = event.target.files[0];
     if (!file) return;
 
@@ -106,8 +103,6 @@ const ImageManager = ({
       const newImageData = [...data, { url: newImageUrl, id: result.imageId }];
       // Use the imageId returned from the server as the unique identifier
 
-      setData(newImageData); // Update the data state
-
       setLoading(false); // Set loading state to false when upload is complete
     } catch (error) {
       console.error("Upload failed:", error);
@@ -121,7 +116,7 @@ const ImageManager = ({
         {selectedImage && (
           <>
             <img
-              src={selectedImage}
+              src={selectedImage.url}
               alt="Selected"
               className="max-w-full max-h-full object-contain w-full h-full"
               style={{ maxHeight: "calc(80vh - 100px)" }}
@@ -130,7 +125,7 @@ const ImageManager = ({
               {/* Wrap the components and center them */}
               <ImageRemover
                 onRemove={() => handleRemove(selectedImage)}
-                imageUrl={selectedImage}
+                item={selectedImage}
               />
               {loading ? (
                 <div className="w-24 h-24 mr-2 flex justify-center items-center bg-gray-200 cursor-not-allowed object-cover">

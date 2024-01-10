@@ -20,29 +20,21 @@ export default async function handler(
   }
 
   try {
-    const { imageUrl } = req.body;
+    const { data } = req.body;
 
     // Extract the file name from the imageUrl
-    const fileName = imageUrl.split("/").pop();
+    const fileName = data.url.split("/").pop();
 
     // Delete the object from GCS
     await storage.bucket(bucketName).file(`PhotoCarousel/${fileName}`).delete();
 
-    // Construct the public URL based on the bucket's configuration
-    const publicUrl = `https://storage.googleapis.com/${bucketName}/PhotoCarousel/${fileName}`;
-
-    // Query Datastore to find the entity with the normalized URL
-    const query = datastore.createQuery(kind).filter("url", "=", imageUrl);
-    const [entities] = await datastore.runQuery(query);
-    if (entities.length === 0) {
-      throw new Error("No matching entity found in Datastore");
-    }
+    // Construct a key for the Datastore entity using the provided ID
+    const entityKey = datastore.key([kind, datastore.int(data.id)]);
 
     // Delete the reference from Datastore
-    const entityKey = entities[0][datastore.KEY];
     await datastore.delete(entityKey);
 
-    res.status(200).json({ message: "Image removed successfully", publicUrl });
+    res.status(200).json({ message: "Image removed successfully" });
   } catch (error) {
     console.error("Deletion failed:", error);
     res.status(500).json({ error: "Internal Server Error" });
