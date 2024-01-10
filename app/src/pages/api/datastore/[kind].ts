@@ -1,5 +1,3 @@
-// pages/api/datastore/[kind].ts
-
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Datastore } from "@google-cloud/datastore";
 
@@ -28,7 +26,13 @@ export default async function handler(
     const query = datastore.createQuery(kind);
     const [entities] = await datastore.runQuery(query);
 
-    res.status(200).json(entities);
+    // Map the entities to include ID and return
+    const entitiesWithId = entities.map((entity) => ({
+      id: entity[datastore.KEY].id, // Include the ID
+      ...entity, // Include all other properties
+    }));
+
+    res.status(200).json(entitiesWithId);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

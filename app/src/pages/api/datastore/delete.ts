@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Storage } from "@google-cloud/storage";
-import { Datastore, Query } from "@google-cloud/datastore";
+import { Datastore } from "@google-cloud/datastore";
 
 // Initialize GCS and Datastore clients with project ID
 const storage = new Storage({ projectId: process.env.GCS_PROJECT_ID });
@@ -22,9 +22,14 @@ export default async function handler(
   try {
     const { imageUrl } = req.body;
 
-    // Extract the file name from the imageUrl and delete it from GCS
+    // Extract the file name from the imageUrl
     const fileName = imageUrl.split("/").pop();
+
+    // Delete the object from GCS
     await storage.bucket(bucketName).file(`PhotoCarousel/${fileName}`).delete();
+
+    // Construct the public URL based on the bucket's configuration
+    const publicUrl = `https://storage.googleapis.com/${bucketName}/PhotoCarousel/${fileName}`;
 
     // Query Datastore to find the entity with the normalized URL
     const query = datastore.createQuery(kind).filter("url", "=", imageUrl);
@@ -37,7 +42,7 @@ export default async function handler(
     const entityKey = entities[0][datastore.KEY];
     await datastore.delete(entityKey);
 
-    res.status(200).json({ message: "Image removed successfully" });
+    res.status(200).json({ message: "Image removed successfully", publicUrl });
   } catch (error) {
     console.error("Deletion failed:", error);
     res.status(500).json({ error: "Internal Server Error" });
