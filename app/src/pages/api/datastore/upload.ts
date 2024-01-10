@@ -33,8 +33,6 @@ const processForm = async (req: NextApiRequest): Promise<formidable.Files> => {
         console.error("Error parsing the form:", err);
         reject(err);
       } else {
-        console.log("FILES", files);
-        console.log("fields", fields);
         resolve(files); // Resolve with the files
       }
     });
@@ -56,7 +54,6 @@ const uploadHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       throw new Error("No file uploaded");
     }
 
-    console.log("STEP 2", file);
     const destinationPath = `PhotoCarousel/${file.originalFilename}`;
     const [fileUploadResponse] = await storage
       .bucket(bucketName)

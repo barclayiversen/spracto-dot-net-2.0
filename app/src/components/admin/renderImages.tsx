@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import ImageUploader from "@/components/admin/imageUploader";
-import Thumbnails from "@/components/admin/thumbnails";
-import ImageRemover from "./imageRemover";
+import ImageManager from "@/components/admin/imageManager";
 
 const RenderImages = ({ data }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -21,52 +19,19 @@ const RenderImages = ({ data }) => {
         body: formData,
       });
       const result = await response.json();
-      console.log("result", result); // The response from your server
     } catch (error) {
       console.error("Upload failed:", error);
     }
   };
 
-  const handleRemove = async (imageUrl) => {
-    if (window.confirm("Are you sure you want to remove this image?")) {
-      console.log("IMIMIMIMIMIMIIMIM", imageUrl);
-      // Call the remove API endpoint
-      try {
-        const response = await fetch("/api/datastore/delete", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ imageUrl }),
-        });
-        const result = await response.json();
-        console.log("result", result); // The response from your server
-
-        // Optionally update the state to reflect the removal
-        setSelectedImage(null);
-      } catch (error) {
-        console.error("Removal failed:", error);
-      }
-    }
-  };
-
   return (
     <div className="flex flex-col bg-red-400">
-      <div className="flex-grow overflow-hidden bg-green-400">
-        {selectedImage && (
-          <>
-            <img
-              src={selectedImage}
-              alt="Selected"
-              className="max-w-full max-h-full object-contain w-full h-full"
-              style={{ maxHeight: "calc(80vh - 100px)" }}
-            />
-            <ImageRemover onRemove={() => handleRemove(selectedImage)} />
-          </>
-        )}
-        <ImageUploader onFileChange={handleFileChange} />
-      </div>
-      <Thumbnails data={data} onSelectImage={setSelectedImage} />
+      <ImageManager
+        selectedImage={selectedImage}
+        setSelectedImage={setSelectedImage}
+        handleFileChange={handleFileChange}
+        data={data}
+      />
     </div>
   );
 };

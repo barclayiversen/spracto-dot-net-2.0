@@ -28,9 +28,9 @@ const Admin = () => {
     try {
       const response = await fetch(`/api/datastore/${item.kind}`);
       const result = await response.json();
+
       setData(result);
     } catch (error) {
-      console.error("Error fetching data:", error);
       // Handle error appropriately
     } finally {
       setIsLoading(false); // Set loading to false after fetching data
