@@ -23,7 +23,6 @@ const DataDisplay: React.FC<DataDisplayProps> = ({
     case "featuredRelease":
       return <FeaturedRelease />;
     case "image":
-      console.log(data);
       return <RenderImages data={data} />;
 
     default:
