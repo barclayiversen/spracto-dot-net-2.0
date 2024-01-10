@@ -112,7 +112,7 @@ const ImageManager = ({ selectedImage, setSelectedImage, data }) => {
 
   return (
     <>
-      <div className="flex-grow overflow-hidden bg-green-400">
+      <div className="flex-grow min-h-96 overflow-hidden bg-green-400">
         {selectedImage && (
           <>
             <img
