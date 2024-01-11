@@ -37,10 +37,21 @@ const ReleaseEditor: React.FC = () => {
     setSelectedTrack(event.target.value);
   };
 
+  const addTrack = () => {
+    // Implement the logic to add a new track and update the `tracks` state
+  };
+
+  const deleteTrack = () => {
+    if (selectedTrack) {
+      // Implement the logic to delete the selected track and update the `tracks` state
+      setSelectedTrack(null);
+    }
+  };
+
   const renderTracks = () => {
     if (tracks && tracks.length > 0) {
       return (
-        <div className="tracks-container bg-black text-white">
+        <div className="tracks-container bg-gray-600 text-white min-h-96">
           <select
             onChange={handleTrackSelect}
             value={selectedTrack || ""}
@@ -53,22 +64,41 @@ const ReleaseEditor: React.FC = () => {
               </option>
             ))}
           </select>
+
           {selectedTrack && (
-            <div className="track bg-black w-1/3 mx-auto">
-              <h2>Track ID: {selectedTrack}</h2>
-              <p>
-                Platform:{" "}
-                {tracks.find((t) => t.trackId === selectedTrack)?.platform}
-              </p>
-              <iframe
-                title={`Track - ${selectedTrack}`}
-                src={getSoundcloudEmbedUrl(selectedTrack)}
-                width="100%"
-                height="166"
-                frameBorder="0"
-                scrolling="no"
-                allow="autoplay"
-              ></iframe>
+            <div className="track  flex bg-white">
+              <div className="track-info bg-green-600 w-1/2 p-4 items-center justify-center ">
+                <h2>Track ID: {selectedTrack}</h2>
+                <p>
+                  Platform:{" "}
+                  {tracks.find((t) => t.trackId === selectedTrack)?.platform}
+                </p>
+                <div className="buttons-container flex items-center justify-center">
+                  <button
+                    onClick={addTrack}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Add Track
+                  </button>
+                  <button
+                    onClick={deleteTrack}
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Delete Track
+                  </button>
+                </div>
+              </div>
+              <div className="track-iframe w-1/2 p-4">
+                <iframe
+                  title={`Track - ${selectedTrack}`}
+                  src={getSoundcloudEmbedUrl(selectedTrack)}
+                  width="100%"
+                  height="600"
+                  frameBorder="0"
+                  scrolling="no"
+                  allow="autoplay"
+                ></iframe>
+              </div>
             </div>
           )}
         </div>
@@ -78,11 +108,47 @@ const ReleaseEditor: React.FC = () => {
     }
   };
 
+  const handleThumbnailClick = (trackId: string) => {
+    setSelectedTrack(trackId);
+  };
+
+  const renderThumbnailRow = () => {
+    return (
+      <div className="thumbnail-row bg-black p-4 flex justify-center">
+        {tracks &&
+          tracks.map((track) => (
+            <div
+              key={track.trackId}
+              className={`thumbnail p-2 hover:scale-110 ${
+                selectedTrack === track.trackId ? "selected" : ""
+              }`}
+              onClick={() => handleThumbnailClick(track.trackId)}
+            >
+              <iframe
+                title={`Thumbnail - ${track.trackId}`}
+                src={getSoundcloudEmbedUrl(track.trackId)}
+                width="100%"
+                height="100"
+                frameBorder="0"
+                scrolling="no"
+                allow="autoplay"
+              ></iframe>
+            </div>
+          ))}
+      </div>
+    );
+  };
+
   if (isLoading)
     return <p className="text-white">Loading featured release...</p>;
   if (error) return <p>{error}</p>;
 
-  return <div className="release-editor-container">{renderTracks()}</div>;
+  return (
+    <div className="release-editor-container">
+      {renderTracks()}
+      {renderThumbnailRow()}
+    </div>
+  );
 };
 
 export default ReleaseEditor;
