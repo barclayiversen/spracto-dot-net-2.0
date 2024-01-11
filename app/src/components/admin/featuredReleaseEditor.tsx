@@ -12,12 +12,15 @@ const FeaturedReleaseEditor: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [trackData, setTrackData] = useState<TrackData | null>(null);
   const [newTrackId, setNewTrackId] = useState<string>(""); // Input field value
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null); // Updated preview URL
 
   useEffect(() => {
     const fetchFeaturedRelease = async () => {
       try {
         const response = await axios.get("/api/featuredRelease");
+        console.log(response.data);
         setTrackData(response.data);
+        setPreviewUrl(getSoundcloudEmbedUrl(response.data.trackId));
       } catch (err) {
         setError("Failed to load featured release.");
       } finally {
@@ -28,19 +31,30 @@ const FeaturedReleaseEditor: React.FC = () => {
     fetchFeaturedRelease();
   }, []);
 
-  const handleUpdateTrackId = () => {
-    // You can implement the logic to update the featured release trackId here
-    // Make a POST request to your API endpoint with the newTrackId value
-    // For example:
-    // axios.post("/api/updateFeaturedRelease", { newTrackId })
+  const getSoundcloudEmbedUrl = (trackId: string) => {
+    return `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%235bff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
+  };
+
+  const handleUpdateTrackId = async () => {
+    try {
+      // Make a POST request to update the track ID
+      await axios.post("/api/datastore/updateFeaturedRelease", { newTrackId });
+      // Update the trackData with the new track ID
+      setTrackData((prevData) => ({
+        ...prevData,
+        trackId: newTrackId,
+      }));
+      // Update the preview URL
+      setPreviewUrl(getSoundcloudEmbedUrl(newTrackId));
+    } catch (error) {
+      setError("Failed to update track ID.");
+    }
   };
 
   if (isLoading)
     return <p className="text-white">Loading featured release...</p>;
   if (error) return <p>{error}</p>;
   if (!trackData || !trackData.trackId) return null;
-
-  const soundcloudEmbedUrl = `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackData.trackId}&color=%235bff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
 
   return (
     <div className="grid grid-cols-2 gap-2 bg-black h-full">
@@ -76,7 +90,7 @@ const FeaturedReleaseEditor: React.FC = () => {
             scrolling="no"
             frameBorder="no"
             allow="autoplay"
-            src={soundcloudEmbedUrl}
+            src={previewUrl}
             className="aspect-ratio-box-inside"
           ></iframe>
         </div>

@@ -65,7 +65,7 @@ const Admin = () => {
         <div className="hidden md:block w-1/6 bg-gray-800 p-4 text-white">
           <ItemList items={items} onItemSelect={handleItemClick} />
         </div>
-        <div className="flex-1 bg-black">
+        <div className="flex-1 ">
           {selectedItem && (
             <DataDisplay
               selectedItem={selectedItem}
