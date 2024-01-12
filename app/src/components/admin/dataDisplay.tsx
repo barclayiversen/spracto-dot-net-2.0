@@ -15,7 +15,7 @@ const DataDisplay: React.FC<DataDisplayProps> = ({
   isLoading,
 }) => {
   if (isLoading) {
-    return <div>Loading...</div>; // Or any loading spinner
+    return <div>Loading editor...</div>; // Or any loading spinner
   }
 
   switch (selectedItem.kind) {

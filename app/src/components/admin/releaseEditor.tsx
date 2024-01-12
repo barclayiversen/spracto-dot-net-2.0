@@ -88,7 +88,10 @@ const ReleaseEditor: React.FC = () => {
                   </button>
                 </div>
               </div>
-              <div className="track-iframe w-1/2 p-4">
+              <div
+                className="track-iframe w-1/2 p-4"
+                style={{ position: "relative" }}
+              >
                 <iframe
                   title={`Track - ${selectedTrack}`}
                   src={getSoundcloudEmbedUrl(selectedTrack)}
@@ -98,6 +101,10 @@ const ReleaseEditor: React.FC = () => {
                   scrolling="no"
                   allow="autoplay"
                 ></iframe>
+                <div
+                  className="iframe-overlay"
+                  onClick={() => console.log("Track iframe clicked")}
+                ></div>
               </div>
             </div>
           )}
@@ -122,6 +129,7 @@ const ReleaseEditor: React.FC = () => {
               className={`thumbnail p-2 hover:scale-110 ${
                 selectedTrack === track.trackId ? "selected" : ""
               }`}
+              style={{ position: "relative" }}
               onClick={() => handleThumbnailClick(track.trackId)}
             >
               <iframe
@@ -133,14 +141,14 @@ const ReleaseEditor: React.FC = () => {
                 scrolling="no"
                 allow="autoplay"
               ></iframe>
+              <div className="iframe-overlay"></div>
             </div>
           ))}
       </div>
     );
   };
 
-  if (isLoading)
-    return <p className="text-white">Loading featured release...</p>;
+  if (isLoading) return <p className="text-white">Loading releases...</p>;
   if (error) return <p>{error}</p>;
 
   return (

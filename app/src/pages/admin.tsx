@@ -40,8 +40,8 @@ const Admin = () => {
   const items = [
     { name: "Tracks", kind: "track" },
     { name: "Images", kind: "image" },
-    { name: "Featured Release", kind: "featuredRelease" },
-    { name: "Upcoming Release", kind: "upcomingRelease" },
+    // { name: "Featured Release", kind: "featuredRelease" },
+    // { name: "Upcoming Release", kind: "upcomingRelease" },
   ];
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
