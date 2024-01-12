@@ -12,12 +12,18 @@ const ReleaseEditor: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [tracks, setTracks] = useState<TrackData[] | null>(null);
   const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [formValues, setFormValues] = useState({
+    trackId: "",
+    platform: "",
+    dlUrl: "",
+  });
 
   useEffect(() => {
     const fetchReleases = async () => {
       try {
         const response = await axios.get("/api/tracks");
-        console.log("res", response);
+
         setTracks(response.data); // Assuming the response is an array of TrackData
       } catch (err) {
         setError("Failed to load featured releases.");
@@ -37,10 +43,6 @@ const ReleaseEditor: React.FC = () => {
     setSelectedTrack(event.target.value);
   };
 
-  const addTrack = () => {
-    // Implement the logic to add a new track and update the `tracks` state
-  };
-
   const deleteTrack = () => {
     if (selectedTrack) {
       // Implement the logic to delete the selected track and update the `tracks` state
@@ -48,50 +50,45 @@ const ReleaseEditor: React.FC = () => {
     }
   };
 
+  const makeFeaturedRelease = () => {
+    if (selectedTrack) {
+      console.log("Featured Track ID:", selectedTrack);
+      // Add any additional logic for featuring a track here
+    } else {
+      console.log("No track selected for featuring.");
+    }
+  };
+
   const renderTracks = () => {
     if (tracks && tracks.length > 0) {
       return (
         <div className="tracks-container bg-gray-600 text-white min-h-96">
-          <select
-            onChange={handleTrackSelect}
-            value={selectedTrack || ""}
-            className="bg-blue-500 text-white py-2 px-4 mt-2 rounded"
-          >
-            <option value="">Select a Track</option>
-            {tracks.map((track) => (
-              <option key={track.trackId} value={track.trackId}>
-                {track.trackId}
-              </option>
-            ))}
-          </select>
-
           {selectedTrack && (
-            <div className="track  flex bg-white">
-              <div className="track-info bg-green-600 w-1/2 p-4 items-center justify-center ">
-                <h2>Track ID: {selectedTrack}</h2>
-                <p>
+            <div className="track flex bg-white">
+              <div className="track-info flex flex-col items-center justify-center bg-gray-500 w-1/2 p-4">
+                <h1 className="text-3xl text-center">
+                  Track ID: {selectedTrack}
+                </h1>
+                <p className="text-center">
                   Platform:{" "}
                   {tracks.find((t) => t.trackId === selectedTrack)?.platform}
                 </p>
-                <div className="buttons-container flex items-center justify-center">
+                <div className="buttons-container flex items-center justify-center mt-4">
                   <button
-                    onClick={addTrack}
+                    onClick={makeFeaturedRelease}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                   >
-                    Add Track
+                    Make Featured Release
                   </button>
                   <button
                     onClick={deleteTrack}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
                   >
                     Delete Track
                   </button>
                 </div>
               </div>
-              <div
-                className="track-iframe w-1/2 p-4"
-                style={{ position: "relative" }}
-              >
+              <div className="track-iframe w-1/2 p-4 relative">
                 <iframe
                   title={`Track - ${selectedTrack}`}
                   src={getSoundcloudEmbedUrl(selectedTrack)}
@@ -115,6 +112,18 @@ const ReleaseEditor: React.FC = () => {
     }
   };
 
+  const addTrack = () => {
+    setShowForm(true);
+  };
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    console.log(formValues);
+    // Logic to actually add the track
+    setShowForm(false);
+  };
+  const handleFormChange = (e) => {
+    setFormValues({ ...formValues, [e.target.name]: e.target.value });
+  };
   const handleThumbnailClick = (trackId: string) => {
     setSelectedTrack(trackId);
   };
@@ -147,7 +156,37 @@ const ReleaseEditor: React.FC = () => {
       </div>
     );
   };
-
+  const renderForm = () => {
+    if (showForm) {
+      return (
+        <form onSubmit={handleFormSubmit} className="add-track-form">
+          <input
+            type="text"
+            name="trackId"
+            value={formValues.trackId}
+            onChange={handleFormChange}
+            placeholder="Track ID"
+          />
+          <input
+            type="text"
+            name="platform"
+            value={formValues.platform}
+            onChange={handleFormChange}
+            placeholder="Platform"
+          />
+          <input
+            type="text"
+            name="dlUrl"
+            value={formValues.dlUrl}
+            onChange={handleFormChange}
+            placeholder="Download URL"
+          />
+          <button type="submit">Submit</button>
+        </form>
+      );
+    }
+    return null;
+  };
   if (isLoading) return <p className="text-white">Loading releases...</p>;
   if (error) return <p>{error}</p>;
 
@@ -155,6 +194,7 @@ const ReleaseEditor: React.FC = () => {
     <div className="release-editor-container">
       {renderTracks()}
       {renderThumbnailRow()}
+      {renderForm()}
     </div>
   );
 };
