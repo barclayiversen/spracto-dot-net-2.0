@@ -23,7 +23,8 @@ export default async function handler(
       // Cast the fetched data to the Track interface
 
       const formattedTracks: Track[] = tracks.map((track: any) => ({
-        trackId: track.id,
+        id: track.id,
+        trackId: track.trackId,
         dlUrl: track.dlUrl,
         platform: track.platform,
       }));

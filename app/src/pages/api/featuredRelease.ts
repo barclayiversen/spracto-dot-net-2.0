@@ -19,7 +19,7 @@ export default async function handler(
     if (featuredReleases.length > 0) {
       console.log(featuredReleases);
       // Assuming the structure has a 'trackId' property
-      const trackId = featuredReleases[0].id;
+      const trackId = featuredReleases[0].trackId;
       const dlUrl = featuredReleases[0].dlUrl;
       const platform = featuredReleases[0].platform;
 

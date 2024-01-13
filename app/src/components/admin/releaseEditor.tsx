@@ -5,13 +5,14 @@ interface TrackData {
   trackId: string;
   dlUrl?: string;
   platform?: string;
+  id: string;
 }
 
 const ReleaseEditor: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tracks, setTracks] = useState<TrackData[] | null>(null);
-  const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
+  const [selectedTrack, setSelectedTrack] = useState<TrackData | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [formValues, setFormValues] = useState({
     trackId: "",
@@ -22,9 +23,10 @@ const ReleaseEditor: React.FC = () => {
   useEffect(() => {
     const fetchReleases = async () => {
       try {
-        const response = await axios.get("/api/tracks");
+        const response = await axios.get("/api/datastore/track");
 
         setTracks(response.data); // Assuming the response is an array of TrackData
+        console.log("fulltrackdata", response.data);
       } catch (err) {
         setError("Failed to load featured releases.");
       } finally {
@@ -52,11 +54,14 @@ const ReleaseEditor: React.FC = () => {
 
   const makeFeaturedRelease = () => {
     if (selectedTrack) {
-      console.log("Featured Track ID:", selectedTrack);
       // Add any additional logic for featuring a track here
     } else {
       console.log("No track selected for featuring.");
     }
+  };
+  const handleThumbnailClick = (trackId: string) => {
+    const selected = tracks?.find((track) => track.trackId === trackId);
+    setSelectedTrack(selected || null);
   };
 
   const renderTracks = () => {
@@ -72,6 +77,8 @@ const ReleaseEditor: React.FC = () => {
                 <p className="text-center">
                   Platform:{" "}
                   {tracks.find((t) => t.trackId === selectedTrack)?.platform}
+                  <br />
+                  ID: {tracks.find((t) => t.trackId === selectedTrack)?.id}
                 </p>
                 <div className="buttons-container flex items-center justify-center mt-4">
                   <button
@@ -124,9 +131,9 @@ const ReleaseEditor: React.FC = () => {
   const handleFormChange = (e) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
-  const handleThumbnailClick = (trackId: string) => {
-    setSelectedTrack(trackId);
-  };
+  // const handleThumbnailClick = (trackId: string) => {
+  //   setSelectedTrack(trackId);
+  // };
 
   const renderThumbnailRow = () => {
     return (
