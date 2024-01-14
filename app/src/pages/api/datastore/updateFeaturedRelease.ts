@@ -1,38 +1,63 @@
-// pages/api/updateFeaturedRelease.js
-
 import { Datastore } from "@google-cloud/datastore";
 
 export default async (req, res) => {
-  console.log("rea',", req.body);
   try {
-    const projectId = "spracto-net-stage"; // Replace with your Google Cloud project ID
+    const projectId = process.env.DATASTORE_PROJECT_ID;
     const datastore = new Datastore({ projectId });
 
-    // Query for all entities of kind "featuredRelease"
-    const query = datastore.createQuery("featuredRelease");
-    const [entities] = await datastore.runQuery(query);
+    const transaction = datastore.transaction();
+    await transaction.run();
 
-    // Delete existing entities
-    const deletePromises = entities.map((entity) =>
-      datastore.delete(
-        datastore.key(["featuredRelease", entity[datastore.KEY].id])
-      )
-    );
-    await Promise.all(deletePromises);
+    try {
+      // Query for all entities of kind "featuredRelease"
+      const query = datastore.createQuery("featuredRelease");
+      const [entities] = await transaction.runQuery(query);
 
-    // Create a new entity for the "featuredRelease" kind
-    const newFeaturedRelease = {
-      key: datastore.key("featuredRelease"),
-      data: {
-        trackId: "1479265036", // Replace with your new track ID
-        dlUrl: "https://hypeddit.com/spracto/drop-it-like-its-hot", // Replace with your new download URL
-        platform: "soundcloud", // Replace with your new platform
-      },
-    };
+      console.log(`Found ${entities.length} entities to delete.`);
 
-    await datastore.save(newFeaturedRelease);
+      // Check if entities are found
+      if (entities.length === 0) {
+        console.log("No existing entities found to delete.");
+      }
 
-    res.status(200).json({ message: "Featured release updated successfully" });
+      // Delete existing entities by ID
+      for (const entity of entities) {
+        const entityId = entity[datastore.KEY].id;
+        const entityKey = datastore.key([
+          "featuredRelease",
+          parseInt(entityId),
+        ]);
+        console.log(`Deleting entity with ID: ${entityId}`);
+        await transaction.delete(entityKey);
+      }
+
+      // Create a new entity for the "featuredRelease" kind
+      const newFeaturedRelease = {
+        key: datastore.key("featuredRelease"),
+        data: {
+          trackId: req.body.trackId,
+          dlUrl: req.body.dlUrl,
+          platform: req.body.platform,
+        },
+      };
+
+      console.log(
+        `Adding new featured release: ${JSON.stringify(newFeaturedRelease)}`
+      );
+      await transaction.save(newFeaturedRelease);
+
+      // Commit the transaction
+      await transaction.commit();
+
+      res
+        .status(200)
+        .json({ message: "Featured release updated successfully" });
+    } catch (error) {
+      // Rollback the transaction in case of an error
+      await transaction.rollback();
+      console.error("Transaction failed:", error);
+      res.status(500).json({ error: "Failed to update featured release" });
+    }
   } catch (error) {
     console.error("Error updating featured release:", error);
     res.status(500).json({ error: "Failed to update featured release" });

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 interface TrackData {
   trackId: string;
@@ -14,6 +16,7 @@ const ReleaseEditor: React.FC = () => {
   const [tracks, setTracks] = useState<TrackData[] | null>(null);
   const [selectedTrack, setSelectedTrack] = useState<TrackData | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [formValues, setFormValues] = useState({
     trackId: "",
     platform: "",
@@ -37,6 +40,14 @@ const ReleaseEditor: React.FC = () => {
     fetchReleases();
   }, []);
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const getSoundcloudEmbedUrl = (trackId: string) => {
     return `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%235bff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
   };
@@ -52,9 +63,15 @@ const ReleaseEditor: React.FC = () => {
     }
   };
 
-  const makeFeaturedRelease = () => {
+  const makeFeaturedRelease = async () => {
     if (selectedTrack) {
-      // Add any additional logic for featuring a track here
+      console.log("featured", selectedTrack);
+      const response = await axios.post(
+        "/api/datastore/updateFeaturedRelease",
+        selectedTrack
+      );
+
+      // TODO: toast notification for success
     } else {
       console.log("No track selected for featuring.");
     }
@@ -64,6 +81,46 @@ const ReleaseEditor: React.FC = () => {
     setSelectedTrack(selected || null);
   };
 
+  const renderModal = () => {
+    if (isModalOpen) {
+      return (
+        <div className="modal-overlay">
+          <div className="modal-content bg-gray-400 p-5 rounded">
+            <button onClick={closeModal} className="close-button">
+              Close
+            </button>
+            <form onSubmit={handleFormSubmit} className="add-track-form">
+              <input
+                type="text"
+                name="trackId"
+                value={formValues.trackId}
+                onChange={handleFormChange}
+                placeholder="Track ID"
+              />
+              <input
+                type="text"
+                name="platform"
+                value={formValues.platform}
+                onChange={handleFormChange}
+                placeholder="Platform"
+              />
+              <input
+                type="text"
+                name="dlUrl"
+                value={formValues.dlUrl}
+                onChange={handleFormChange}
+                placeholder="Download URL"
+              />
+              <button type="submit" className="submit-button">
+                Submit
+              </button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
   const renderTracks = () => {
     if (tracks && tracks.length > 0) {
       return (
@@ -72,13 +129,12 @@ const ReleaseEditor: React.FC = () => {
             <div className="track flex bg-white">
               <div className="track-info flex flex-col items-center justify-center bg-gray-500 w-1/2 p-4">
                 <h1 className="text-3xl text-center">
-                  Track ID: {selectedTrack}
+                  Track ID: {selectedTrack.trackId}
                 </h1>
                 <p className="text-center">
-                  Platform:{" "}
-                  {tracks.find((t) => t.trackId === selectedTrack)?.platform}
+                  Platform: {tracks.find((t) => t === selectedTrack)?.platform}
                   <br />
-                  ID: {tracks.find((t) => t.trackId === selectedTrack)?.id}
+                  ID: {tracks.find((t) => t === selectedTrack)?.id}
                 </p>
                 <div className="buttons-container flex items-center justify-center mt-4">
                   <button
@@ -98,7 +154,7 @@ const ReleaseEditor: React.FC = () => {
               <div className="track-iframe w-1/2 p-4 relative">
                 <iframe
                   title={`Track - ${selectedTrack}`}
-                  src={getSoundcloudEmbedUrl(selectedTrack)}
+                  src={getSoundcloudEmbedUrl(selectedTrack.trackId)}
                   width="100%"
                   height="600"
                   frameBorder="0"
@@ -137,32 +193,42 @@ const ReleaseEditor: React.FC = () => {
 
   const renderThumbnailRow = () => {
     return (
-      <div className="thumbnail-row bg-black p-4 flex justify-center">
-        {tracks &&
-          tracks.map((track) => (
-            <div
-              key={track.trackId}
-              className={`thumbnail p-2 hover:scale-110 ${
-                selectedTrack === track.trackId ? "selected" : ""
-              }`}
-              style={{ position: "relative" }}
-              onClick={() => handleThumbnailClick(track.trackId)}
-            >
-              <iframe
-                title={`Thumbnail - ${track.trackId}`}
-                src={getSoundcloudEmbedUrl(track.trackId)}
-                width="100%"
-                height="100"
-                frameBorder="0"
-                scrolling="no"
-                allow="autoplay"
-              ></iframe>
-              <div className="iframe-overlay"></div>
-            </div>
-          ))}
-      </div>
+      <>
+        <div className="thumbnail-row p-4 bg-green-200 flex justify-center">
+          {tracks &&
+            tracks.map((track) => (
+              <div
+                key={track.trackId}
+                className={`thumbnail mx-4 hover:scale-110 ${
+                  selectedTrack?.trackId === track.trackId ? "selected" : ""
+                }`}
+                style={{ position: "relative", height: "100px", width: "100%" }}
+                onClick={() => handleThumbnailClick(track.trackId)}
+              >
+                <iframe
+                  title={`Thumbnail - ${track.trackId}`}
+                  src={getSoundcloudEmbedUrl(track.trackId)}
+                  width="100%"
+                  height="100"
+                  frameBorder="0"
+                  scrolling="no"
+                  allow="autoplay"
+                ></iframe>
+                <div className="iframe-overlay"></div>
+              </div>
+            ))}
+          <div
+            className="thumbnail mr-2 ml-2 add-icon bg-gray-400 flex justify-center items-center hover:scale-110"
+            style={{ height: "100px", width: "100%" }}
+            onClick={openModal}
+          >
+            <FontAwesomeIcon icon={faPlus} size="2x" />
+          </div>
+        </div>
+      </>
     );
   };
+
   const renderForm = () => {
     if (showForm) {
       return (
@@ -201,6 +267,7 @@ const ReleaseEditor: React.FC = () => {
     <div className="release-editor-container">
       {renderTracks()}
       {renderThumbnailRow()}
+      {renderModal()}
       {renderForm()}
     </div>
   );
