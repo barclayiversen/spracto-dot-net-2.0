@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-
+import Modal from "@/components/admin/modal";
+import ThumbnailRow from "@/components/admin/thumbnailRow";
 interface TrackData {
   trackId: string;
   dlUrl?: string;
@@ -78,47 +79,6 @@ const ReleaseEditor: React.FC = () => {
     setSelectedTrack(selected || null);
   };
 
-  const renderModal = () => {
-    if (isModalOpen) {
-      return (
-        <div className="modal-overlay">
-          <div className="modal-content bg-gray-400 p-5 rounded">
-            <button onClick={closeModal} className="close-button">
-              Close
-            </button>
-            <form onSubmit={handleFormSubmit} className="add-track-form">
-              <input
-                type="text"
-                name="trackId"
-                value={formValues.trackId}
-                onChange={handleFormChange}
-                placeholder="Track ID"
-              />
-              <input
-                type="text"
-                name="platform"
-                value={formValues.platform}
-                onChange={handleFormChange}
-                placeholder="Platform"
-              />
-              <input
-                type="text"
-                name="dlUrl"
-                value={formValues.dlUrl}
-                onChange={handleFormChange}
-                placeholder="Download URL"
-              />
-              <button type="submit" className="submit-button">
-                Submit
-              </button>
-            </form>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
-
   const renderTracks = () => {
     if (tracks && tracks.length > 0) {
       return (
@@ -175,55 +135,19 @@ const ReleaseEditor: React.FC = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    console.log(formValues);
-    console.log("Log track info here", formValues);
+
     const response = await axios.post("/api/datastore/tracks/add", formValues);
     console.log("asdf", response);
     if (response.status === 200) {
-      /**close modal and success response.  */
+      closeModal();
+    } else {
+      /**show error */
     }
     setShowForm(false);
   };
+
   const handleFormChange = (e) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
-  };
-
-  const renderThumbnailRow = () => {
-    return (
-      <>
-        <div className="thumbnail-row p-4 bg-green-200 flex justify-center">
-          {tracks &&
-            tracks.map((track) => (
-              <div
-                key={track.trackId}
-                className={`thumbnail mx-4 hover:scale-110 ${
-                  selectedTrack?.trackId === track.trackId ? "selected" : ""
-                }`}
-                style={{ position: "relative", height: "100px", width: "100%" }}
-                onClick={() => handleThumbnailClick(track.trackId)}
-              >
-                <iframe
-                  title={`Thumbnail - ${track.trackId}`}
-                  src={getSoundcloudEmbedUrl(track.trackId)}
-                  width="100%"
-                  height="100"
-                  frameBorder="0"
-                  scrolling="no"
-                  allow="autoplay"
-                ></iframe>
-                <div className="iframe-overlay"></div>
-              </div>
-            ))}
-          <div
-            className="thumbnail mr-2 ml-2 add-icon bg-gray-400 flex justify-center items-center hover:scale-110"
-            style={{ height: "100px", width: "100%" }}
-            onClick={openModal}
-          >
-            <FontAwesomeIcon icon={faPlus} size="2x" />
-          </div>
-        </div>
-      </>
-    );
   };
 
   if (isLoading) return <p className="text-white">Loading releases...</p>;
@@ -232,8 +156,20 @@ const ReleaseEditor: React.FC = () => {
   return (
     <div className="release-editor-container">
       {renderTracks()}
-      {renderThumbnailRow()}
-      {renderModal()}
+
+      <ThumbnailRow
+        tracks={tracks}
+        openModal={openModal}
+        handleThumbnailClick={handleThumbnailClick}
+        getSoundcloudEmbedUrl={getSoundcloudEmbedUrl}
+      />
+      <Modal
+        isModalOpen={isModalOpen}
+        closeModal={closeModal}
+        handleFormSubmit={handleFormSubmit}
+        formValues={formValues}
+        handleFormChange={handleFormChange}
+      />
     </div>
   );
 };
