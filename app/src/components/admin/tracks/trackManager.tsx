@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import ThumbnailRow from "@/components/admin/thumbnailRow";
-import RenderTracks from "@/components/admin/renderTracks";
-import AddTrackModal from "@/components/admin/addTrackModal";
-import { start } from "repl";
+
+import ThumbnailRow from "@/components/admin/tracks/thumbnailRow";
+import RenderTracks from "@/components/admin/tracks/renderTracks";
+import AddTrackModal from "@/components/admin/tracks/addTrackModal";
+
 interface TrackData {
   trackId: string;
   dlUrl?: string;
@@ -13,13 +12,14 @@ interface TrackData {
   id: string;
 }
 
-const ReleaseEditor: React.FC = () => {
-  const [trackAdded, setTrackAdded] = useState(false);
-  const [trackDeleted, setTrackDeleted] = useState(false);
+const ReleaseEditor: React.FC<TrackData> = () => {
+  // const [trackAdded, setTrackAdded] = useState(false);
+  // const [trackDeleted, setTrackDeleted] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [tracks, setTracks] = useState<TrackData[] | null>(null);
+  // const [error, setError] = useState<string | null>(null);
+  // const [tracks, setTracks] = useState<TrackData[] | null>(null);
   const [selectedTrack, setSelectedTrack] = useState<TrackData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formValues, setFormValues] = useState({
@@ -40,26 +40,26 @@ const ReleaseEditor: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchReleases = async () => {
-      try {
-        const response = await axios.get("/api/datastore/track");
-        setTracks(response.data);
-      } catch (err) {
-        setError("Failed to load tracks.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchReleases = async () => {
+  //     try {
+  //       const response = await axios.get("/api/datastore/track");
+  //       setTracks(response.data);
+  //     } catch (err) {
+  //       setError("Failed to load tracks.");
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    fetchReleases();
+  //   fetchReleases();
 
-    // Reset the trackAdded and trackDeleted flags
-    if (trackAdded || trackDeleted) {
-      setTrackAdded(false);
-      setTrackDeleted(false);
-    }
-  }, [trackAdded, trackDeleted]);
+  //   // Reset the trackAdded and trackDeleted flags
+  //   if (trackAdded || trackDeleted) {
+  //     setTrackAdded(false);
+  //     setTrackDeleted(false);
+  //   }
+  // }, [trackAdded, trackDeleted]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -75,14 +75,21 @@ const ReleaseEditor: React.FC = () => {
 
   const deleteTrack = async () => {
     if (selectedTrack) {
-      const response = await axios.delete("/api/datastore/tracks/delete", {
-        data: { trackData: selectedTrack },
-      });
+      setIsDeleting(true); // Start loading
+      try {
+        const response = await axios.delete("/api/datastore/tracks/delete", {
+          data: { trackData: selectedTrack },
+        });
 
-      if (response.status === 204) {
-        startModalCloseAnimation();
-        setTrackDeleted(true); // Set the flag to true when a track is deleted
-        setSelectedTrack(null);
+        if (response.status === 204) {
+          setTrackDeleted(true); // Set the flag to true when a track is deleted
+          setSelectedTrack(null);
+        }
+      } catch (error) {
+        console.error("Error deleting track", error);
+        // Handle error
+      } finally {
+        setIsDeleting(false); // End loading
       }
     }
   };
@@ -127,20 +134,21 @@ const ReleaseEditor: React.FC = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="release-editor-container animate-fade-in-.5">
+    <div className="animate-fade-in-.5">
       <RenderTracks
+        isDeleting={isDeleting}
         tracks={tracks}
         selectedTrack={selectedTrack}
         makeFeaturedRelease={makeFeaturedRelease}
         deleteTrack={deleteTrack}
         getSoundcloudEmbedUrl={getSoundcloudEmbedUrl}
       />
-      <ThumbnailRow
+      {/* <ThumbnailRow
         tracks={tracks}
         openModal={openModal}
         handleThumbnailClick={handleThumbnailClick}
         getSoundcloudEmbedUrl={getSoundcloudEmbedUrl}
-      />
+      /> */}
       <AddTrackModal
         isModalOpen={isModalOpen}
         closeModal={closeModal}

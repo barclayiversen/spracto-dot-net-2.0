@@ -9,7 +9,7 @@ const ThumbnailRow = ({
   handleThumbnailClick,
   getSoundcloudEmbedUrl,
 }) => (
-  <div className="thumbnail-row p-4 bg-green-200 flex justify-center">
+  <div className="thumbnail-row w-full mx-auto float-right p-4 bg-gray-500 flex justify-center">
     {tracks &&
       tracks.map((track) => (
         <div

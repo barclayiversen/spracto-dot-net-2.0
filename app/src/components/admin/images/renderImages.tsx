@@ -4,7 +4,7 @@ const Thumbnails = ({ data, onSelectImage }) => {
   return (
     <div
       className="flex overflow-x-auto  mx-auto bg-blue-200"
-      style={{ height: "10vh" }}
+      // style={{ height: "10vh" }}
     >
       {data.map((item: { url: string; id: string }, index: number) => (
         <img
@@ -53,7 +53,12 @@ const ImageUploader = ({ onFileChange }) => {
   );
 };
 
-const ImageManager = ({ selectedImage, setSelectedImage, data }) => {
+const RenderImages = ({
+  handleFileChange,
+  selectedImage,
+  setSelectedImage,
+  data,
+}) => {
   const [loading, setLoading] = useState(false);
 
   const handleRemove = async (data) => {
@@ -112,38 +117,37 @@ const ImageManager = ({ selectedImage, setSelectedImage, data }) => {
 
   return (
     <>
-      <div className="flex-grow min-h-96 overflow-hidden bg-green-400">
-        {selectedImage && (
-          <>
-            <img
-              src={selectedImage.url}
-              alt="Selected"
-              className="max-w-full max-h-full object-contain w-full h-full"
-              style={{ maxHeight: "calc(80vh - 100px)" }}
+      {selectedImage && (
+        <>
+          <img
+            src={selectedImage.url}
+            alt="Selected"
+            className="mx-auto object-contain"
+            // style={{ maxHeight: "calc(80vh - 100px)" }}
+          />
+          <div className="flex justify-center bg-black">
+            {/* Wrap the components and center them */}
+            <ImageRemover
+              onRemove={() => handleRemove(selectedImage)}
+              item={selectedImage}
             />
-            <div className="flex justify-center">
-              {/* Wrap the components and center them */}
-              <ImageRemover
-                onRemove={() => handleRemove(selectedImage)}
-                item={selectedImage}
+            {loading ? (
+              <div className="w-24 h-24 mr-2 flex justify-center items-center bg-blue-100 cursor-not-allowed object-cover">
+                <span className="text-4xl text-gray-600">Uploading...</span>
+              </div>
+            ) : (
+              <ImageUploader
+                onFileChange={handleUpload}
+                disabled={loading} // Disable the file input while uploading
               />
-              {loading ? (
-                <div className="w-24 h-24 mr-2 flex justify-center items-center bg-gray-200 cursor-not-allowed object-cover">
-                  <span className="text-4xl text-gray-600">Uploading...</span>
-                </div>
-              ) : (
-                <ImageUploader
-                  onFileChange={handleUpload}
-                  disabled={loading} // Disable the file input while uploading
-                />
-              )}
-            </div>
-          </>
-        )}
-      </div>
+            )}
+          </div>
+        </>
+      )}
+
       <Thumbnails data={data} onSelectImage={setSelectedImage} />
     </>
   );
 };
 
-export default ImageManager;
+export default RenderImages;

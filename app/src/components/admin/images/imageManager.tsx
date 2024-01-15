@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import ImageManager from "@/components/admin/imageManager";
+import RenderImages from "@/components/admin/images/renderImages";
 
-const RenderImages = ({ data }) => {
+const ImageManager = ({ data }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleFileChange = async (event) => {
@@ -26,7 +26,7 @@ const RenderImages = ({ data }) => {
 
   return (
     <div className="flex flex-col bg-red-400">
-      <ImageManager
+      <RenderImages
         selectedImage={selectedImage}
         setSelectedImage={setSelectedImage}
         handleFileChange={handleFileChange}
@@ -36,4 +36,4 @@ const RenderImages = ({ data }) => {
   );
 };
 
-export default RenderImages;
+export default ImageManager;

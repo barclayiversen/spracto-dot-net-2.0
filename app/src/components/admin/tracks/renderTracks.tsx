@@ -1,7 +1,9 @@
 import React from "react";
+import Loading from "@/components/admin/loading";
 
 const RenderTracks = ({
   tracks,
+  isDeleting,
   selectedTrack,
   makeFeaturedRelease,
   deleteTrack,
@@ -9,10 +11,14 @@ const RenderTracks = ({
 }) => {
   if (tracks && tracks.length > 0) {
     return (
-      <div className="tracks-container bg-gray-600 text-white min-h-96">
+      <div
+        className="tracks-container bg-blue-200 text-white w-11/12 float-right"
+        id="tracks-container"
+      >
         {selectedTrack && (
-          <div className="track flex bg-white">
-            <div className="track-info flex flex-col items-center justify-center bg-gray-500 w-1/2 p-4">
+          <div className="track flex bg-green-400 ">
+            <div className="track-info flex flex-col items-center justify-center bg-red-200 w-1/2 p-4 relative">
+              {isDeleting && <Loading />} {/* Loading indicator */}
               <h1 className="text-3xl text-center">
                 Track ID: {selectedTrack.trackId}
               </h1>
@@ -31,6 +37,7 @@ const RenderTracks = ({
                 <button
                   onClick={deleteTrack}
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+                  disabled={isDeleting} // Disable the button while deleting
                 >
                   Delete Track
                 </button>
