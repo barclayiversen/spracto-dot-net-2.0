@@ -52,10 +52,6 @@ const ReleaseEditor: React.FC = () => {
     return `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%235bff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
   };
 
-  const handleTrackSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedTrack(event.target.value);
-  };
-
   const deleteTrack = () => {
     if (selectedTrack) {
       // Implement the logic to delete the selected track and update the `tracks` state
@@ -76,6 +72,7 @@ const ReleaseEditor: React.FC = () => {
       console.log("No track selected for featuring.");
     }
   };
+
   const handleThumbnailClick = (trackId: string) => {
     const selected = tracks?.find((track) => track.trackId === trackId);
     setSelectedTrack(selected || null);
@@ -121,6 +118,7 @@ const ReleaseEditor: React.FC = () => {
     }
     return null;
   };
+
   const renderTracks = () => {
     if (tracks && tracks.length > 0) {
       return (
@@ -175,21 +173,20 @@ const ReleaseEditor: React.FC = () => {
     }
   };
 
-  const addTrack = () => {
-    setShowForm(true);
-  };
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     console.log(formValues);
-    // Logic to actually add the track
+    console.log("Log track info here", formValues);
+    const response = await axios.post("/api/datastore/tracks/add", formValues);
+    console.log("asdf", response);
+    if (response.status === 200) {
+      /**close modal and success response.  */
+    }
     setShowForm(false);
   };
   const handleFormChange = (e) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
-  // const handleThumbnailClick = (trackId: string) => {
-  //   setSelectedTrack(trackId);
-  // };
 
   const renderThumbnailRow = () => {
     return (
@@ -229,37 +226,6 @@ const ReleaseEditor: React.FC = () => {
     );
   };
 
-  const renderForm = () => {
-    if (showForm) {
-      return (
-        <form onSubmit={handleFormSubmit} className="add-track-form">
-          <input
-            type="text"
-            name="trackId"
-            value={formValues.trackId}
-            onChange={handleFormChange}
-            placeholder="Track ID"
-          />
-          <input
-            type="text"
-            name="platform"
-            value={formValues.platform}
-            onChange={handleFormChange}
-            placeholder="Platform"
-          />
-          <input
-            type="text"
-            name="dlUrl"
-            value={formValues.dlUrl}
-            onChange={handleFormChange}
-            placeholder="Download URL"
-          />
-          <button type="submit">Submit</button>
-        </form>
-      );
-    }
-    return null;
-  };
   if (isLoading) return <p className="text-white">Loading releases...</p>;
   if (error) return <p>{error}</p>;
 
@@ -268,7 +234,6 @@ const ReleaseEditor: React.FC = () => {
       {renderTracks()}
       {renderThumbnailRow()}
       {renderModal()}
-      {renderForm()}
     </div>
   );
 };
