@@ -5,6 +5,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import ThumbnailRow from "@/components/admin/thumbnailRow";
 import RenderTracks from "@/components/admin/renderTracks";
 import AddTrackModal from "@/components/admin/addTrackModal";
+import { start } from "repl";
 interface TrackData {
   trackId: string;
   dlUrl?: string;
@@ -13,11 +14,13 @@ interface TrackData {
 }
 
 const ReleaseEditor: React.FC = () => {
+  const [trackAdded, setTrackAdded] = useState(false);
+  const [trackDeleted, setTrackDeleted] = useState(false);
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tracks, setTracks] = useState<TrackData[] | null>(null);
   const [selectedTrack, setSelectedTrack] = useState<TrackData | null>(null);
-  const [showForm, setShowForm] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formValues, setFormValues] = useState({
     trackId: "",
@@ -41,17 +44,22 @@ const ReleaseEditor: React.FC = () => {
     const fetchReleases = async () => {
       try {
         const response = await axios.get("/api/datastore/track");
-
-        setTracks(response.data); // Assuming the response is an array of TrackData
+        setTracks(response.data);
       } catch (err) {
-        setError("Failed to load featured releases.");
+        setError("Failed to load tracks.");
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchReleases();
-  }, []);
+
+    // Reset the trackAdded and trackDeleted flags
+    if (trackAdded || trackDeleted) {
+      setTrackAdded(false);
+      setTrackDeleted(false);
+    }
+  }, [trackAdded, trackDeleted]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -65,10 +73,17 @@ const ReleaseEditor: React.FC = () => {
     return `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%235bff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
   };
 
-  const deleteTrack = () => {
+  const deleteTrack = async () => {
     if (selectedTrack) {
-      // Implement the logic to delete the selected track and update the `tracks` state
-      setSelectedTrack(null);
+      const response = await axios.delete("/api/datastore/tracks/delete", {
+        data: { trackData: selectedTrack },
+      });
+
+      if (response.status === 204) {
+        startModalCloseAnimation();
+        setTrackDeleted(true); // Set the flag to true when a track is deleted
+        setSelectedTrack(null);
+      }
     }
   };
 
@@ -93,15 +108,15 @@ const ReleaseEditor: React.FC = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
     const response = await axios.post("/api/datastore/tracks/add", formValues);
-    console.log("asdf", response);
+    console.log("add track response", response);
     if (response.status === 200) {
       startModalCloseAnimation();
+      setTrackAdded(true); // Set the flag to true when a track is added
     } else {
-      /**show error */
+      // Show error
+      console.log("ERROR NUMBER 420");
     }
-    setShowForm(false);
   };
 
   const handleFormChange = (e) => {

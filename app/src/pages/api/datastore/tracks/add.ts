@@ -25,7 +25,7 @@ export default async function handler(
         {
           name: "trackId",
           value: trackData.trackId,
-          excludeFromIndexes: true,
+          excludeFromIndexes: false,
         },
         {
           name: "platform",
