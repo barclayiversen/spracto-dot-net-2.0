@@ -18,11 +18,17 @@ const config: Config = {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
+        fadeOut: {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
+        },
       },
       animation: {
         "fade-in-2": "fadeIn 2s ease-in-out",
         "fade-in-.2": "fadeIn .2s ease-in-out",
         "fade-in-.5": "fadeIn .5s ease-in-out",
+        "fade-out-.5": "fadeOut .5s ease-in-out",
+        "fade-out-.2": "fadeOut .2s ease-in-out",
       },
     },
   },

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import Modal from "@/components/admin/modal";
 import ThumbnailRow from "@/components/admin/thumbnailRow";
 import RenderTracks from "@/components/admin/renderTracks";
+import AddTrackModal from "@/components/admin/addTrackModal";
 interface TrackData {
   trackId: string;
   dlUrl?: string;
@@ -25,13 +25,24 @@ const ReleaseEditor: React.FC = () => {
     dlUrl: "",
   });
 
+  const [modalAnimationState, setModalAnimationState] = useState("exited");
+  const startModalCloseAnimation = () => {
+    setModalAnimationState("leaving"); // Start the fade-out animation
+  };
+
+  const handleModalAnimationEnd = () => {
+    if (modalAnimationState === "leaving") {
+      setModalAnimationState("exited");
+      closeModal(); // Actually close the modal
+    }
+  };
+
   useEffect(() => {
     const fetchReleases = async () => {
       try {
         const response = await axios.get("/api/datastore/track");
 
         setTracks(response.data); // Assuming the response is an array of TrackData
-        console.log("fulltrackdata", response.data);
       } catch (err) {
         setError("Failed to load featured releases.");
       } finally {
@@ -86,7 +97,7 @@ const ReleaseEditor: React.FC = () => {
     const response = await axios.post("/api/datastore/tracks/add", formValues);
     console.log("asdf", response);
     if (response.status === 200) {
-      closeModal();
+      startModalCloseAnimation();
     } else {
       /**show error */
     }
@@ -115,12 +126,15 @@ const ReleaseEditor: React.FC = () => {
         handleThumbnailClick={handleThumbnailClick}
         getSoundcloudEmbedUrl={getSoundcloudEmbedUrl}
       />
-      <Modal
+      <AddTrackModal
         isModalOpen={isModalOpen}
         closeModal={closeModal}
         handleFormSubmit={handleFormSubmit}
         formValues={formValues}
         handleFormChange={handleFormChange}
+        startModalCloseAnimation={startModalCloseAnimation}
+        handleModalAnimationEnd={handleModalAnimationEnd}
+        modalAnimationState={modalAnimationState}
       />
     </div>
   );
