@@ -33,7 +33,7 @@ const ThumbnailRow = ({
         </div>
       ))}
     <div
-      className="thumbnail mr-2 ml-2 add-icon bg-gray-400 flex justify-center items-center hover:scale-110"
+      className="animate-fade-in-.5 thumbnail mr-2 ml-2 add-icon bg-gray-400 flex justify-center items-center hover:scale-110"
       style={{ height: "100px", width: "100%" }}
       onClick={openModal}
     >
