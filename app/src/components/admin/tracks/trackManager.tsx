@@ -12,7 +12,12 @@ interface TrackData {
   id: string;
 }
 
-const ReleaseEditor: React.FC<TrackData> = () => {
+interface ReleaseEditorProps {
+  selectedTrack: TrackData;
+}
+
+const ReleaseEditor: React.FC<ReleaseEditorProps> = ({ selectedTrack }) => {
+  console.log("final", selectedTrack);
   // const [trackAdded, setTrackAdded] = useState(false);
   // const [trackDeleted, setTrackDeleted] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -20,7 +25,7 @@ const ReleaseEditor: React.FC<TrackData> = () => {
   const [isLoading, setIsLoading] = useState(true);
   // const [error, setError] = useState<string | null>(null);
   // const [tracks, setTracks] = useState<TrackData[] | null>(null);
-  const [selectedTrack, setSelectedTrack] = useState<TrackData | null>(null);
+  // const [selectedTrack, setSelectedTrack] = useState<TrackData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formValues, setFormValues] = useState({
     trackId: "",
@@ -39,27 +44,6 @@ const ReleaseEditor: React.FC<TrackData> = () => {
       closeModal(); // Actually close the modal
     }
   };
-
-  // useEffect(() => {
-  //   const fetchReleases = async () => {
-  //     try {
-  //       const response = await axios.get("/api/datastore/track");
-  //       setTracks(response.data);
-  //     } catch (err) {
-  //       setError("Failed to load tracks.");
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchReleases();
-
-  //   // Reset the trackAdded and trackDeleted flags
-  //   if (trackAdded || trackDeleted) {
-  //     setTrackAdded(false);
-  //     setTrackDeleted(false);
-  //   }
-  // }, [trackAdded, trackDeleted]);
 
   const openModal = () => {
     setIsModalOpen(true);

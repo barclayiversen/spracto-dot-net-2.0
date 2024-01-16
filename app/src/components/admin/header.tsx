@@ -7,7 +7,6 @@ const HeaderComponent = ({ signOut, toggleModal }) => {
   const [headerHeight, setHeaderHeight] = useState(0);
 
   useEffect(() => {
-    console.log("headerRef", headerRef.current.clientHeight);
     if (headerRef.current) {
       setHeaderHeight(headerRef.current.clientHeight);
     }
@@ -16,7 +15,7 @@ const HeaderComponent = ({ signOut, toggleModal }) => {
   const tracksContainerStyle = {
     height: `calc(100vh - ${headerHeight}px)`,
   };
-  console.log("trackscontainestyle", tracksContainerStyle);
+
   return (
     <div ref={headerRef} className="bg-black p-4 text-white" id="header">
       <div className="flex justify-between items-center">

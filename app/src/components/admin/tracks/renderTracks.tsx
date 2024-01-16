@@ -9,6 +9,7 @@ const RenderTracks = ({
   deleteTrack,
   getSoundcloudEmbedUrl,
 }) => {
+  console.log("RENDER", selectedTrack);
   if (tracks && tracks.length > 0) {
     return (
       <div
