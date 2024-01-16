@@ -7,6 +7,7 @@ import axios from "axios";
 import ItemList from "@/components/admin/itemList";
 import Header from "@/components/admin/header";
 import ContentEditor from "@/components/admin/contentEditor";
+import AddTrackModal from "@/components/admin/addContentModal";
 // Define an interface for items
 interface Item {
   name: string;
@@ -15,7 +16,7 @@ interface Item {
 
 const Admin = () => {
   const [selectedContent, setSelectedContent] = useState(null);
-  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,10 +58,6 @@ const Admin = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
   useEffect(() => {
     const fetchReleases = async () => {
       try {
@@ -100,7 +97,9 @@ const Admin = () => {
         data={data}
         kind={selectedItem?.kind}
         onSelect={handleContentSelect}
+        toggleModal={toggleModal}
       />
+      <AddTrackModal isModalOpen={isModalOpen} toggleModal={toggleModal} />
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-const ThumbnailRow = ({ data, kind, onSelect }) => {
+const ThumbnailRow = ({ data, kind, onSelect, toggleModal }) => {
   // Log the data and kind props whenever they change
   useEffect(() => {
     console.log("Data: ", data);
@@ -53,12 +53,15 @@ const ThumbnailRow = ({ data, kind, onSelect }) => {
           Select a category to view thumbnails
         </div>
       )}
-      <div
-        className="add-icon bg-gray-400 flex justify-center items-center hover:scale-110"
-        style={{ height: "100px", width: "100px" }}
-      >
-        <FontAwesomeIcon icon={faPlus} size="2x" />
-      </div>
+      {kind && (
+        <div
+          className="add-icon bg-gray-400 flex justify-center items-center hover:scale-110"
+          style={{ height: "100px", width: "100px" }}
+          onClick={toggleModal}
+        >
+          <FontAwesomeIcon icon={faPlus} size="2x" />
+        </div>
+      )}
     </div>
   );
 };
