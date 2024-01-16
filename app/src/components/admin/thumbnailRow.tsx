@@ -24,14 +24,14 @@ const ThumbnailRow = ({ data, kind, onSelect }) => {
               <div
                 className="relative hover:scale-110"
                 key={item.trackId}
-                onClick={onSelect}
+                onClick={() => onSelect(item)} // Corrected here
               >
                 <iframe
                   src={getSoundcloudEmbedUrl(item.trackId)}
-                  className="thumbnail mx-4 "
+                  className="thumbnail mx-4"
                   style={{ height: "100px", width: "100px" }}
                 ></iframe>
-                <div className="absolute top-0 left-0 w-full h-full bg-transparent z-10 "></div>
+                <div className="absolute top-0 left-0 w-full h-full bg-transparent z-10"></div>
               </div>
             );
           } else if (kind === "image") {

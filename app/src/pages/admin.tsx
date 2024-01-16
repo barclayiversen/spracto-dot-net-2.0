@@ -81,20 +81,13 @@ const Admin = () => {
     <div className="max-h-screen min-h-screen bg-gray-600 flex flex-col">
       {/* Header */}
       <Header signOut={signOut} toggleModal={toggleModal} />
-
       {/* Main Content Area */}
       <div className="flex flex-grow overflow-hidden">
         {/* ItemList */}
-        <div className="w-1/12 bg-blue-400 overflow-auto p-4">
-          <ItemList items={items} onItemSelect={handleItemClick} />
-        </div>
-
+        <ItemList items={items} onItemSelect={handleItemClick} />
         {/* ContentEditor */}
-        <div className="w-11/12 overflow-auto">
-          <ContentEditor content={selectedContent} kind={selectedItem?.kind} />
-        </div>
+        <ContentEditor content={selectedContent} kind={selectedItem?.kind} />
       </div>
-
       {/* ThumbnailRow */}
       <ThumbnailRow
         data={data}
