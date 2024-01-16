@@ -8,6 +8,7 @@ import ItemList from "@/components/admin/itemList";
 import Header from "@/components/admin/header";
 import ContentEditor from "@/components/admin/contentEditor";
 import AddTrackModal from "@/components/admin/addContentModal";
+
 // Define an interface for items
 interface Item {
   name: string;
@@ -40,7 +41,6 @@ const Admin = () => {
       const response = await fetch(`/api/datastore/${item.kind}`);
       const result = await response.json();
       // setSelectedContent(result); // Set the selected content
-      console.log("CHECKING IF I NEED THIS", result);
       setData(result); // Assuming this is still needed
     } catch (error) {
       // Handle error appropriately
@@ -99,7 +99,11 @@ const Admin = () => {
         onSelect={handleContentSelect}
         toggleModal={toggleModal}
       />
-      <AddTrackModal isModalOpen={isModalOpen} toggleModal={toggleModal} />
+      <AddTrackModal
+        isModalOpen={isModalOpen}
+        toggleModal={toggleModal}
+        kind={selectedItem?.kind}
+      />
     </div>
   );
 };
