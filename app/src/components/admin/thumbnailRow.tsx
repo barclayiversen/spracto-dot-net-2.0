@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-const ThumbnailRow = ({ data, kind }) => {
+const ThumbnailRow = ({ data, kind, onSelect }) => {
   // Log the data and kind props whenever they change
   useEffect(() => {
     console.log("Data: ", data);
@@ -18,21 +18,27 @@ const ThumbnailRow = ({ data, kind }) => {
       {/* Your existing rendering logic */}
       {kind &&
         data &&
-        data.map((item, index) => {
+        data.map((item) => {
           if (kind === "track") {
             return (
-              <iframe
-                key={index}
-                src={getSoundcloudEmbedUrl(item.trackId)}
-                className="thumbnail mx-4 hover:scale-110"
-                style={{ height: "100px", width: "100px" }}
-              ></iframe>
+              <div
+                className="relative hover:scale-110"
+                key={item.trackId}
+                onClick={onSelect}
+              >
+                <iframe
+                  src={getSoundcloudEmbedUrl(item.trackId)}
+                  className="thumbnail mx-4 "
+                  style={{ height: "100px", width: "100px" }}
+                ></iframe>
+                <div className="absolute top-0 left-0 w-full h-full bg-transparent z-10 "></div>
+              </div>
             );
           } else if (kind === "image") {
             return (
               <div className="bg-blue-800 h-100 w-100">
                 <img
-                  key={index}
+                  key={item.id}
                   src={item.url} // Replace with your actual image src
                   alt={item.altText} // Replace with your actual image alt text
                   className="thumbnail mx-4 hover:scale-110"

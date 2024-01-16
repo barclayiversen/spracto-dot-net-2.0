@@ -6,6 +6,7 @@ import ThumbnailRow from "@/components/admin/thumbnailRow";
 import axios from "axios";
 import ItemList from "@/components/admin/itemList";
 import Header from "@/components/admin/header";
+import ContentEditor from "@/components/admin/contentEditor";
 // Define an interface for items
 interface Item {
   name: string;
@@ -13,7 +14,8 @@ interface Item {
 }
 
 const Admin = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedContent, setSelectedContent] = useState(null);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,19 +25,23 @@ const Admin = () => {
   const [error, setError] = useState<string | null>(null);
   const [tracks, setTracks] = useState<TrackData[] | null>(null);
 
+  const handleContentSelect = (content) => {
+    setSelectedContent(content);
+  };
+
   const handleItemClick = async (item: Item) => {
     setSelectedItem(item);
-    setIsLoading(true); // Set loading to true before fetching data
+    setIsLoading(true);
 
     try {
       const response = await fetch(`/api/datastore/${item.kind}`);
       const result = await response.json();
-
-      setData(result);
+      // setSelectedContent(result); // Set the selected content
+      setData(result); // Assuming this is still needed
     } catch (error) {
       // Handle error appropriately
     } finally {
-      setIsLoading(false); // Set loading to false after fetching data
+      setIsLoading(false);
     }
   };
 
@@ -73,9 +79,28 @@ const Admin = () => {
 
   return (
     <div className="max-h-screen bg-gray-600 flex flex-col">
+      {/* Header */}
       <Header signOut={signOut} toggleModal={toggleModal} />
-      <ItemList items={items} onItemSelect={handleItemClick} />
-      <ThumbnailRow data={data} kind={selectedItem?.kind} />
+
+      {/* Main Content Area */}
+      <div className="flex flex-grow overflow-hidden">
+        {/* ItemList */}
+        <div className="w-1/12 bg-blue-800 overflow-auto">
+          <ItemList items={items} onItemSelect={handleItemClick} />
+        </div>
+
+        {/* ContentEditor */}
+        <div className="w-11/12 overflow-auto">
+          <ContentEditor content={selectedContent} kind={selectedItem?.kind} />
+        </div>
+      </div>
+
+      {/* ThumbnailRow */}
+      <ThumbnailRow
+        data={data}
+        kind={selectedItem?.kind}
+        onSelect={handleContentSelect}
+      />
     </div>
   );
 };
