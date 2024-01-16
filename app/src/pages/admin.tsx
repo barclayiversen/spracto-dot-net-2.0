@@ -78,14 +78,14 @@ const Admin = () => {
   }, [trackAdded, trackDeleted]);
 
   return (
-    <div className="max-h-screen bg-gray-600 flex flex-col">
+    <div className="max-h-screen min-h-screen bg-gray-600 flex flex-col">
       {/* Header */}
       <Header signOut={signOut} toggleModal={toggleModal} />
 
       {/* Main Content Area */}
       <div className="flex flex-grow overflow-hidden">
         {/* ItemList */}
-        <div className="w-1/12 bg-blue-800 overflow-auto">
+        <div className="w-1/12 bg-blue-400 overflow-auto p-4">
           <ItemList items={items} onItemSelect={handleItemClick} />
         </div>
 
