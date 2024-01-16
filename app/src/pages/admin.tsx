@@ -26,7 +26,9 @@ const Admin = () => {
   const [tracks, setTracks] = useState<TrackData[] | null>(null);
 
   const handleContentSelect = (content) => {
+    setIsLoading(true);
     setSelectedContent(content);
+    setIsLoading(false);
   };
 
   const handleItemClick = async (item: Item) => {
@@ -37,6 +39,7 @@ const Admin = () => {
       const response = await fetch(`/api/datastore/${item.kind}`);
       const result = await response.json();
       // setSelectedContent(result); // Set the selected content
+      console.log("CHECKING IF I NEED THIS", result);
       setData(result); // Assuming this is still needed
     } catch (error) {
       // Handle error appropriately
@@ -86,7 +89,11 @@ const Admin = () => {
         {/* ItemList */}
         <ItemList items={items} onItemSelect={handleItemClick} />
         {/* ContentEditor */}
-        <ContentEditor content={selectedContent} kind={selectedItem?.kind} />
+        <ContentEditor
+          content={selectedContent}
+          kind={selectedItem?.kind}
+          isLoading={isLoading}
+        />
       </div>
       {/* ThumbnailRow */}
       <ThumbnailRow

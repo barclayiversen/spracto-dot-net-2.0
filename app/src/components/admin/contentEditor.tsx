@@ -1,10 +1,12 @@
 // components/contentEditor.tsx
 
 import React, { useState } from "react";
+import Loading from "@/components/admin/loading";
 
-const ContentEditor = ({ content, kind }) => {
+const ContentEditor = ({ content, kind, isLoading }) => {
   //state variables
   const [editedContent, setEditedContent] = useState(content);
+
   //component scoped functions
   const handleChange = (e) => {
     setEditedContent({ ...editedContent, [e.target.name]: e.target.value });
@@ -29,10 +31,14 @@ const ContentEditor = ({ content, kind }) => {
   if (!content) {
     return <div>Select an item to edit.</div>;
   }
+
+  if (isLoading) {
+    return <Loading />;
+  }
   //Markup
   return (
-    <div className="w-11/12 overflow-auto">
-      <div className="content-editor p-4 bg-gray-200">
+    <div className="w-11/12 overflow-auto bg-black">
+      <div className="content-editor p-4 bg-gray-500 animate-fade-in-.5">
         {kind === "track" && (
           <div className="flex">
             <div className="flex-1 p-4">
