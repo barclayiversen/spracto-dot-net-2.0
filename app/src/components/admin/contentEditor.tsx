@@ -2,26 +2,49 @@
 
 import React, { useState } from "react";
 import Loading from "@/components/admin/loading";
-
-const ContentEditor = ({ content, kind, isLoading }) => {
+import axios from "axios";
+const ContentEditor = ({ content, kind, isLoading, setIsLoading }) => {
   //state variables
   const [editedContent, setEditedContent] = useState(content);
 
-  //component scoped functions
-  const handleChange = (e) => {
-    setEditedContent({ ...editedContent, [e.target.name]: e.target.value });
-  };
+  // //component scoped functions
+  // const handleChange = (e) => {
+  //   setEditedContent({ ...editedContent, [e.target.name]: e.target.value });
+  // };
 
   const handleSubmit = async () => {
     // Logic to save the edited content
   };
 
-  const handleMakeFeatured = () => {
+  const handleMakeFeatured = async (trackData) => {
     // Logic to make the track a featured release
+    const response = await axios.post(
+      "/api/datastore/updateFeaturedRelease",
+      trackData
+    );
+    console.log("update", response);
   };
 
-  const handleDelete = () => {
-    // Logic to delete the track
+  const handleDelete = async (kind, contentId) => {
+    if (kind === "track") {
+      setIsLoading(true); // Start loading
+      try {
+        const response = await axios.delete(`/api/datastore/${kind}/delete`, {
+          data: { kind: kind, id: contentId },
+        });
+
+        if (response.status === 200) {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error deleting track", error);
+        // Handle error
+        setIsLoading(false);
+      } finally {
+        setIsLoading(false);
+        // End loading
+      }
+    }
   };
 
   const getSoundcloudEmbedUrl = (trackId: string) => {
@@ -50,13 +73,13 @@ const ContentEditor = ({ content, kind, isLoading }) => {
               <p className="text-xl text-black">ID: {content.id}</p>
 
               <button
-                onClick={handleMakeFeatured}
+                onClick={() => handleMakeFeatured(content)}
                 className="mr-2 px-4 py-2 bg-green-500 rounded hover:bg-green-700 transition duration-300"
               >
                 Make Featured Release
               </button>
               <button
-                onClick={handleDelete}
+                onClick={() => handleDelete(kind, content.id)}
                 className="mr-2 px-4 py-2 bg-blue-500 rounded hover:bg-blue-700 transition duration-300"
               >
                 Delete

@@ -90,6 +90,7 @@ const Admin = () => {
           content={selectedContent}
           kind={selectedItem?.kind}
           isLoading={isLoading}
+          setIsLoading={setIsLoading}
         />
       </div>
       {/* ThumbnailRow */}
