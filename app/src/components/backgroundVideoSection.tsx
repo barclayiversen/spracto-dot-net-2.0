@@ -10,6 +10,7 @@ const BackgroundVideoSection: React.FC = () => {
   return (
     <div className="relative w-full h-screen animate-fade-in-.5">
       <video
+        playsInline
         src="/bgvideo.mp4"
         autoPlay
         preload="auto"
