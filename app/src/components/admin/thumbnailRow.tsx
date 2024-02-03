@@ -45,6 +45,7 @@ const ThumbnailRow = ({ data, kind, onSelect, toggleModal }) => {
                   alt={item.altText} // Replace with your actual image alt text
                   className="thumbnail mx-4 hover:scale-110"
                   style={{ height: "100px", width: "100px" }}
+                  onClick={() => onSelect(item)}
                 />
               </div>
             );
