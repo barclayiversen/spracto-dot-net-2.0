@@ -39,10 +39,12 @@ const BackgroundVideoSection: React.FC = () => {
         offset={offsetValue}
         className="cursor-pointer"
       >
-        <FontAwesomeIcon
-          icon={faChevronDown}
-          className="text-white absolute left-1/2 bottom-20 animate-bounce"
-        />
+        <div className="bg-black">
+          <FontAwesomeIcon
+            icon={faChevronDown}
+            className="text-white absolute left-1/2 bottom-20 animate-bounce"
+          />
+        </div>
       </Link>
     </div>
   );
