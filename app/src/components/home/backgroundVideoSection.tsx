@@ -43,6 +43,7 @@ const BackgroundVideoSection: React.FC = () => {
           <FontAwesomeIcon
             icon={faChevronDown}
             className="text-white absolute left-1/2 bottom-20 animate-bounce"
+            size="3x"
           />
         </div>
       </Link>
