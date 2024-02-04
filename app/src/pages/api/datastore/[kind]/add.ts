@@ -4,7 +4,6 @@ const datastore = new Datastore({
   projectId: process.env.DATASTORE_PROJECT_ID,
 });
 export default async function handler(req, res) {
-  console.log("request body ", req.body);
   const datastore = new Datastore({
     projectId: process.env.DATASTORE_PROJECT_ID,
   });

@@ -12,9 +12,9 @@ const ContentEditor = ({ content, kind, isLoading, setIsLoading }) => {
   //   setEditedContent({ ...editedContent, [e.target.name]: e.target.value });
   // };
 
-  const handleSubmit = async () => {
-    // Logic to save the edited content
-  };
+  // const handleSubmit = async () => {
+  //   // Logic to save the edited content
+  // };
 
   const handleMakeFeatured = async (trackData) => {
     // Logic to make the track a featured release
@@ -25,19 +25,41 @@ const ContentEditor = ({ content, kind, isLoading, setIsLoading }) => {
     console.log("update", response);
   };
 
-  const handleDelete = async (kind, contentId) => {
+  const handleDelete = async (kind, content) => {
+    console.log("kkkkkk", kind);
+    console.log("kkxccccc", content);
+
     if (kind === "track") {
       setIsLoading(true); // Start loading
       try {
         const response = await axios.delete(`/api/datastore/${kind}/delete`, {
-          data: { kind: kind, id: contentId },
+          data: { kind: kind, id: content.id },
         });
-
         if (response.status === 200) {
           setIsLoading(false);
         }
       } catch (error) {
         console.error("Error deleting track", error);
+        // Handle error
+        setIsLoading(false);
+      } finally {
+        setIsLoading(false);
+
+        // End loading
+      }
+    }
+
+    if (kind === "image") {
+      setIsLoading(true); // Start loading
+      try {
+        const response = await axios.delete(`/api/datastore/${kind}/delete`, {
+          data: { kind: kind, id: content.id, url: content.url },
+        });
+        if (response.status === 200) {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error deleting image", error);
         // Handle error
         setIsLoading(false);
       } finally {
@@ -101,15 +123,15 @@ const ContentEditor = ({ content, kind, isLoading, setIsLoading }) => {
 
         {kind === "image" && (
           <div>
-            <img src={content.url} />
+            <img className="mx-auto" src={content.url} />
           </div>
         )}
 
         <button
-          onClick={handleSubmit}
-          className="px-4 py-2 bg-red-500 rounded hover:bg-red-700 transition duration-300"
+          onClick={() => handleDelete(kind, content)}
+          className="px-4 py-2 mt-10 bg-red-500 rounded hover:bg-red-700 transition duration-300"
         >
-          Save Changes
+          Delete item
         </button>
       </div>
     </div>

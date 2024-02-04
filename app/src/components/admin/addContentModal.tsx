@@ -1,3 +1,4 @@
+//components/admin/addContentModal.tsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -6,6 +7,7 @@ const AddContentModal = ({ isModalOpen, toggleModal, kind }) => {
   const [trackId, setTrackId] = useState("");
   const [platform, setPlatform] = useState("");
   const [url, setUrl] = useState("");
+  const [file, setFile] = useState(null); // New state for the file
 
   useEffect(() => {
     setContentType(kind); // Update the content type when 'kind' changes
@@ -13,23 +15,43 @@ const AddContentModal = ({ isModalOpen, toggleModal, kind }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement the logic to add the content
 
-    console.log("###3", trackId);
-    console.log("###4", platform);
-    console.log("###5", url);
+    if (contentType.toLowerCase() === "image" && file) {
+      const formData = new FormData();
+      formData.append("file", file); // Append the file to form data
+      formData.append("kind", contentType.toLowerCase());
+      // Add other fields if necessary
+      try {
+        const response = await axios.post(
+          // `/api/datastore/${contentType}/add`,
+          `/api/datastore/upload`,
 
-    const data = {
-      kind: contentType.toLowerCase(),
-      trackId,
-      platform,
-      dlUrl: url,
-    };
-    const response = await axios.post(
-      `/api/datastore/${contentType}/add`,
-      data
-    );
-    console.log(response.data);
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log(response.data);
+      } catch (error) {
+        console.error("Failed to upload image:", error);
+      }
+    } else {
+      // Handle other content types as before
+      const data = {
+        kind: contentType.toLowerCase(),
+        trackId,
+        platform,
+        dlUrl: url,
+      };
+      const response = await axios.post(
+        `/api/datastore/${contentType}/add`,
+        data
+      );
+      console.log(response.data);
+    }
+
     toggleModal(); // Close the modal after submission
   };
 
@@ -37,7 +59,7 @@ const AddContentModal = ({ isModalOpen, toggleModal, kind }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center animate-fade-in-.5">
-      <div className="bg-white p-5 rounded-lg shadow-lg relative ">
+      <div className="bg-white p-5 rounded-lg shadow-lg relative">
         {/* Close Button */}
         <div className="mb-4">
           <button
@@ -81,8 +103,9 @@ const AddContentModal = ({ isModalOpen, toggleModal, kind }) => {
               <option value="image">Image</option>
             </select>
           </div>
-          {contentType === "track" && (
+          {contentType === "track" ? (
             <div>
+              {/* Track inputs */}
               <input
                 type="text"
                 value={trackId}
@@ -102,6 +125,18 @@ const AddContentModal = ({ isModalOpen, toggleModal, kind }) => {
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="URL"
+                className="mt-1 block w-full rounded-md border-gray-300"
+              />
+            </div>
+          ) : (
+            // Image upload input
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Upload Image
+              </label>
+              <input
+                type="file"
+                onChange={(e) => setFile(e.target.files[0])}
                 className="mt-1 block w-full rounded-md border-gray-300"
               />
             </div>
