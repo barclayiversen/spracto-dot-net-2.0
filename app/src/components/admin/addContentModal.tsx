@@ -18,18 +18,29 @@ const AddContentModal = ({
   const [url, setUrl] = useState("");
   const [file, setFile] = useState(null); // New state for the file
   const [errorMessage, setErrorMessage] = useState("");
-  const [errors, setErrors] = useState({ trackId: "", platform: "", url: "" });
+  const [errors, setErrors] = useState({
+    trackId: "",
+    platform: "",
+    url: "",
+    file: "",
+  });
 
   useEffect(() => {
     setContentType(kind); // Update the content type when 'kind' changes
   }, [kind]);
 
   const validateForm = () => {
-    let newErrors = { trackId: "", platform: "", url: "" };
+    let newErrors = { trackId: "", platform: "", url: "", file: "" };
     let isValid = true;
 
     if (kind === "image") {
-      return isValid;
+      if (file) {
+        return isValid;
+      } else {
+        console.log("AAAAAAA");
+
+        newErrors.file = "Please select a file to upload.";
+      }
     }
 
     if (!trackId) {
@@ -57,7 +68,7 @@ const AddContentModal = ({
 
     setErrors({ trackId: "", platform: "", url: "" });
 
-    if (contentType.toLowerCase() === "track" && !validateForm()) {
+    if (!validateForm()) {
       setIsLoading(false);
       return; // Stop form submission if validation fails
     }
@@ -204,6 +215,7 @@ const AddContentModal = ({
                 onChange={(e) => setFile(e.target.files[0])}
                 className="mt-2 block w-full  border-gray-200"
               />
+              <p className="text-red-500 text-xs italic">{errors.file}</p>
             </div>
           )}
           <button
