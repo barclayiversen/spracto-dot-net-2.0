@@ -17,14 +17,51 @@ const AddContentModal = ({
   const [platform, setPlatform] = useState("");
   const [url, setUrl] = useState("");
   const [file, setFile] = useState(null); // New state for the file
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errors, setErrors] = useState({ trackId: "", platform: "", url: "" });
 
   useEffect(() => {
     setContentType(kind); // Update the content type when 'kind' changes
   }, [kind]);
 
+  const validateForm = () => {
+    let newErrors = { trackId: "", platform: "", url: "" };
+    let isValid = true;
+
+    if (kind === "image") {
+      return isValid;
+    }
+
+    if (!trackId) {
+      newErrors.trackId = "Please enter a track ID.";
+      isValid = false;
+    }
+    if (!platform) {
+      newErrors.platform = "Please enter a platform.";
+      isValid = false;
+    }
+    if (!url) {
+      newErrors.url = "Please enter a URL.";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setIsLoading(true);
+    console.log("contentType", contentType);
+
+    setErrors({ trackId: "", platform: "", url: "" });
+
+    if (contentType.toLowerCase() === "track" && !validateForm()) {
+      setIsLoading(false);
+      return; // Stop form submission if validation fails
+    }
+
     if (contentType.toLowerCase() === "image" && file) {
       const formData = new FormData();
       formData.append("file", file); // Append the file to form data
@@ -47,7 +84,7 @@ const AddContentModal = ({
       } catch (error) {
         console.error("Failed to upload image:", error);
       }
-    } else {
+    } else if (contentType.toLowerCase() === "track") {
       // Handle other content types as before
       const data = {
         kind: contentType.toLowerCase(),
@@ -118,9 +155,11 @@ const AddContentModal = ({
               <option value="image">Image</option>
             </select>
           </div>
+          {errorMessage && (
+            <div className="font-bold text-red-400">{errorMessage}</div>
+          )}
           {contentType === "track" ? (
             <div>
-              {/* Track inputs */}
               <input
                 type="text"
                 value={trackId}
@@ -128,6 +167,10 @@ const AddContentModal = ({
                 placeholder="ID"
                 className="mt-1 block w-full rounded-md border-gray-300"
               />
+              {errors.trackId && (
+                <p className="text-red-500 text-xs italic">{errors.trackId}</p>
+              )}
+
               <input
                 type="text"
                 value={platform}
@@ -135,13 +178,20 @@ const AddContentModal = ({
                 placeholder="Platform"
                 className="mt-1 block w-full rounded-md border-gray-300"
               />
+              {errors.platform && (
+                <p className="text-red-500 text-xs italic">{errors.platform}</p>
+              )}
+
               <input
                 type="text"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="URL"
+                placeholder="Download URL"
                 className="mt-1 block w-full rounded-md border-gray-300"
               />
+              {errors.url && (
+                <p className="text-red-500 text-xs italic">{errors.url}</p>
+              )}
             </div>
           ) : (
             // Image upload input
