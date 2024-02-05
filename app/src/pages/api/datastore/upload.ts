@@ -4,7 +4,6 @@ import { Storage } from "@google-cloud/storage";
 import { Datastore } from "@google-cloud/datastore";
 import { IncomingForm } from "formidable";
 
-// Replace with your GCS and Datastore project names
 const gcsProjectId = process.env.GCS_PROJECT_ID;
 const datastoreProjectId = process.env.DATASTORE_PROJECT_ID;
 
@@ -13,11 +12,11 @@ const datastoreOptions = datastoreProjectId
   ? { projectId: datastoreProjectId }
   : {};
 
-const storage = new Storage(storageOptions); // Initialize GCS client with project ID
-const datastore = new Datastore(datastoreOptions); // Initialize Datastore client with project ID
+const storage = new Storage(storageOptions);
+const datastore = new Datastore(datastoreOptions);
 
-const bucketName = process.env.BUCKET_NAME; // Replace with your GCS bucket name
-const kind = "image"; // The kind for the Datastore
+const bucketName = process.env.BUCKET_NAME;
+const kind = "image";
 
 export const config = {
   api: {
@@ -33,7 +32,7 @@ const processForm = async (req: NextApiRequest): Promise<formidable.Files> => {
         console.error("Error parsing the form:", err);
         reject(err);
       } else {
-        resolve(files); // Resolve with the files
+        resolve(files);
       }
     });
   });
@@ -46,30 +45,40 @@ const uploadHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    // Process the file upload
     const files = await processForm(req);
-    const file = files.file[0]; // Accessing the first element of the array
+    const file = files.file[0];
 
     if (!file) {
       throw new Error("No file uploaded");
     }
 
     const destinationPath = `PhotoCarousel/${file.originalFilename}`;
+
+    // Check if object exists in the bucket
+    const [exists] = await storage
+      .bucket(bucketName)
+      .file(destinationPath)
+      .exists();
+
+    if (exists) {
+      // If the file exists, respond with an error or handle accordingly
+      res.status(409).json({ error: "File already exists" });
+      return;
+    }
+
+    // If object doesn't exist, proceed with the upload
     const [fileUploadResponse] = await storage
       .bucket(bucketName)
       .upload(file.filepath, {
         destination: destinationPath,
       });
 
-    // Get public URL for the file
     const publicUrl = `https://storage.googleapis.com/${bucketName}/${destinationPath}`;
 
     // Store URL in Datastore
     const entity = {
       key: datastore.key([kind]),
-      data: {
-        url: publicUrl,
-      },
+      data: { url: publicUrl },
     };
     await datastore.save(entity);
 

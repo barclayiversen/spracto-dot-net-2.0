@@ -2,7 +2,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const AddContentModal = ({ isModalOpen, toggleModal, kind }) => {
+const AddContentModal = ({
+  isModalOpen,
+  toggleModal,
+  kind,
+  triggerDataRefresh,
+}) => {
   const [contentType, setContentType] = useState(kind); // Default to 'track'
   const [trackId, setTrackId] = useState("");
   const [platform, setPlatform] = useState("");
@@ -33,7 +38,8 @@ const AddContentModal = ({ isModalOpen, toggleModal, kind }) => {
             },
           }
         );
-        console.log(response.data);
+        console.log("added IMAGE", response.data);
+        triggerDataRefresh();
       } catch (error) {
         console.error("Failed to upload image:", error);
       }
@@ -137,13 +143,13 @@ const AddContentModal = ({ isModalOpen, toggleModal, kind }) => {
               <input
                 type="file"
                 onChange={(e) => setFile(e.target.files[0])}
-                className="mt-1 block w-full rounded-md border-gray-300"
+                className="mt-2 block w-full  border-gray-200"
               />
             </div>
           )}
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+            className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-700"
           >
             Add Content
           </button>

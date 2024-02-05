@@ -3,7 +3,14 @@
 import React, { useState } from "react";
 import Loading from "@/components/admin/loading";
 import axios from "axios";
-const ContentEditor = ({ content, kind, isLoading, setIsLoading }) => {
+const ContentEditor = ({
+  content,
+  kind,
+  isLoading,
+  setIsLoading,
+  // setImageDeleted,
+  triggerDataRefresh,
+}) => {
   //state variables
   const [editedContent, setEditedContent] = useState(content);
 
@@ -14,6 +21,10 @@ const ContentEditor = ({ content, kind, isLoading, setIsLoading }) => {
 
   // const handleSubmit = async () => {
   //   // Logic to save the edited content
+  // };
+
+  // const handleImageDeletion = () => {
+  //   setImageDeleted(true);
   // };
 
   const handleMakeFeatured = async (trackData) => {
@@ -43,6 +54,7 @@ const ContentEditor = ({ content, kind, isLoading, setIsLoading }) => {
         // Handle error
         setIsLoading(false);
       } finally {
+        // handleImageDeletion();
         setIsLoading(false);
 
         // End loading
@@ -63,6 +75,7 @@ const ContentEditor = ({ content, kind, isLoading, setIsLoading }) => {
         // Handle error
         setIsLoading(false);
       } finally {
+        triggerDataRefresh();
         setIsLoading(false);
         // End loading
       }

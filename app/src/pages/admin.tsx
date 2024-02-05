@@ -7,7 +7,7 @@ import axios from "axios";
 import ItemList from "@/components/admin/itemList";
 import Header from "@/components/admin/header";
 import ContentEditor from "@/components/admin/contentEditor";
-import AddTrackModal from "@/components/admin/addContentModal";
+import AddContentModal from "@/components/admin/addContentModal";
 
 // Define an interface for items
 interface Item {
@@ -16,6 +16,8 @@ interface Item {
 }
 
 const Admin = () => {
+  const [refreshData, setRefreshData] = useState(false);
+
   const [selectedContent, setSelectedContent] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
@@ -31,6 +33,11 @@ const Admin = () => {
     setIsLoading(true);
     setSelectedContent(content);
     setIsLoading(false);
+  };
+
+  const triggerDataRefresh = () => {
+    setSelectedContent(null);
+    setRefreshData((prev) => !prev); // Toggle to trigger useEffect
   };
 
   const handleItemClick = async (item: Item) => {
@@ -77,6 +84,22 @@ const Admin = () => {
     }
   }, [trackAdded, trackDeleted]);
 
+  useEffect(() => {
+    // Function to fetch data
+    const fetchData = async () => {
+      // Fetch data logic here
+      // For example, fetching image list for ThumbnailRow
+      try {
+        const response = await axios.get(`/api/datastore/image`);
+        setData(response.data); // Assuming setData updates the state used by ThumbnailRow
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+
+    fetchData();
+  }, [refreshData]); // Depend on refreshData to re-fetch whenever it changes
+
   return (
     <div className="max-h-screen min-h-screen bg-gray-600 flex flex-col">
       {/* Header */}
@@ -91,6 +114,7 @@ const Admin = () => {
           kind={selectedItem?.kind}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
+          triggerDataRefresh={triggerDataRefresh}
         />
       </div>
       {/* ThumbnailRow */}
@@ -99,8 +123,10 @@ const Admin = () => {
         kind={selectedItem?.kind}
         onSelect={handleContentSelect}
         toggleModal={toggleModal}
+        triggerDataRefresh={triggerDataRefresh}
       />
-      <AddTrackModal
+      <AddContentModal
+        triggerDataRefresh={triggerDataRefresh}
         isModalOpen={isModalOpen}
         toggleModal={toggleModal}
         kind={selectedItem?.kind}
