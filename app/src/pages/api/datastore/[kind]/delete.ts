@@ -30,19 +30,20 @@ export default async function handler(req, res) {
     console.log("Deleting entity from Datastore", key);
     await datastore.delete(key);
 
-    // Parse the URL to extract bucket name and object name
-    const urlPattern = /^https:\/\/storage\.googleapis\.com\/([^\/]+)\/(.+)$/;
-    const matches = url.match(urlPattern);
-    if (!matches) {
-      throw new Error("Invalid URL format");
+    // Delete the object on GCS if it's an image
+    if (kind === "image") {
+      // Parse the URL to extract bucket name and object name
+      const urlPattern = /^https:\/\/storage\.googleapis\.com\/([^\/]+)\/(.+)$/;
+      const matches = url.match(urlPattern);
+      if (!matches) {
+        throw new Error("Invalid URL format");
+      }
+      const bucketName = matches[1];
+      const objectName = matches[2];
+      // Delete the object from GCS
+      console.log(`Deleting object ${objectName} from bucket ${bucketName}`);
+      await storage.bucket(bucketName).file(objectName).delete();
     }
-
-    const bucketName = matches[1];
-    const objectName = matches[2];
-
-    // Delete the object from GCS
-    console.log(`Deleting object ${objectName} from bucket ${bucketName}`);
-    await storage.bucket(bucketName).file(objectName).delete();
 
     res.status(200).json({ message: `${kind} deleted successfully` });
   } catch (error) {

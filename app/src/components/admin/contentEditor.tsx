@@ -8,24 +8,10 @@ const ContentEditor = ({
   kind,
   isLoading,
   setIsLoading,
-  // setImageDeleted,
   triggerDataRefresh,
 }) => {
   //state variables
   const [editedContent, setEditedContent] = useState(content);
-
-  // //component scoped functions
-  // const handleChange = (e) => {
-  //   setEditedContent({ ...editedContent, [e.target.name]: e.target.value });
-  // };
-
-  // const handleSubmit = async () => {
-  //   // Logic to save the edited content
-  // };
-
-  // const handleImageDeletion = () => {
-  //   setImageDeleted(true);
-  // };
 
   const handleMakeFeatured = async (trackData) => {
     // Logic to make the track a featured release

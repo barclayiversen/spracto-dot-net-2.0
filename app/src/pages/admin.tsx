@@ -90,7 +90,6 @@ const Admin = () => {
 
   useEffect(() => {
     if (!refreshDetails.kind) return; // Early exit if kind is not set
-    console.log("refreshing data", refreshDetails.kind);
     const fetchData = async () => {
       try {
         const response = await axios.get(
