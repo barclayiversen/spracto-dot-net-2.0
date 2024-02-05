@@ -83,7 +83,7 @@ const ContentEditor = ({
   return (
     <div className="w-11/12 overflow-auto bg-black">
       <div className="content-editor p-4 bg-gray-500 animate-fade-in-.5">
-        {kind === "track" && (
+        {kind === "track" && content.id !== null && (
           <div className="flex">
             <div className="flex-1 p-4">
               {/* Left Column: Track Information and Buttons */}
@@ -100,8 +100,8 @@ const ContentEditor = ({
                 Make Featured Release
               </button>
               <button
-                onClick={() => handleDelete(kind, content.id)}
-                className="mr-2 px-4 py-2 bg-blue-500 rounded hover:bg-blue-700 transition duration-300"
+                onClick={() => handleDelete(kind, content)}
+                className="mr-2 px-4 py-2 bg-red-500 rounded hover:bg-red-700 transition duration-300"
               >
                 Delete
               </button>
@@ -120,18 +120,17 @@ const ContentEditor = ({
           </div>
         )}
 
-        {kind === "image" && (
+        {kind === "image" && content.url !== null && (
           <div>
             <img className="mx-auto" src={content.url} />
+            <button
+              onClick={() => handleDelete(kind, content)}
+              className="px-4 py-2 mt-10 bg-red-500 rounded hover:bg-red-700 transition duration-300"
+            >
+              Delete item
+            </button>
           </div>
         )}
-
-        <button
-          onClick={() => handleDelete(kind, content)}
-          className="px-4 py-2 mt-10 bg-red-500 rounded hover:bg-red-700 transition duration-300"
-        >
-          Delete item
-        </button>
       </div>
     </div>
   );
