@@ -75,7 +75,7 @@ const ContentEditor = ({
         // Handle error
         setIsLoading(false);
       } finally {
-        triggerDataRefresh();
+        triggerDataRefresh(kind);
         setIsLoading(false);
         // End loading
       }

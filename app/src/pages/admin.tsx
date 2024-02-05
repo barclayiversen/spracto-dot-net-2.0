@@ -16,7 +16,11 @@ interface Item {
 }
 
 const Admin = () => {
-  const [refreshData, setRefreshData] = useState(false);
+  //State
+  const [refreshDetails, setRefreshDetails] = useState({
+    refresh: false,
+    kind: null,
+  });
 
   const [selectedContent, setSelectedContent] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,16 +32,25 @@ const Admin = () => {
   const [trackDeleted, setTrackDeleted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tracks, setTracks] = useState<TrackData[] | null>(null);
-
+  //Static object
+  const items = [
+    { name: "Tracks", kind: "track" },
+    { name: "Images", kind: "image" },
+  ];
+  //Functions
   const handleContentSelect = (content) => {
     setIsLoading(true);
     setSelectedContent(content);
     setIsLoading(false);
   };
 
-  const triggerDataRefresh = () => {
+  const triggerDataRefresh = (kind) => {
     setSelectedContent(null);
-    setRefreshData((prev) => !prev); // Toggle to trigger useEffect
+    setRefreshDetails({ refresh: !refreshDetails.refresh, kind: kind }); // Toggle to trigger useEffect
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
   };
 
   const handleItemClick = async (item: Item) => {
@@ -47,24 +60,15 @@ const Admin = () => {
     try {
       const response = await fetch(`/api/datastore/${item.kind}`);
       const result = await response.json();
-      // setSelectedContent(result); // Set the selected content
-      setData(result); // Assuming this is still needed
+      setData(result);
     } catch (error) {
-      // Handle error appropriately
+      console.log("ERROR FETCHING ITEMS", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const items = [
-    { name: "Tracks", kind: "track" },
-    { name: "Images", kind: "image" },
-  ];
-
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-
+  //hooks
   useEffect(() => {
     const fetchReleases = async () => {
       try {
@@ -77,7 +81,7 @@ const Admin = () => {
       }
     };
     fetchReleases();
-    // Reset the trackAdded and trackDeleted flags
+
     if (trackAdded || trackDeleted) {
       setTrackAdded(false);
       setTrackDeleted(false);
@@ -85,20 +89,21 @@ const Admin = () => {
   }, [trackAdded, trackDeleted]);
 
   useEffect(() => {
-    // Function to fetch data
+    if (!refreshDetails.kind) return; // Early exit if kind is not set
+    console.log("refreshing data", refreshDetails.kind);
     const fetchData = async () => {
-      // Fetch data logic here
-      // For example, fetching image list for ThumbnailRow
       try {
-        const response = await axios.get(`/api/datastore/image`);
-        setData(response.data); // Assuming setData updates the state used by ThumbnailRow
+        const response = await axios.get(
+          `/api/datastore/${refreshDetails.kind}`
+        );
+        setData(response.data);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
     };
 
     fetchData();
-  }, [refreshData]); // Depend on refreshData to re-fetch whenever it changes
+  }, [refreshDetails]); // Depend on refreshDetails to re-fetch whenever it changes
 
   return (
     <div className="max-h-screen min-h-screen bg-gray-600 flex flex-col">

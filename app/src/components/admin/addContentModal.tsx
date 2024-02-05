@@ -39,7 +39,7 @@ const AddContentModal = ({
           }
         );
         console.log("added IMAGE", response.data);
-        triggerDataRefresh();
+        triggerDataRefresh("image");
       } catch (error) {
         console.error("Failed to upload image:", error);
       }
@@ -55,6 +55,8 @@ const AddContentModal = ({
         `/api/datastore/${contentType}/add`,
         data
       );
+      triggerDataRefresh("track");
+
       console.log(response.data);
     }
 

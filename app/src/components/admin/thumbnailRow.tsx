@@ -4,7 +4,13 @@ import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-const ThumbnailRow = ({ data, kind, onSelect, toggleModal }) => {
+const ThumbnailRow = ({
+  data,
+  kind,
+  onSelect,
+  toggleModal,
+  triggerDataRefresh,
+}) => {
   // Log the data and kind props whenever they change
   useEffect(() => {
     console.log("Data: ", data);
