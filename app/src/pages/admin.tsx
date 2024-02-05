@@ -55,6 +55,7 @@ const Admin = () => {
 
   const handleItemClick = async (item: Item) => {
     setSelectedItem(item);
+    setSelectedContent(null);
     setIsLoading(true);
 
     try {
@@ -134,6 +135,8 @@ const Admin = () => {
         isModalOpen={isModalOpen}
         toggleModal={toggleModal}
         kind={selectedItem?.kind}
+        setIsLoading={setIsLoading}
+        isLoading={isLoading}
       />
     </div>
   );
