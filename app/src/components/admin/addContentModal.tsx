@@ -7,6 +7,8 @@ const AddContentModal = ({
   toggleModal,
   kind,
   triggerDataRefresh,
+  setIsLoading,
+  isLoading,
 }) => {
   const [contentType, setContentType] = useState(kind); // Default to 'track'
   const [trackId, setTrackId] = useState("");
@@ -20,7 +22,7 @@ const AddContentModal = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setIsLoading(true);
     if (contentType.toLowerCase() === "image" && file) {
       const formData = new FormData();
       formData.append("file", file); // Append the file to form data
@@ -59,12 +61,15 @@ const AddContentModal = ({
 
       console.log(response.data);
     }
-
+    setIsLoading(false);
     toggleModal(); // Close the modal after submission
   };
 
   if (!isModalOpen) return null; // Don't render the modal if it's not open
 
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center animate-fade-in-.5">
       <div className="bg-white p-5 rounded-lg shadow-lg relative">
