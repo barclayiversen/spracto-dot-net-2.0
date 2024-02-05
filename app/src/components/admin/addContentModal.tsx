@@ -1,5 +1,7 @@
 //components/admin/addContentModal.tsx
 import React, { useState, useEffect } from "react";
+import Loading from "@/components/admin/loading";
+
 import axios from "axios";
 
 const AddContentModal = ({
