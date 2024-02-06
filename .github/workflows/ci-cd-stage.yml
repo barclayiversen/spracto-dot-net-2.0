@@ -33,4 +33,10 @@ jobs:
             --region ${{ secrets.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated \
-            --set-env-vars=DATASTORE_PROJECT_ID=${{ secrets.DATASTORE_PROJECT_ID }},GOOGLE_CLIENT_ID=${{ secrets.STAGE_GOOGLE_CLIENT_ID }},GOOGLE_CLIENT_SECRET=${{ secrets.STAGE_GOOGLE_CLIENT_SECRET }},BUCKET_NAME=${{ secrets.STAGE_BUCKET_NAME }},GCS_PROJECT_ID=${{ secrets.STAGE_GCS_PROJECT_ID }},NEXT_PUBLIC_BASE_URL=${{ secrets.STAGE_NEXT_PUBLIC_BASE_URL }},NEXTAUTH_SECRET=${{ secrets.STAGE_NEXTAUTH_SECRET }}
+            --set-env-vars=DATASTORE_PROJECT_ID=${{ secrets.DATASTORE_PROJECT_ID }}\
+            --set-env-vars=GOOGLE_CLIENT_ID=${{ secrets.STAGE_GOOGLE_CLIENT_ID }}\
+            --set-env-vars=GOOGLE_CLIENT_SECRET=${{ secrets.STAGE_GOOGLE_CLIENT_SECRET }}\
+            --set-env-vars=BUCKET_NAME=${{ secrets.STAGE_BUCKET_NAME }}\
+            --set-env-vars=GCS_PROJECT_ID=${{ secrets.STAGE_GCS_PROJECT_ID }}\
+            --set-env-vars=NEXT_PUBLIC_BASE_URL=${{ secrets.STAGE_NEXT_PUBLIC_BASE_URL }}\
+            --set-env-vars=NEXTAUTH_SECRET=${{ secrets.STAGE_NEXTAUTH_SECRET }}\
