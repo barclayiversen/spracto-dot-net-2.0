@@ -5,6 +5,13 @@ resource "google_project_iam_member" "backend-roles" {
   member  = "serviceAccount:${google_service_account.spracto_net_backend.email}"
 }
 
+resource "google_project_iam_member" "backend-role-prd" {
+  count   = length(var.spracto-net-backend-roles-prd)
+  project = var.prd_project_id
+  role    = var.spracto-net-backend-roles-prd[count.index]
+  member  = "serviceAccount:${google_service_account.spracto_net_backend.email}"
+}
+
 resource "google_project_iam_member" "gh-actions-roles" {
   count   = length(var.spracto-net-gh-actions-roles)
   project = var.project-id
