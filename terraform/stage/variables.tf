@@ -17,7 +17,7 @@ variable "state_bucket" {
 variable "spracto-net-backend-roles" {
   description = "List of IAM roles for backend SA"
   type        = list(string)
-  default     = ["roles/datastore.user", "roles/datastore.viewer"]  # Example roles
+  default     = ["roles/datastore.user", "roles/datastore.viewer", "roles/storage.objects.create"]  # Example roles
 }
 
 variable "spracto-net-gh-actions-roles" {
