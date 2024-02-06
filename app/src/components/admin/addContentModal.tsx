@@ -1,10 +1,19 @@
 //components/admin/addContentModal.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import Loading from "@/components/admin/loading";
 
 import axios from "axios";
 
-const AddContentModal = ({
+interface AddContentModalProps {
+  isModalOpen: boolean;
+  toggleModal: () => void;
+  kind: string;
+  triggerDataRefresh: (kind: string) => void;
+  setIsLoading: (isLoading: boolean) => void;
+  isLoading: boolean;
+}
+
+const AddContentModal: React.FC<AddContentModalProps> = ({
   isModalOpen,
   toggleModal,
   kind,
@@ -16,7 +25,7 @@ const AddContentModal = ({
   const [trackId, setTrackId] = useState("");
   const [platform, setPlatform] = useState("");
   const [url, setUrl] = useState("");
-  const [file, setFile] = useState(null); // New state for the file
+  const [file, setFile] = useState<File | null>(null); // New state for the file
   const [errorMessage, setErrorMessage] = useState("");
   const [errors, setErrors] = useState({
     trackId: "",
@@ -37,8 +46,6 @@ const AddContentModal = ({
       if (file) {
         return isValid;
       } else {
-        console.log("AAAAAAA");
-
         newErrors.file = "Please select a file to upload.";
       }
     }
@@ -60,13 +67,13 @@ const AddContentModal = ({
     return isValid;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setIsLoading(true);
     console.log("contentType", contentType);
 
-    setErrors({ trackId: "", platform: "", url: "" });
+    setErrors({ trackId: "", platform: "", url: "", file: "" });
 
     if (!validateForm()) {
       setIsLoading(false);
@@ -212,9 +219,16 @@ const AddContentModal = ({
               </label>
               <input
                 type="file"
-                onChange={(e) => setFile(e.target.files[0])}
-                className="mt-2 block w-full  border-gray-200"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  // Check if files exist and if there's at least one file
+                  const selectedFile = e.target.files
+                    ? e.target.files[0]
+                    : null;
+                  setFile(selectedFile);
+                }}
+                className="mt-2 block w-full border-gray-200"
               />
+
               <p className="text-red-500 text-xs italic">{errors.file}</p>
             </div>
           )}

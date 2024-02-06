@@ -3,7 +3,24 @@
 import React, { useState } from "react";
 import Loading from "@/components/admin/loading";
 import axios from "axios";
-const ContentEditor = ({
+
+interface Content {
+  id?: string;
+  trackId?: string;
+  platform?: string;
+  url?: string;
+  dlUrl?: string;
+}
+
+interface ContentEditorProps {
+  content: Content;
+  kind: string;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
+  triggerDataRefresh: (kind: string) => void;
+}
+
+const ContentEditor: React.FC<ContentEditorProps> = ({
   content,
   kind,
   isLoading,
@@ -13,7 +30,7 @@ const ContentEditor = ({
   //state variables
   const [editedContent, setEditedContent] = useState(content);
 
-  const handleMakeFeatured = async (trackData) => {
+  const handleMakeFeatured = async (trackData: Content) => {
     // Logic to make the track a featured release
     const response = await axios.post(
       "/api/datastore/updateFeaturedRelease",
@@ -22,7 +39,7 @@ const ContentEditor = ({
     console.log("update", response);
   };
 
-  const handleDelete = async (kind, content) => {
+  const handleDelete = async (kind: string, content: Content) => {
     console.log("kkkkkk", kind);
     console.log("kkxccccc", content);
 
@@ -68,7 +85,10 @@ const ContentEditor = ({
     }
   };
 
-  const getSoundcloudEmbedUrl = (trackId: string) => {
+  const getSoundcloudEmbedUrl = (trackId: string | undefined) => {
+    if (!trackId) {
+      return undefined;
+    }
     return `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%235bff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
   };
 

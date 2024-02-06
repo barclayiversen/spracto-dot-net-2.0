@@ -9,10 +9,18 @@ import Header from "@/components/admin/header";
 import ContentEditor from "@/components/admin/contentEditor";
 import AddContentModal from "@/components/admin/addContentModal";
 
-// Define an interface for items
+// Define interfaces
 interface Item {
   name: string;
   kind: string;
+}
+
+interface Content {
+  id?: string;
+  trackId?: string;
+  platform?: string;
+  url?: string;
+  dlUrl?: string;
 }
 
 const Admin = () => {
@@ -21,30 +29,31 @@ const Admin = () => {
     refresh: false,
     kind: null,
   });
-
   const [selectedContent, setSelectedContent] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedTrack, setSelectedTrack] = useState<TrackData | null>(null);
-  const [trackAdded, setTrackAdded] = useState(false);
-  const [trackDeleted, setTrackDeleted] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [tracks, setTracks] = useState<TrackData[] | null>(null);
+
+  // const [selectedTrack, setSelectedTrack] = useState<TrackData | null>(null);
+  // const [trackAdded, setTrackAdded] = useState(false);
+  // const [trackDeleted, setTrackDeleted] = useState(false);
+  // const [tracks, setTracks] = useState<TrackData[] | null>(null);
+
   //Static object
   const items = [
     { name: "Tracks", kind: "track" },
     { name: "Images", kind: "image" },
   ];
   //Functions
-  const handleContentSelect = (content) => {
+  const handleContentSelect = (content: Content) => {
     setIsLoading(true);
     setSelectedContent(content);
     setIsLoading(false);
   };
 
-  const triggerDataRefresh = (kind) => {
+  const triggerDataRefresh = (kind: any) => {
     setSelectedContent(null);
     setRefreshDetails({ refresh: !refreshDetails.refresh, kind: kind }); // Toggle to trigger useEffect
   };
@@ -70,24 +79,24 @@ const Admin = () => {
   };
 
   //hooks
-  useEffect(() => {
-    const fetchReleases = async () => {
-      try {
-        const response = await axios.get("/api/datastore/track");
-        setTracks(response.data);
-      } catch (err) {
-        setError("Failed to load tracks.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchReleases();
+  // useEffect(() => {
+  //   const fetchReleases = async () => {
+  //     try {
+  //       const response = await axios.get("/api/datastore/track");
+  //       setTracks(response.data);
+  //     } catch (err) {
+  //       setError("Failed to load tracks.");
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   fetchReleases();
 
-    if (trackAdded || trackDeleted) {
-      setTrackAdded(false);
-      setTrackDeleted(false);
-    }
-  }, [trackAdded, trackDeleted]);
+  //   if (trackAdded || trackDeleted) {
+  //     setTrackAdded(false);
+  //     setTrackDeleted(false);
+  //   }
+  // }, [trackAdded, trackDeleted]);
 
   useEffect(() => {
     if (!refreshDetails.kind) return; // Early exit if kind is not set
