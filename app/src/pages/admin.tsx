@@ -153,15 +153,15 @@ const Admin = () => {
 
 export default Admin;
 
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-
+const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
+console.log;
 export const getServerSideProps = async (context: any) => {
   const session = await getSession(context);
 
   if (!session) {
     return {
       redirect: {
-        destination: NEXT_PUBLIC_BASE_URL + "/api/auth/signin",
+        destination: NEXTAUTH_URL + "/api/auth/signin",
         permanent: false,
       },
     };
