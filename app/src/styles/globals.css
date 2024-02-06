@@ -98,6 +98,6 @@ body {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-2%); /* Reduce bounce height */
+    transform: translateY(-40%); /* Reduce bounce height */
   }
 }

@@ -44,7 +44,7 @@ const BackgroundVideoSection: React.FC = () => {
           icon={faChevronDown}
           className="text-white absolute  left-[45%] md:left-[50%] bottom-20 "
           size="3x"
-          style={{ animate: "custom-bounce 1s infinite" }}
+          style={{ animation: "custom-bounce 1s infinite" }}
         />
       </Link>
     </div>
