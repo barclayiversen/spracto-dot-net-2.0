@@ -1,3 +1,4 @@
+//pages/api/datastore/delete
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Storage } from "@google-cloud/storage";
 import { Datastore } from "@google-cloud/datastore";
@@ -17,6 +18,10 @@ export default async function handler(
 ) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  if (!bucketName) {
+    return res.status(500).json({ error: "Bucket name is undefined" });
   }
 
   try {
