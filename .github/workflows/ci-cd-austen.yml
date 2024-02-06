@@ -1,0 +1,43 @@
+name: CI/CD Austen
+
+on:
+  push:
+    branches:
+      - austen-dev
+
+jobs:
+  build-and-deploy-app:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud using Workload Identity Federation
+        uses: google-github-actions/auth@v1
+        with:
+          create_credentials_file: true
+          workload_identity_provider: ${{ secrets.AUSTEN_WIF_PROVIDER }}
+          service_account: ${{ secrets.AUSTEN_GCP_SA_EMAIL }}
+
+      - name: Build and Deploy App
+        run: |
+          cd app
+          docker build -t gcr.io/${{ secrets.AUSTEN_GCP_PROJECT_ID }}/${{ secrets.AUSTEN_GCP_SERVICE }}:$GITHUB_SHA .
+          gcloud auth configure-docker
+          docker push gcr.io/${{ secrets.AUSTEN_GCP_PROJECT_ID }}/${{ secrets.AUSTEN_GCP_SERVICE }}:$GITHUB_SHA
+          gcloud run deploy ${{ secrets.AUSTEN_GCP_SERVICE }} \
+            --image gcr.io/${{ secrets.AUSTEN_GCP_PROJECT_ID }}/${{ secrets.AUSTEN_GCP_SERVICE }}:$GITHUB_SHA \
+            --region ${{ secrets.GCP_REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --set-env-vars=DATASTORE_PROJECT_ID=${{ secrets.AUSTEN_GCP_PROJECT_ID }}\
+            --set-env-vars=GOOGLE_CLIENT_ID=${{ secrets.AUSTEN_GOOGLE_CLIENT_ID }}\
+            --set-env-vars=GOOGLE_CLIENT_SECRET=${{ secrets.AUSTEN_GOOGLE_CLIENT_SECRET }}\
+            --set-env-vars=BUCKET_NAME=${{ secrets.AUSTEN_BUCKET_NAME }}\
+            --set-env-vars=GCS_PROJECT_ID=${{ secrets.AUSTEN_GCS_PROJECT_ID }}\
+            --set-env-vars=NEXT_PUBLIC_BASE_URL=${{ secrets.AUSTEN_NEXT_PUBLIC_BASE_URL }}\
+            --set-env-vars=NEXTAUTH_SECRET=${{ secrets.AUSTEN_NEXTAUTH_SECRET }}\
+            --set-env-vars=NEXTAUTH_URL=${{ secrets.AUSTEN_NEXTAUTH_URL }}
