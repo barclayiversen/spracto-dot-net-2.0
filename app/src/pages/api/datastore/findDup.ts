@@ -1,6 +1,13 @@
 const { Datastore } = require("@google-cloud/datastore");
 const datastore = new Datastore();
 
+interface DatastoreEntity {
+  url?: string;
+  id?: string;
+  // Include other properties that your entities might have
+  [propName: string]: any; // For additional dynamic properties
+}
+
 async function findAndDeleteDuplicateUrls() {
   const kind = "image";
   const query = datastore.createQuery(kind);
@@ -9,7 +16,7 @@ async function findAndDeleteDuplicateUrls() {
   const urlMap = new Map();
 
   // Group entities by URL
-  entities.forEach((entity) => {
+  entities.forEach((entity: DatastoreEntity) => {
     const url = entity.url;
     const entityKey = entity[datastore.KEY];
 

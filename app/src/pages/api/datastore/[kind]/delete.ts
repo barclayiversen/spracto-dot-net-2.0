@@ -1,8 +1,12 @@
 // pages/api/[kind]/add.ts
 import { Datastore } from "@google-cloud/datastore";
 import { Storage } from "@google-cloud/storage"; // Import the Google Cloud Storage client
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method !== "DELETE") {
     return res.status(405).json({ error: "Method Not Allowed" });
   }

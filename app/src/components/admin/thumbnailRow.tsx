@@ -4,12 +4,26 @@ import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-const ThumbnailRow = ({
+interface ThumbNailRowProps {
+  data: any;
+  kind: string;
+  onSelect: any;
+  toggleModal: any;
+}
+
+interface Item {
+  id?: string;
+  trackId?: string;
+  url?: string;
+  dlUrl?: string;
+  altText?: string;
+}
+
+const ThumbnailRow: React.FC<ThumbNailRowProps> = ({
   data,
   kind,
   onSelect,
   toggleModal,
-  triggerDataRefresh,
 }) => {
   // Log the data and kind props whenever they change
   useEffect(() => {
@@ -17,7 +31,10 @@ const ThumbnailRow = ({
     console.log("Kind: ", kind);
   }, [data, kind]);
 
-  const getSoundcloudEmbedUrl = (trackId: string) => {
+  const getSoundcloudEmbedUrl = (trackId: string | undefined) => {
+    if (!trackId) {
+      return `https://storage.googleapis.com/spracto-net-images/PhotoCarousel/shruggie.webp`;
+    }
     return `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%235bff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
   };
 
@@ -26,7 +43,7 @@ const ThumbnailRow = ({
       {/* Your existing rendering logic */}
       {kind &&
         data &&
-        data.map((item) => {
+        data.map((item: Item) => {
           if (kind === "track") {
             return (
               <div

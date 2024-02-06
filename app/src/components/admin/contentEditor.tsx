@@ -13,8 +13,8 @@ interface Content {
 }
 
 interface ContentEditorProps {
-  content: Content;
-  kind: string;
+  content: Content | null;
+  kind: string | null;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
   triggerDataRefresh: (kind: string) => void;

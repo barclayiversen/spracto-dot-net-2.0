@@ -2,7 +2,11 @@
 
 interface ItemListProps {
   items: Item[];
-  onItemSelect: (item: Item) => void;
+  onItemSelect: any;
+}
+
+interface Item {
+  name: string;
 }
 
 const ItemList: React.FC<ItemListProps> = ({ items, onItemSelect }) => {

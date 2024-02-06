@@ -29,7 +29,7 @@ const Admin = () => {
     refresh: false,
     kind: null,
   });
-  const [selectedContent, setSelectedContent] = useState(null);
+  const [selectedContent, setSelectedContent] = useState<Content | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [data, setData] = useState([]);
@@ -125,7 +125,7 @@ const Admin = () => {
         {/* ContentEditor */}
         <ContentEditor
           content={selectedContent}
-          kind={selectedItem?.kind}
+          kind={selectedItem?.kind ?? ""}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
           triggerDataRefresh={triggerDataRefresh}
@@ -134,16 +134,16 @@ const Admin = () => {
       {/* ThumbnailRow */}
       <ThumbnailRow
         data={data}
-        kind={selectedItem?.kind}
+        kind={selectedItem?.kind ?? ""}
         onSelect={handleContentSelect}
         toggleModal={toggleModal}
-        triggerDataRefresh={triggerDataRefresh}
+        // triggerDataRefresh={triggerDataRefresh}
       />
       <AddContentModal
         triggerDataRefresh={triggerDataRefresh}
         isModalOpen={isModalOpen}
         toggleModal={toggleModal}
-        kind={selectedItem?.kind}
+        kind={selectedItem?.kind ?? ""}
         setIsLoading={setIsLoading}
         isLoading={isLoading}
       />

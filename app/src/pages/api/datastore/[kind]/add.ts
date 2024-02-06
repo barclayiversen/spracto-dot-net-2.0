@@ -1,9 +1,13 @@
 // pages/api/[kind]/add.ts
 import { Datastore } from "@google-cloud/datastore";
+import { NextApiRequest, NextApiResponse } from "next";
 const datastore = new Datastore({
   projectId: process.env.DATASTORE_PROJECT_ID,
 });
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const datastore = new Datastore({
     projectId: process.env.DATASTORE_PROJECT_ID,
   });

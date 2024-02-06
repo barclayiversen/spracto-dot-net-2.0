@@ -18,13 +18,37 @@ const datastore = new Datastore(datastoreOptions);
 const bucketName = process.env.BUCKET_NAME;
 const kind = "image";
 
+interface FormidableFiles {
+  file?: FormidableFile[];
+}
+
+interface FormidableFile {
+  originalFilename?: string;
+  filepath?: string;
+  // Add other fields from the formidable file object you use
+}
+
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
-const processForm = async (req: NextApiRequest): Promise<formidable.Files> => {
+// const processForm = async (req: NextApiRequest) => {
+//   return new Promise((resolve, reject) => {
+//     const form = new IncomingForm();
+//     form.parse(req, (err, fields, files) => {
+//       if (err) {
+//         console.error("Error parsing the form:", err);
+//         reject(err);
+//       } else {
+//         resolve(files);
+//       }
+//     });
+//   });
+// };
+
+const processForm = async (req: NextApiRequest): Promise<FormidableFiles> => {
   return new Promise((resolve, reject) => {
     const form = new IncomingForm();
     form.parse(req, (err, fields, files) => {
@@ -46,10 +70,15 @@ const uploadHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const files = await processForm(req);
-    const file = files.file[0];
 
+    const file = files.file?.[0];
+
+    console.log("FILE", file);
     if (!file) {
       throw new Error("No file uploaded");
+    }
+    if (!bucketName) {
+      return res.status(500).json({ error: "Bucket name is undefined" });
     }
 
     const destinationPath = `PhotoCarousel/${file.originalFilename}`;
@@ -67,11 +96,17 @@ const uploadHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // If object doesn't exist, proceed with the upload
-    const [fileUploadResponse] = await storage
-      .bucket(bucketName)
-      .upload(file.filepath, {
-        destination: destinationPath,
-      });
+    if (file.filepath) {
+      const fileUploadResponse = await storage
+        .bucket(bucketName)
+        .upload(file.filepath, {
+          destination: destinationPath,
+        });
+      console.log(fileUploadResponse);
+    } else {
+      // Handle the case where filepath is undefined, e.g., return an error response
+      return res.status(400).json({ error: "File path is undefined" });
+    }
 
     const publicUrl = `https://storage.googleapis.com/${bucketName}/${destinationPath}`;
 
