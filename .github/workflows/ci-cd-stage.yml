@@ -4,13 +4,13 @@ on:
   push:
     branches:
       - stage
+
 jobs:
-  # Job for Backend
   build-and-deploy-app:
     runs-on: ubuntu-latest
     permissions:
-      contents: "read"
-      id-token: "write"
+      contents: read
+      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -19,18 +19,18 @@ jobs:
         uses: google-github-actions/auth@v1
         with:
           create_credentials_file: true
-          workload_identity_provider: "${{ secrets.STAGE_WIF_PROVIDER }}"
-          service_account: "${{ secrets.STAGE_GCP_SA_EMAIL }}"
+          workload_identity_provider: ${{ secrets.STAGE_WIF_PROVIDER }}
+          service_account: ${{ secrets.STAGE_GCP_SA_EMAIL }}
 
       - name: Build and Deploy App
         run: |
           cd app
-          docker build -t gcr.io/${{ secrets.STAGE_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }} .
+          docker build -t gcr.io/${{ secrets.STAGE_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:$GITHUB_SHA .
           gcloud auth configure-docker
-          docker push gcr.io/${{ secrets.STAGE_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}
+          docker push gcr.io/${{ secrets.STAGE_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:$GITHUB_SHA
           gcloud run deploy ${{ secrets.GCP_SERVICE }} \
-            --image gcr.io/${{ secrets.STAGE_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:latest \
+            --image gcr.io/${{ secrets.STAGE_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:$GITHUB_SHA \
             --region ${{ secrets.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated \
-            --set-env-vars=DATASTORE_PROJECT_ID=${{ secrets.STAGE_GCP_PROJECT_ID }}
+            --set-env-vars=DATASTORE_PROJECT_ID=${{ secrets.DATASTORE_PROJECT_ID }},GOOGLE_CLIENT_ID=${{ secrets.STAGE_GOOGLE_CLIENT_ID }},GOOGLE_CLIENT_SECRET=${{ secrets.STAGE_GOOGLE_CLIENT_SECRET }},BUCKET_NAME=${{ secrets.STAGE_BUCKET_NAME }},GCS_PROJECT_ID=${{ secrets.STAGE_GCS_PROJECT_ID }},NEXT_PUBLIC_BASE_URL=${{ secrets.STAGE_NEXT_PUBLIC_BASE_URL }},NEXTAUTH_SECRET=${{ secrets.STAGE_NEXTAUTH_SECRET }}
