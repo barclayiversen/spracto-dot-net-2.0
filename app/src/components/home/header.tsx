@@ -1,3 +1,4 @@
+//components/home/header.tsx
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -8,6 +9,7 @@ import {
   faSoundcloud,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 import Modal from "./modal";
 
 const Header: React.FC = () => {
@@ -33,18 +35,15 @@ const Header: React.FC = () => {
     >
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/">
-          <Image src={logo} alt="Logo" width={160} height={40} />
+          <FontAwesomeIcon icon={faHome} size="3x" />
         </Link>
 
         <nav className="hidden md:flex space-x-4">
-          <Link href="https://instagram.com/spracto">
+          <Link href="https://instagram.com/_legrant">
             <FontAwesomeIcon size="3x" icon={faInstagram} />
           </Link>
-          <Link href="https://soundcloud.com/spracto">
+          <Link href="https://soundcloud.com/austenluego">
             <FontAwesomeIcon size="3x" icon={faSoundcloud} />
-          </Link>
-          <Link href="https://youtube.com/spracto">
-            <FontAwesomeIcon size="3x" icon={faYoutube} />
           </Link>
         </nav>
 
@@ -72,7 +71,7 @@ const Header: React.FC = () => {
           >
             <nav className="flex flex-col items-center space-y-4">
               <a
-                href="https://instagram.com/spracto"
+                href="https://instagram.com/_legrant"
                 className="text-white text-2xl px-3 py-2"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -82,7 +81,7 @@ const Header: React.FC = () => {
               </a>
 
               <a
-                href="https://soundcloud.com/spracto"
+                href="https://soundcloud.com/austenluego"
                 className="text-white text-2xl px-3 py-2"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -91,15 +90,15 @@ const Header: React.FC = () => {
                 <FontAwesomeIcon icon={faSoundcloud} size="2x" />
               </a>
 
-              <a
-                href="https://youtube.com/spracto"
+              {/* <a
+                href="https://youtube.com/_legrant"
                 className="text-white text-2xl px-3 py-2"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setIsModalOpen(false)}
               >
                 <FontAwesomeIcon icon={faYoutube} size="2x" />
-              </a>
+              </a> */}
             </nav>
           </Modal>
         )}

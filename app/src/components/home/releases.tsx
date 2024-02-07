@@ -3,14 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSoundcloud, faYoutube } from "@fortawesome/free-brands-svg-icons";
 
 const Releases: React.FC = () => {
-  const soundcloudUrl = "https://soundcloud.com/spracto/sets/free-downloads"; // Your SoundCloud profile URL
+  const soundcloudUrl = "https://soundcloud.com/austenluego"; // Your SoundCloud profile URL
   const youtubeUrl = "https://youtube.com/spracto";
 
   return (
     <div className="bg-black mx-auto p-5 text-center">
-      <h2 className="text-2xl font-bold mb-4 text-white">
-        Stream (and download) my tracks:
-      </h2>
+      <h2 className="text-2xl font-bold mb-4 text-white">Stream my music</h2>
       <div className="mt-2 flex flex-col items-center sm:flex-row justify-center sm:space-x-4 space-y-10 sm:space-y-0">
         <a href={soundcloudUrl} target="_blank" rel="noopener noreferrer">
           <button className="bg-white text-black py-2 px-6 w-60 font-mono hover:bg-gray-200 rounded-3xl flex items-center justify-center">
@@ -18,12 +16,12 @@ const Releases: React.FC = () => {
             on SoundCloud
           </button>
         </a>
-        <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
+        {/* <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
           <button className="bg-white text-black py-2 px-6 w-60 font-mono hover:bg-gray-200 rounded-3xl flex items-center justify-center">
             <FontAwesomeIcon icon={faYoutube} className="mr-2" size="3x" />
             on YouTube
           </button>
-        </a>
+        </a> */}
       </div>
     </div>
   );

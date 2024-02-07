@@ -15,7 +15,6 @@ export default async function handler(
 
   try {
     const trackData = req.body;
-    console.log("", trackData);
 
     // Create a new entity for the "track" kind
     const trackKey = datastore.key("track");

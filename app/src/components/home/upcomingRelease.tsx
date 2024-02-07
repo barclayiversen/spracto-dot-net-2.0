@@ -5,30 +5,31 @@ interface UpcomingReleaseData {
   albumArtUrl: string;
   albumName: string;
   releaseDate: string;
+  flyerUrl: string;
 }
 
-const getFormattedReleaseDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+// const getFormattedReleaseDate = (dateString: string) => {
+//   const date = new Date(dateString);
+//   const monthNames = [
+//     "January",
+//     "February",
+//     "March",
+//     "April",
+//     "May",
+//     "June",
+//     "July",
+//     "August",
+//     "September",
+//     "October",
+//     "November",
+//     "December",
+//   ];
 
-  const month = monthNames[date.getMonth()];
-  const year = date.getFullYear();
+//   const month = monthNames[date.getMonth()];
+//   const year = date.getFullYear();
 
-  return `Coming out in ${month} ${year}`;
-};
+//   return `Coming out in ${month} ${year}`;
+// };
 
 const UpcomingRelease: React.FC = () => {
   const [upcomingRelease, setUpcomingRelease] =
@@ -39,9 +40,10 @@ const UpcomingRelease: React.FC = () => {
   useEffect(() => {
     const fetchUpcomingRelease = async () => {
       try {
-        const response = await axios.get("/api/upcomingRelease");
-        if (response.data && response.data.albumArtUrl) {
-          setUpcomingRelease(response.data);
+        const response = await axios.get("/api/datastore/show");
+        console.log(response.data[0].flyerUrl);
+        if (response.data && response.data[0].flyerUrl) {
+          setUpcomingRelease(response.data[0]);
         } else {
           setUpcomingRelease(null);
         }
@@ -61,16 +63,18 @@ const UpcomingRelease: React.FC = () => {
 
   return (
     <div className="upcoming-release-container py-10 px-5 text-center bg-black max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4 text-white">Upcoming Release</h2>
-      <img
-        src={upcomingRelease.albumArtUrl}
-        alt={`Album art for ${upcomingRelease.albumName}`}
-        className="mx-auto"
-      />
-      <p className="mt-3 text-lg">{upcomingRelease.albumName}</p>
+      <h2 className="text-2xl font-bold mb-4 text-white">Upcoming Shows</h2>
+      <a href="https://dirtynotsorry.com/events/4-year-anniversary-party-02-24">
+        <img
+          src={upcomingRelease.flyerUrl}
+          alt={`upcoming show for Legrant`}
+          className="mx-auto"
+        />
+      </a>
+      {/* <p className="mt-3 text-lg">{upcomingRelease.albumName}</p>
       <p className="text-sm text-white">
         {getFormattedReleaseDate(upcomingRelease.releaseDate)}
-      </p>
+      </p> */}
     </div>
   );
 };

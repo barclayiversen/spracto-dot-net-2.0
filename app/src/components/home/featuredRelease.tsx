@@ -37,7 +37,7 @@ const FeaturedRelease: React.FC = () => {
   return (
     <div className="featured-release-container my-10 px-5 max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold mb-4 text-white text-center">
-        Featured Release
+        Featured Set
       </h2>
       <div className="aspect-ratio-box">
         <iframe

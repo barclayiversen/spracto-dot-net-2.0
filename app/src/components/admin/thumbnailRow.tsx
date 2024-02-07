@@ -33,7 +33,7 @@ const ThumbnailRow: React.FC<ThumbNailRowProps> = ({
 
   const getSoundcloudEmbedUrl = (trackId: string | undefined) => {
     if (!trackId) {
-      return `https://storage.googleapis.com/spracto-net-images/PhotoCarousel/shruggie.webp`;
+      return `https://storage.googleapis.com/spracto-net-images/legrant/shruggie.webp`;
     }
     return `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%235bff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
   };

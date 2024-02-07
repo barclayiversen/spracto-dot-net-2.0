@@ -81,7 +81,7 @@ const uploadHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(500).json({ error: "Bucket name is undefined" });
     }
 
-    const destinationPath = `PhotoCarousel/${file.originalFilename}`;
+    const destinationPath = `legrant/${file.originalFilename}`;
 
     // Check if object exists in the bucket
     const [exists] = await storage

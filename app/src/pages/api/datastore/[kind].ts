@@ -17,12 +17,13 @@ export default async function handler(
       "image",
       "upcomingRelease",
       "featuredRelease",
+      "show",
     ];
 
     if (!allowedKinds.includes(kind)) {
       return res.status(400).json({ error: "Invalid kind" });
     }
-
+    console.log("getting to this", kind);
     const query = datastore.createQuery(kind);
     const [entities] = await datastore.runQuery(query);
 
@@ -31,7 +32,9 @@ export default async function handler(
       id: entity[datastore.KEY].id, // Include the ID
       ...entity, // Include all other properties
     }));
-
+    if (kind == "show") {
+      console.log("shows", entities);
+    }
     res.status(200).json(entitiesWithId);
   } catch (error) {
     console.error(error);

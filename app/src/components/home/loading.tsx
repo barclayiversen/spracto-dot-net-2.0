@@ -6,7 +6,7 @@ const Loading = () => (
       role="status"
     >
       {/* Visually hidden text for accessibility */}
-      <span className="visually-hidden">@Spracto</span>
+      <span className="visually-hidden">@_legrant</span>
     </div>
 
     {/* Static text */}

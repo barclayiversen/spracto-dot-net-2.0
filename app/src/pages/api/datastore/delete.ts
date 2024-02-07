@@ -31,7 +31,7 @@ export default async function handler(
     const fileName = data.url.split("/").pop();
 
     // Delete the object from GCS
-    await storage.bucket(bucketName).file(`PhotoCarousel/${fileName}`).delete();
+    await storage.bucket(bucketName).file(`legrant/${fileName}`).delete();
 
     // Construct a key for the Datastore entity using the provided ID
     const entityKey = datastore.key([kind, datastore.int(data.id)]);
