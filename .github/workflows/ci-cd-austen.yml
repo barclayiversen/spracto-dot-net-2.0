@@ -26,7 +26,7 @@ jobs:
         run: |
           cd app
           docker build -t gcr.io/${{ secrets.AUSTEN_GCP_PROJECT_ID }}/${{ secrets.AUSTEN_GCP_SERVICE }}:$GITHUB_SHA .
-          gcloud auth configure-docker
+          gcloud auth configure-docker --quiet
           docker push gcr.io/${{ secrets.AUSTEN_GCP_PROJECT_ID }}/${{ secrets.AUSTEN_GCP_SERVICE }}:$GITHUB_SHA
           gcloud run deploy ${{ secrets.AUSTEN_GCP_SERVICE }} \
             --image gcr.io/${{ secrets.AUSTEN_GCP_PROJECT_ID }}/${{ secrets.AUSTEN_GCP_SERVICE }}:$GITHUB_SHA \
