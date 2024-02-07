@@ -1,5 +1,5 @@
 import React, { ReactNode, FC } from "react";
-import logo from "/public/logo.png"; // Update the path as per your project structure
+import logo from "/public/logo-white.png"; // Update the path as per your project structure
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -15,7 +15,7 @@ const Modal: FC<ModalProps> = ({ close, children, className = "" }) => {
     <div
       className={`fixed inset-0 bg-black flex flex-col items-center justify-start pt-4 ${className}`}
     >
-      {/* <img src={logo.src} alt="Logo" className="h-12 w-auto mb-20" /> */}
+      <img src={logo.src} alt="Logo" className="h-12 w-auto mb-20" />
       {children}
       <button
         onClick={close}

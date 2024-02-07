@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import logo from "@/../public/logo.png";
+import logo from "@/../public/logo-white.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faInstagram,
@@ -35,7 +35,7 @@ const Header: React.FC = () => {
     >
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/">
-          <FontAwesomeIcon icon={faHome} size="3x" />
+          <Image src={logo} alt="Photo of Legrant" width={160} height={40} />
         </Link>
 
         <nav className="hidden md:flex space-x-4">
@@ -89,16 +89,6 @@ const Header: React.FC = () => {
               >
                 <FontAwesomeIcon icon={faSoundcloud} size="2x" />
               </a>
-
-              {/* <a
-                href="https://youtube.com/_legrant"
-                className="text-white text-2xl px-3 py-2"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsModalOpen(false)}
-              >
-                <FontAwesomeIcon icon={faYoutube} size="2x" />
-              </a> */}
             </nav>
           </Modal>
         )}
