@@ -39,5 +39,5 @@ variable "prd_project_id" {
 variable "legrant-net-gh-actions-roles" {
   description = "List of IAM roles for gh actions SA"
   type        = list(string)
-  default     = ["roles/cloudbuild.builds.editor", "roles/run.admin", "roles/iam.serviceAccountUser", "roles/storage.admin", "roles/iam.workloadIdentityUser"]  # Example roles
+  default     = ["roles/cloudbuild.builds.editor", "roles/run.admin", "roles/iam.serviceAccountUser", "roles/storage.admin", "roles/iam.workloadIdentityUser", "roles/artifactregistry.createOnPushWriter"]  # Example roles
 }

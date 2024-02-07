@@ -43,7 +43,7 @@ const BackgroundVideoSection: React.FC = () => {
         <div className="bg-black max-h-10">
           <FontAwesomeIcon
             icon={faChevronDown}
-            className="text-white absolute left-1/2 bottom-20 "
+            className="text-white absolute left-[45%] sm:left-[47%] md:left-[49%] lg:left-[50%] bottom-20 animate-fade-in-2"
             style={{ animation: "custom-bounce 1s infinite" }}
             size="3x"
           />

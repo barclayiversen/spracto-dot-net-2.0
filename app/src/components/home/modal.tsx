@@ -15,7 +15,7 @@ const Modal: FC<ModalProps> = ({ close, children, className = "" }) => {
     <div
       className={`fixed inset-0 bg-black flex flex-col items-center justify-start pt-4 ${className}`}
     >
-      <img src={logo.src} alt="Logo" className="h-12 w-auto mb-20" />
+      {/* <img src={logo.src} alt="Logo" className="h-12 w-auto mb-20" /> */}
       {children}
       <button
         onClick={close}
