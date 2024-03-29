@@ -10,6 +10,7 @@ interface Content {
   platform?: string;
   url?: string;
   dlUrl?: string;
+  flyerUrl?: string;
 }
 
 interface ContentEditorProps {
@@ -65,6 +66,26 @@ const ContentEditor: React.FC<ContentEditorProps> = ({
     }
 
     if (kind === "image") {
+      setIsLoading(true); // Start loading
+      try {
+        const response = await axios.delete(`/api/datastore/${kind}/delete`, {
+          data: { kind: kind, id: content.id, url: content.url },
+        });
+        if (response.status === 200) {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error deleting image", error);
+        // Handle error
+        setIsLoading(false);
+      } finally {
+        triggerDataRefresh(kind);
+        setIsLoading(false);
+        // End loading
+      }
+    }
+
+    if (kind === "show") {
       setIsLoading(true); // Start loading
       try {
         const response = await axios.delete(`/api/datastore/${kind}/delete`, {
@@ -143,6 +164,18 @@ const ContentEditor: React.FC<ContentEditorProps> = ({
         {kind === "image" && content.url !== null && (
           <div>
             <img className="mx-auto" src={content.url} />
+            <button
+              onClick={() => handleDelete(kind, content)}
+              className="px-4 py-2 mt-10 bg-red-500 rounded hover:bg-red-700 transition duration-300"
+            >
+              Delete item
+            </button>
+          </div>
+        )}
+
+        {kind === "show" && content.flyerUrl !== null && (
+          <div>
+            <img className="mx-auto" src={content.flyerUrl} />
             <button
               onClick={() => handleDelete(kind, content)}
               className="px-4 py-2 mt-10 bg-red-500 rounded hover:bg-red-700 transition duration-300"

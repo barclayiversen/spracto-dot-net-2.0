@@ -21,6 +21,8 @@ const AddContentModal: React.FC<AddContentModalProps> = ({
   setIsLoading,
   isLoading,
 }) => {
+  const [showDate, setShowDate] = useState("");
+
   const [contentType, setContentType] = useState(kind); // Default to 'track'
   const [trackId, setTrackId] = useState("");
   const [platform, setPlatform] = useState("");
@@ -117,6 +119,28 @@ const AddContentModal: React.FC<AddContentModalProps> = ({
       triggerDataRefresh("track");
 
       console.log(response.data);
+    } else if (contentType.toLocaleLowerCase() === "show" && file) {
+      const formData = new FormData();
+      formData.append("file", file); // Append the file to form data
+      formData.append("show", contentType.toLowerCase());
+      // Add other fields if necessary
+      try {
+        const response = await axios.post(
+          // `/api/datastore/${contentType}/add`,
+          `/api/datastore/upload`,
+
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("added IMAGE", response.data);
+        triggerDataRefresh("image");
+      } catch (error) {
+        console.error("Failed to upload image:", error);
+      }
     }
     setIsLoading(false);
     toggleModal(); // Close the modal after submission
@@ -171,6 +195,7 @@ const AddContentModal: React.FC<AddContentModalProps> = ({
               <option value="">Select an option</option>
               <option value="track">Track</option>
               <option value="image">Image</option>
+              <option value="show">Show</option>
             </select>
           </div>
           {errorMessage && (

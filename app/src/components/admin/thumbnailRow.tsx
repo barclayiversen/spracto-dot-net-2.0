@@ -17,6 +17,7 @@ interface Item {
   url?: string;
   dlUrl?: string;
   altText?: string;
+  flyerUrl?: string;
 }
 
 const ThumbnailRow: React.FC<ThumbNailRowProps> = ({
@@ -65,6 +66,19 @@ const ThumbnailRow: React.FC<ThumbNailRowProps> = ({
                 <img
                   key={item.id}
                   src={item.url} // Replace with your actual image src
+                  alt={item.altText} // Replace with your actual image alt text
+                  className="thumbnail mx-4 hover:scale-110"
+                  style={{ height: "100px", width: "100px" }}
+                  onClick={() => onSelect(item)}
+                />
+              </div>
+            );
+          } else if (kind === "show") {
+            return (
+              <div className="bg-blue-800 h-100 w-100">
+                <img
+                  key={item.id}
+                  src={item.flyerUrl} // Replace with your actual image src
                   alt={item.altText} // Replace with your actual image alt text
                   className="thumbnail mx-4 hover:scale-110"
                   style={{ height: "100px", width: "100px" }}

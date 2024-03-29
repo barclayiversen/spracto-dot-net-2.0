@@ -45,6 +45,7 @@ const Admin = () => {
   const items = [
     { name: "Tracks", kind: "track" },
     { name: "Images", kind: "image" },
+    { name: "Shows", kind: "show" },
   ];
   //Functions
   const handleContentSelect = (content: Content) => {
