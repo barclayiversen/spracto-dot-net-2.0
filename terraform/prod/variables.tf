@@ -33,3 +33,27 @@ variable "spracto-net-gh-actions-roles" {
   type        = list(string)
   default     = ["roles/appengine.deployer", "roles/appengine.appAdmin", "roles/cloudbuild.builds.editor", "roles/run.admin", "roles/iam.serviceAccountUser", "roles/storage.admin", "roles/iam.workloadIdentityUser"]  # Example roles
 }
+
+variable "discord_url" {
+  type = string
+}
+
+variable "billing_account_id" {
+  type = string
+}
+
+variable "secondary_admin_email" {
+  type = string
+}
+
+variable "secondary_account_type" {
+  type = string
+}
+
+variable "admin_account_type" {
+  type = string
+}
+
+variable "primary_admin_email" {
+  type = string
+}

@@ -51,3 +51,7 @@ backend-old
 # typescript
 /app*.tsbuildinfo
 /appnext-env.d.ts
+
+*.pyc
+
+terraform/prod/budget_alert.zip
