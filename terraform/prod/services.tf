@@ -52,3 +52,8 @@ resource "google_project_service" "cloudbuild_googleapis_com" {
   project = var.project_number
   service = "cloudbuild.googleapis.com"
 }
+
+resource "google_project_service" "cloud_functions" {
+  project = var.project_number
+  service = "cloudfunctions.googleapis.com"
+}

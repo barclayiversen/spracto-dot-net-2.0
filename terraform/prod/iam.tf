@@ -42,3 +42,14 @@ resource "google_iam_workload_identity_pool_provider" "github-actions" {
   attribute_condition = "assertion.repository=='barclayiversen/spracto-dot-net-2.0'"
 
 }
+
+// For assigning the role at the billing account level rather than the project level.
+resource "google_billing_account_iam_binding" "billing_account_billing_admin" {
+  billing_account_id = var.billing_account_id
+  role               = "roles/billing.admin"
+
+  members = [
+    "${var.secondary_account_type}:${var.secondary_admin_email}",
+    "${var.admin_account_type}:${var.primary_admin_email}"
+  ]
+}
