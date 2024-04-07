@@ -24,6 +24,7 @@ export default async function handler(
 
       const formattedTracks: Track[] = tracks.map((track: any) => ({
         id: track.id,
+        trackId: track.trackId,
         dlUrl: track.dlUrl,
         platform: track.platform,
       }));

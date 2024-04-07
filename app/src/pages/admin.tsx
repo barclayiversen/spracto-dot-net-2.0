@@ -1,93 +1,167 @@
 // pages/admin.tsx
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { getSession, useSession, signOut } from "next-auth/react";
-import UpcomingRelease from "@/components/upcomingRelease";
-import FeaturedRelease from "@/components/featuredRelease";
-// Define an interface for items
+import ThumbnailRow from "@/components/admin/thumbnailRow";
+import axios from "axios";
+import ItemList from "@/components/admin/itemList";
+import Header from "@/components/admin/header";
+import ContentEditor from "@/components/admin/contentEditor";
+import AddContentModal from "@/components/admin/addContentModal";
+
+// Define interfaces
 interface Item {
   name: string;
   kind: string;
 }
 
+interface Content {
+  id?: string;
+  trackId?: string;
+  platform?: string;
+  url?: string;
+  dlUrl?: string;
+}
+
 const Admin = () => {
+  //State
+  const [refreshDetails, setRefreshDetails] = useState({
+    refresh: false,
+    kind: null,
+  });
+  const [selectedContent, setSelectedContent] = useState<Content | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleItemClick = async (item: Item) => {
-    setSelectedItem(item);
+  // const [selectedTrack, setSelectedTrack] = useState<TrackData | null>(null);
+  // const [trackAdded, setTrackAdded] = useState(false);
+  // const [trackDeleted, setTrackDeleted] = useState(false);
+  // const [tracks, setTracks] = useState<TrackData[] | null>(null);
 
-    // Fetch data from your API route which interacts with Google Cloud Datastore
-    const response = await fetch(`/api/datastore/${item.kind}`);
-    const result = await response.json();
-
-    setData(result);
-  };
-
+  //Static object
   const items = [
     { name: "Tracks", kind: "track" },
     { name: "Images", kind: "image" },
-    { name: "Featured Release", kind: "featuredRelease" },
-    { name: "Upcoming Release", kind: "upcomingRelease" },
   ];
+  //Functions
+  const handleContentSelect = (content: Content) => {
+    setIsLoading(true);
+    setSelectedContent(content);
+    setIsLoading(false);
+  };
 
-  const renderData = () => {
-    switch (selectedItem?.kind) {
-      case "upcomingRelease":
-        return <UpcomingRelease />;
-      case "featuredRelease":
-        return <FeaturedRelease />;
-      default:
-        return <pre>{JSON.stringify(data, null, 2)}</pre>;
+  const triggerDataRefresh = (kind: any) => {
+    setSelectedContent(null);
+    setRefreshDetails({ refresh: !refreshDetails.refresh, kind: kind }); // Toggle to trigger useEffect
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handleItemClick = async (item: Item) => {
+    setSelectedItem(item);
+    setSelectedContent(null);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`/api/datastore/${item.kind}`);
+      const result = await response.json();
+      setData(result);
+    } catch (error) {
+      console.log("ERROR FETCHING ITEMS", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  //hooks
+  // useEffect(() => {
+  //   const fetchReleases = async () => {
+  //     try {
+  //       const response = await axios.get("/api/datastore/track");
+  //       setTracks(response.data);
+  //     } catch (err) {
+  //       setError("Failed to load tracks.");
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   fetchReleases();
+
+  //   if (trackAdded || trackDeleted) {
+  //     setTrackAdded(false);
+  //     setTrackDeleted(false);
+  //   }
+  // }, [trackAdded, trackDeleted]);
+
+  useEffect(() => {
+    if (!refreshDetails.kind) return; // Early exit if kind is not set
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `/api/datastore/${refreshDetails.kind}`
+        );
+        setData(response.data);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+
+    fetchData();
+  }, [refreshDetails]); // Depend on refreshDetails to re-fetch whenever it changes
+
   return (
-    <div className="h-screen">
-      <div className="flex justify-end items-center bg-gray-800 p-4 text-white">
-        <button
-          onClick={() => signOut()}
-          className="px-4 py-2 bg-red-500 rounded hover:bg-red-700 transition duration-300"
-        >
-          Logout
-        </button>
+    <div className="max-h-screen min-h-screen bg-gray-600 flex flex-col">
+      {/* Header */}
+      <Header signOut={signOut} toggleModal={toggleModal} />
+      {/* Main Content Area */}
+      <div className="flex flex-grow overflow-hidden">
+        {/* ItemList */}
+        <ItemList items={items} onItemSelect={handleItemClick} />
+        {/* ContentEditor */}
+        <ContentEditor
+          content={selectedContent}
+          kind={selectedItem?.kind ?? ""}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+          triggerDataRefresh={triggerDataRefresh}
+        />
       </div>
-      <div className="flex h-full">
-        <div className="w-1/3 bg-gray-700 p-4 text-white overflow-y-auto">
-          <ul>
-            {items.map((item) => (
-              <li
-                key={item.name}
-                className="mb-2 cursor-pointer"
-                onClick={() => handleItemClick(item)}
-              >
-                {item.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="flex-1 p-4">
-          {selectedItem && (
-            <div>
-              <h2 className="text-xl mb-4">Data for {selectedItem.name}</h2>
-              {renderData()}
-            </div>
-          )}
-        </div>
-      </div>
+      {/* ThumbnailRow */}
+      <ThumbnailRow
+        data={data}
+        kind={selectedItem?.kind ?? ""}
+        onSelect={handleContentSelect}
+        toggleModal={toggleModal}
+        // triggerDataRefresh={triggerDataRefresh}
+      />
+      <AddContentModal
+        triggerDataRefresh={triggerDataRefresh}
+        isModalOpen={isModalOpen}
+        toggleModal={toggleModal}
+        kind={selectedItem?.kind ?? ""}
+        setIsLoading={setIsLoading}
+        isLoading={isLoading}
+      />
     </div>
   );
 };
 
 export default Admin;
 
+const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
+console.log("NEXTUATHURL", NEXTAUTH_URL);
 export const getServerSideProps = async (context: any) => {
   const session = await getSession(context);
 
   if (!session) {
     return {
       redirect: {
-        destination: "/api/auth/signin",
+        destination: NEXTAUTH_URL + "/api/auth/signin",
         permanent: false,
       },
     };
