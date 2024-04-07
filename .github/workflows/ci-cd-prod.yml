@@ -32,7 +32,7 @@ jobs:
             --region ${{ secrets.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated \
-            --set-env-vars=DATASTORE_PROJECT_ID=${{ secrets.PROD_GCP_PROJECT_ID }}
+            --set-env-vars=DATASTORE_PROJECT_ID=${{ secrets.PROD_GCP_PROJECT_ID }}\
             --set-env-vars=GOOGLE_CLIENT_ID=${{ secrets.PROD_GOOGLE_CLIENT_ID }}\
             --set-env-vars=GOOGLE_CLIENT_SECRET=${{ secrets.PROD_GOOGLE_CLIENT_SECRET }}\
             --set-env-vars=BUCKET_NAME=${{ secrets.PROD_BUCKET_NAME }}\

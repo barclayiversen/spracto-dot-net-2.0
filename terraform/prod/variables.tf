@@ -57,3 +57,7 @@ variable "admin_account_type" {
 variable "primary_admin_email" {
   type = string
 }
+
+variable "stage_project-id" {
+  
+}
