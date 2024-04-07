@@ -22,7 +22,9 @@ resource "google_cloudfunctions_function" "budget_alert_function" {
   }
 
   environment_variables = {
-    "DISCORD_WEBHOOK_URL" = var.discord_url
+    "DISCORD_WEBHOOK_URL" = var.discord_url,
+    "PROD_PROJECT_ID" = var.project-id,
+    "STAGE_PROJECT_ID" = var.stage_project-id
   }
 
 
