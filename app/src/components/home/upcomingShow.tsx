@@ -70,11 +70,17 @@ const upcomingShow: React.FC = () => {
       <h2 className="text-2xl font-bold mb-4 text-white">
         Come see me at my next show supporting JUUSH!
       </h2>
-      <img
-        src={upcomingShow.flyerUrl}
-        alt={`Album art for ${upcomingShow.flyerUrl}`}
-        className="mx-auto"
-      />
+      <a
+        href={upcomingShow.ticketLink}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img
+          src={upcomingShow.flyerUrl}
+          alt={`Album art for ${upcomingShow.flyerUrl}`}
+          className="mx-auto"
+        />
+      </a>
       <p className="mt-3 text-lg">{upcomingShow.flyerUrl}</p>
 
       <a
