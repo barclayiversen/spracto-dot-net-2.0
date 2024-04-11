@@ -17,7 +17,6 @@ export default async function handler(
   try {
     const [featuredReleases] = await datastoreClient.runQuery(query);
     if (featuredReleases.length > 0) {
-      console.log(featuredReleases);
       // Assuming the structure has a 'trackId' property
       const trackId = featuredReleases[0].trackId;
       const dlUrl = featuredReleases[0].dlUrl;

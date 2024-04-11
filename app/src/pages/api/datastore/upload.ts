@@ -73,7 +73,6 @@ const uploadHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const file = files.file?.[0];
 
-    console.log("FILE", file);
     if (!file) {
       throw new Error("No file uploaded");
     }

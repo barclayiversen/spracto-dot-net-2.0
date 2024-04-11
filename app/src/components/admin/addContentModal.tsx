@@ -71,7 +71,6 @@ const AddContentModal: React.FC<AddContentModalProps> = ({
     e.preventDefault();
 
     setIsLoading(true);
-    console.log("contentType", contentType);
 
     setErrors({ trackId: "", platform: "", url: "", file: "" });
 
@@ -97,7 +96,7 @@ const AddContentModal: React.FC<AddContentModalProps> = ({
             },
           }
         );
-        console.log("added IMAGE", response.data);
+
         triggerDataRefresh("image");
       } catch (error) {
         console.error("Failed to upload image:", error);
@@ -115,8 +114,6 @@ const AddContentModal: React.FC<AddContentModalProps> = ({
         data
       );
       triggerDataRefresh("track");
-
-      console.log(response.data);
     }
     setIsLoading(false);
     toggleModal(); // Close the modal after submission

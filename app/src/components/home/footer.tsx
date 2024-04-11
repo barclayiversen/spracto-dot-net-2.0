@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
     <footer className="bg-gray-200 text-black p-20 md:flex md:justify-center md:items-center text-center">
       <div className="flex-1 md:border-r md:border-gray-400 md:order-1 font-bold">
         <p>
-          Wanna hear about upcoming shows? Connect with Spracto on Instagram{" "}
+          Connect with Spracto on Instagram:
           <a
             href="https://www.instagram.com/spracto"
             target="_blank"

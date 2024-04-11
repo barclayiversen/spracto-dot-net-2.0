@@ -36,13 +36,9 @@ const ContentEditor: React.FC<ContentEditorProps> = ({
       "/api/datastore/updateFeaturedRelease",
       trackData
     );
-    console.log("update", response);
   };
 
   const handleDelete = async (kind: string, content: Content) => {
-    console.log("kkkkkk", kind);
-    console.log("kkxccccc", content);
-
     if (kind === "track") {
       setIsLoading(true); // Start loading
       try {
