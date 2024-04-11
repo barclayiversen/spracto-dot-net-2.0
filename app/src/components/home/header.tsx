@@ -7,6 +7,7 @@ import {
   faInstagram,
   faSoundcloud,
   faYoutube,
+  faSpotify,
 } from "@fortawesome/free-brands-svg-icons";
 import Modal from "./modal";
 
@@ -45,6 +46,9 @@ const Header: React.FC = () => {
           </Link>
           <Link href="https://youtube.com/spracto">
             <FontAwesomeIcon size="3x" icon={faYoutube} />
+          </Link>
+          <Link href="https://open.spotify.com/artist/0WNhjz2xncVcG10L5DyzxC">
+            <FontAwesomeIcon size="3x" icon={faSpotify} />
           </Link>
         </nav>
 
@@ -99,6 +103,15 @@ const Header: React.FC = () => {
                 onClick={() => setIsModalOpen(false)}
               >
                 <FontAwesomeIcon icon={faYoutube} size="2x" />
+              </a>
+              <a
+                href="https://open.spotify.com/artist/0WNhjz2xncVcG10L5DyzxC"
+                className="text-white text-2xl px-3 py-2"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsModalOpen(false)}
+              >
+                <FontAwesomeIcon icon={faSpotify} size="2x" />
               </a>
             </nav>
           </Modal>

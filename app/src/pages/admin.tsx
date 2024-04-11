@@ -36,11 +36,6 @@ const Admin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // const [selectedTrack, setSelectedTrack] = useState<TrackData | null>(null);
-  // const [trackAdded, setTrackAdded] = useState(false);
-  // const [trackDeleted, setTrackDeleted] = useState(false);
-  // const [tracks, setTracks] = useState<TrackData[] | null>(null);
-
   //Static object
   const items = [
     { name: "Tracks", kind: "track" },
@@ -77,26 +72,6 @@ const Admin = () => {
       setIsLoading(false);
     }
   };
-
-  //hooks
-  // useEffect(() => {
-  //   const fetchReleases = async () => {
-  //     try {
-  //       const response = await axios.get("/api/datastore/track");
-  //       setTracks(response.data);
-  //     } catch (err) {
-  //       setError("Failed to load tracks.");
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-  //   fetchReleases();
-
-  //   if (trackAdded || trackDeleted) {
-  //     setTrackAdded(false);
-  //     setTrackDeleted(false);
-  //   }
-  // }, [trackAdded, trackDeleted]);
 
   useEffect(() => {
     if (!refreshDetails.kind) return; // Early exit if kind is not set
