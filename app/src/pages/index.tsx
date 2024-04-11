@@ -8,6 +8,7 @@ import AboutSection from "@/components/home/about";
 import Releases from "@/components/home/releases";
 import PhotoCarousel from "@/components/home/photoCarousel";
 import UpcomingRelease from "@/components/home/upcomingRelease";
+import UpcomingShow from "@/components/home/upcomingShow";
 import FeaturedRelease from "@/components/home/featuredRelease";
 import { useLoadStatus } from "@/context/loadStatusContext";
 
@@ -49,8 +50,10 @@ export default function Home() {
       >
         <Header />
         <BackgroundVideoSection />
-
         <AboutSection />
+        <Divider />
+
+        <UpcomingShow />
         <Divider />
         <FeaturedRelease />
         <Divider />
