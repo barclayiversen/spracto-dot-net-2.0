@@ -4,8 +4,10 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <title>Spracto Dot Net</title>
-        <meta name="description" content="The official site of Spracto!" />
+        <meta
+          name="description"
+          content="Spracto is a bro just tryin' to be a guy, man!"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

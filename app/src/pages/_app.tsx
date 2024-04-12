@@ -7,6 +7,7 @@ import { SessionProvider } from "next-auth/react";
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <SessionProvider session={pageProps.session}>
+      <title>Spracto Dot Net</title>
       <LoadStatusProvider>
         <Component {...pageProps} />
       </LoadStatusProvider>
