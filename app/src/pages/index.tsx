@@ -52,15 +52,12 @@ export default function Home() {
         <BackgroundVideoSection />
         <AboutSection />
         <Divider />
-
         <UpcomingShow />
         <Divider />
         <FeaturedRelease />
         <Divider />
         <UpcomingRelease />
-
         <Releases />
-
         <PhotoCarousel />
         <Footer />
       </main>

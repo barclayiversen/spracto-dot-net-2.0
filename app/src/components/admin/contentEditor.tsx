@@ -54,6 +54,7 @@ const ContentEditor: React.FC<ContentEditorProps> = ({
         setIsLoading(false);
       } finally {
         // handleImageDeletion();
+        triggerDataRefresh(kind);
         setIsLoading(false);
 
         // End loading

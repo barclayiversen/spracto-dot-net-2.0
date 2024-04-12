@@ -20,7 +20,6 @@ export default async function handler(
 
   try {
     const data = req.body;
-    console.log("data", data);
 
     // Create a new entity
     const key = datastore.key(kind);
@@ -64,8 +63,7 @@ export default async function handler(
     }
 
     await datastore.save(entity);
-
-    res.status(200).json({ message: `${kind} added successfully` });
+    res.status(200).json({ message: "Track added successfully" });
   } catch (error) {
     console.error("request failed:", error);
     res.status(500).json({ error: "Internal Server Error" });

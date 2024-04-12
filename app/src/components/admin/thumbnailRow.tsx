@@ -48,7 +48,7 @@ const ThumbnailRow: React.FC<ThumbNailRowProps> = ({
             return (
               <div
                 className="relative hover:scale-110"
-                key={item.trackId}
+                key={item.id}
                 onClick={() => onSelect(item)} // Corrected here
               >
                 <iframe
