@@ -76,47 +76,47 @@ const AddContentModal: React.FC<AddContentModalProps> = ({
 
     if (!validateForm()) {
       setIsLoading(false);
+      setErrorMessage("Please correct the errors before submitting.");
       return; // Stop form submission if validation fails
     }
 
-    if (contentType.toLowerCase() === "image" && file) {
-      const formData = new FormData();
-      formData.append("file", file); // Append the file to form data
-      formData.append("kind", contentType.toLowerCase());
-      // Add other fields if necessary
-      try {
-        const response = await axios.post(
-          // `/api/datastore/${contentType}/add`,
-          `/api/datastore/upload`,
+    try {
+      let response;
 
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+      if (contentType.toLowerCase() === "image" && file) {
+        const formData = new FormData();
+        formData.append("file", file); // Append the file to form data
+        formData.append("kind", contentType.toLowerCase());
+        response = await axios.post(`/api/datastore/upload`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
         triggerDataRefresh("image");
-      } catch (error) {
-        console.error("Failed to upload image:", error);
+      } else if (contentType.toLowerCase() === "track") {
+        const data = {
+          kind: contentType.toLowerCase(),
+          trackId,
+          platform,
+          dlUrl: url,
+        };
+        response = await axios.post(`/api/datastore/${contentType}/add`, data);
       }
-    } else if (contentType.toLowerCase() === "track") {
-      // Handle other content types as before
-      const data = {
-        kind: contentType.toLowerCase(),
-        trackId,
-        platform,
-        dlUrl: url,
-      };
-      const response = await axios.post(
-        `/api/datastore/${contentType}/add`,
-        data
-      );
-      triggerDataRefresh("track");
+
+      // Check if the response was successful
+      if (response && response.status === 200) {
+        triggerDataRefresh(contentType);
+        toggleModal(); // Close the modal after submission
+      } else {
+        throw new Error("The server responded with an unexpected status.");
+      }
+    } catch (error) {
+      console.error("There was an error processing your request:", error);
+      setErrorMessage("Failed to upload the content. Please try again later.");
     }
-    setIsLoading(false);
-    toggleModal(); // Close the modal after submission
+
+    setIsLoading(false); // Ensure loading state is reset after handling submission
   };
 
   if (!isModalOpen) return null; // Don't render the modal if it's not open
