@@ -16,6 +16,17 @@ export default function Document() {
               "@type": "Organization",
               url: "https://spracto.net",
               logo: "https://spracto.net/logo-black.png",
+              name: "Spracto",
+              contactPoint: {
+                "@type": "ContactPoint",
+                telephone: "+1-415-598-8365",
+                contactType: "customer support",
+              },
+              sameAs: [
+                "https://facebook.com/spracto",
+                "https://instagram.com/spracto",
+                "https://twitter.com/spracto",
+              ],
             }),
           }}
         />
