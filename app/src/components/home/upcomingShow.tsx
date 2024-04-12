@@ -42,7 +42,7 @@ const upcomingShow: React.FC = () => {
     const fetchupcomingShow = async () => {
       try {
         const response = await axios.get("/api/upcomingShow");
-        console.log("response", response);
+
         if (response.data && response.data.flyerUrl) {
           setupcomingShow(response.data);
         } else {
