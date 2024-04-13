@@ -95,9 +95,9 @@ body {
 @keyframes custom-bounce {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translateY(20px);
   }
   50% {
-    transform: translateY(-20%); /* Reduce bounce height */
+    transform: translateY(-10px); /* Reduce bounce height */
   }
 }
