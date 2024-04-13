@@ -81,6 +81,18 @@ resource "google_compute_security_policy" "default" {
     description = "Allow requests to admin path"
   }
 
+    // Rule to allow requests to the /api path
+  rule {
+    action   = "allow"
+    priority = "900"
+    match {
+      expr {
+        expression = "request.path.startsWith('/api')"
+      }
+    }
+    description = "Allow requests to admin path"
+  }
+
   // Default rule to deny all other requests
   rule {
     action   = "deny(403)"
