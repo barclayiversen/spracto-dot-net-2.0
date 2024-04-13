@@ -4,6 +4,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        <link rel="preload" href="/black-logo.png" as="image" />
         <meta
           name="description"
           content="Spracto is a bro just tryin' to be a guy, man!"
