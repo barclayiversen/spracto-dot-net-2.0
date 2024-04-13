@@ -61,3 +61,23 @@ variable "primary_admin_email" {
 variable "stage_project-id" {
   
 }
+
+variable "region" {
+  
+}
+
+variable "client_id" {
+  type = string
+  sensitive = true
+}
+
+variable "client_secret" {
+  type = string
+  sensitive = true
+  
+}
+
+variable "next_secret" {
+  type = string
+  sensitive = true
+}
