@@ -25,7 +25,7 @@ export default async function handler(
     const [upcomingShows] = await datastoreClient.runQuery(query);
     // Assuming the first result is the nearest upcoming show (since we limit the result to 1)
     const upcomingShow = upcomingShows[0] ? upcomingShows[0] : {};
-    console.log("AAAAAAA", upcomingShow);
+
     res.setHeader("Content-Type", "application/json");
     // Check if we got a result; if not, send a 204 No Content response
     if (Object.keys(upcomingShow).length > 0) {
