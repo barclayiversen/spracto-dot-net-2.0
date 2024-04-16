@@ -1,11 +1,11 @@
 resource "google_compute_global_address" "default" {
-  name = "snp-lb-ip"
+  name = "sns-lb-ip"
 }
 
 resource "google_compute_managed_ssl_certificate" "default" {
   name    = "ssl-cert"
   managed {
-    domains = ["spracto.net"]
+    domains = ["stage.spracto.net"]
   }
 }
 
@@ -26,8 +26,6 @@ resource "google_compute_backend_service" "default" {
 
   security_policy = google_compute_security_policy.default.self_link
 }
-
-
 
 resource "google_compute_target_http_proxy" "default" {
   name    = "http-lb-proxy"
@@ -129,7 +127,7 @@ resource "google_compute_security_policy" "default" {
     description = "Allow poster to load"
   }
 
-   rule {
+    rule {
     action = "allow"
     priority = "940"
     match {
@@ -153,7 +151,7 @@ resource "google_compute_security_policy" "default" {
     description = "Deny all other requests"
   }
 
-  #   adaptive_protection_config {
+  # adaptive_protection_config {
   #   layer_7_ddos_defense_config {
   #     enable = false
   #   }
