@@ -37,3 +37,19 @@ variable "spracto-net-gh-actions-roles" {
   type        = list(string)
   default     = ["roles/cloudbuild.builds.editor", "roles/run.admin", "roles/iam.serviceAccountUser", "roles/storage.admin", "roles/iam.workloadIdentityUser"]  # Example roles
 }
+
+variable "client_id" {
+  type = string
+  sensitive = true
+}
+
+variable "client_secret" {
+  type = string
+  sensitive = true
+  
+}
+
+variable "next_secret" {
+  type = string
+  sensitive = true
+}

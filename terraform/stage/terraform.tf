@@ -4,3 +4,8 @@ terraform {
     prefix  = "terraform/state"
   }
 }
+
+provider "google" {
+  project = var.project-id
+  region  = "us-west1"
+}
