@@ -12,7 +12,10 @@ const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
   throw new Error("GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET is not defined");
 }
-
+console.log(
+  "The redirect URI is: ",
+  `${NEXT_PUBLIC_BASE_URL}/api/auth/callback/google`
+);
 export default NextAuth({
   providers: [
     GoogleProvider({
@@ -28,6 +31,7 @@ export default NextAuth({
   ],
   callbacks: {
     async session({ session, token }) {
+      console.log("session?", session);
       // Modify the session object as needed
       return session;
     },
