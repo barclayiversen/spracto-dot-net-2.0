@@ -73,7 +73,7 @@ resource "google_compute_security_policy" "default" {
     priority = "990"
     match {
       expr {
-        expression = "request.path.startsWith('/admin')"
+        expression = "request.path == '/admin'"
       }
     }
     description = "Allow admin path"
@@ -92,21 +92,101 @@ resource "google_compute_security_policy" "default" {
   }
 
   // Allow requests to the /api path
-  rule {
+  # rule {
+  #   action = "allow"
+  #   priority = "970"
+  #   match {
+  #     expr {
+  #       expression = "request.path.startsWith('/api')"
+  #     }
+  #   }
+  #   description = "Allow API endpoints"
+  # }
+
+    rule {
     action = "allow"
     priority = "970"
     match {
       expr {
-        expression = "request.path.startsWith('/api')"
+        expression = "request.path.startsWith('/api/auth')"
+      }
+    }
+    description = "Allow API auth endpoints"
+  }
+
+    rule {
+    action = "allow"
+    priority = "960"
+    match {
+      expr {
+        expression = "request.path.startsWith('/api/datastore')"
+      }
+    }
+    description = "Allow API auth endpoints"
+  }
+
+ 
+     rule {
+    action = "allow"
+    priority = "950"
+    match {
+      expr {
+        expression = "request.path == '/api/about'"
       }
     }
     description = "Allow API endpoints"
   }
 
+  
+     rule {
+    action = "allow"
+    priority = "940"
+    match {
+      expr {
+        expression = "request.path == '/api/upcomingShow'"
+      }
+    }
+    description = "Allow API endpoints"
+  }
+
+  
+     rule {
+    action = "allow"
+    priority = "930"
+    match {
+      expr {
+        expression = "request.path == '/api/featuredRelease'"
+      }
+    }
+    description = "Allow API endpoints"
+  }
+
+     rule {
+    action = "allow"
+    priority = "920"
+    match {
+      expr {
+        expression = "request.path == '/api/upcomingRelease'"
+      }
+    }
+    description = "Allow API endpoints"
+  }
+
+  
+     rule {
+    action = "allow"
+    priority = "910"
+    match {
+      expr {
+        expression = "request.path == '/api/images'"
+      }
+    }
+    description = "Allow API endpoints"
+  }
     // Allow background video
   rule {
     action = "allow"
-    priority = "960"
+    priority = "900"
     match {
       expr {
         expression = "request.path == '/bgvideo.mp4'"
@@ -118,7 +198,7 @@ resource "google_compute_security_policy" "default" {
      // Allow background video poster
   rule {
     action = "allow"
-    priority = "950"
+    priority = "890"
     match {
       expr {
         expression = "request.path == '/poster.png'"
@@ -129,7 +209,7 @@ resource "google_compute_security_policy" "default" {
 
     rule {
     action = "allow"
-    priority = "940"
+    priority = "880"
     match {
       expr {
         expression = "request.path == '/favicon.ico'"
