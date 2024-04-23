@@ -25,11 +25,11 @@ jobs:
       - name: Build and Deploy App
         run: |
           cd app
-          docker build -t gcr.io/${{ secrets.STAGE_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:$GITHUB_SHA .
+          docker build -t gcr.io/${{ secrets.STAGE_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:latest .
           gcloud auth configure-docker
-          docker push gcr.io/${{ secrets.STAGE_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:$GITHUB_SHA
+          docker push gcr.io/${{ secrets.STAGE_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:latest
           gcloud run deploy ${{ secrets.GCP_SERVICE }} \
-            --image gcr.io/${{ secrets.STAGE_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:$GITHUB_SHA \
+            --image gcr.io/${{ secrets.STAGE_GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:latest \
             --region ${{ secrets.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated \
