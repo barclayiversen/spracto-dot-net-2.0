@@ -8,7 +8,10 @@ const BackgroundVideoSection: React.FC = () => {
   const offsetValue = -100; // Adjust this value as needed
 
   return (
-    <div className="relative w-full h-screen animate-fade-in-.5">
+    <div
+      data-testid="background-video-section"
+      className="relative w-full h-screen animate-fade-in-.5"
+    >
       <video
         playsInline
         src="/bgvideo.mp4"
@@ -21,12 +24,13 @@ const BackgroundVideoSection: React.FC = () => {
       />
 
       <div className="absolute top-0 left-0 z-1 w-full h-screen flex justify-center items-center">
-        <div className="relative md:w-1/2 w-3/4 h-1/2 md:border-gray-400">
+        <div className="contain-image relative md:w-1/2 w-3/4 h-1/2 md:border-gray-400">
           <Image
             src="/logo-black.png"
             alt="Logo"
-            layout="fill"
-            objectFit="contain"
+            fill
+            // layout="fill"
+            // objectFit="contain"
             className="animate-fade-in-2"
           />
         </div>
