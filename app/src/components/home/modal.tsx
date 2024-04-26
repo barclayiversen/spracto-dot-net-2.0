@@ -13,11 +13,14 @@ interface ModalProps {
 const Modal: FC<ModalProps> = ({ close, children, className = "" }) => {
   return (
     <div
+      role="dialog"
       className={`fixed inset-0 bg-black flex flex-col items-center justify-start pt-4 ${className}`}
     >
       <img src={logo.src} alt="Logo" className="h-12 w-auto mb-20" />
       {children}
       <button
+        role="button"
+        aria-label="close"
         onClick={close}
         className="absolute top-3 right-3 text-white text-2xl p-4"
       >
