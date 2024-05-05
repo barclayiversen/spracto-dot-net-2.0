@@ -74,11 +74,12 @@ const upcomingShow: React.FC = () => {
         href={upcomingShow.ticketLink}
         target="_blank"
         rel="noopener noreferrer"
+        className="mb-4"
       >
         <img
           src={upcomingShow.flyerUrl}
           alt={`Album art for ${upcomingShow.flyerUrl}`}
-          className="mx-auto"
+          className="mx-auto mb-4"
         />
       </a>
 
