@@ -81,7 +81,6 @@ const upcomingShow: React.FC = () => {
           className="mx-auto"
         />
       </a>
-      <p className="mt-3 text-lg">{upcomingShow.flyerUrl}</p>
 
       <a
         href={upcomingShow.ticketLink}
