@@ -39,16 +39,32 @@ const Header: React.FC = () => {
 
         <nav className="hidden md:flex space-x-4">
           <Link href="https://instagram.com/spracto">
-            <FontAwesomeIcon size="3x" icon={faInstagram} />
+            <FontAwesomeIcon
+              className="icon-hover"
+              size="3x"
+              icon={faInstagram}
+            />
           </Link>
           <Link href="https://soundcloud.com/spracto">
-            <FontAwesomeIcon size="3x" icon={faSoundcloud} />
+            <FontAwesomeIcon
+              className="icon-hover"
+              size="3x"
+              icon={faSoundcloud}
+            />
           </Link>
           <Link href="https://youtube.com/spracto">
-            <FontAwesomeIcon size="3x" icon={faYoutube} />
+            <FontAwesomeIcon
+              className="icon-hover"
+              size="3x"
+              icon={faYoutube}
+            />
           </Link>
           <Link href="https://open.spotify.com/artist/0WNhjz2xncVcG10L5DyzxC">
-            <FontAwesomeIcon size="3x" icon={faSpotify} />
+            <FontAwesomeIcon
+              className="icon-hover"
+              size="3x"
+              icon={faSpotify}
+            />
           </Link>
         </nav>
 
@@ -82,7 +98,11 @@ const Header: React.FC = () => {
                 rel="noopener noreferrer"
                 onClick={() => setIsModalOpen(false)}
               >
-                <FontAwesomeIcon icon={faInstagram} size="2x" />
+                <FontAwesomeIcon
+                  className="icon-hover"
+                  icon={faInstagram}
+                  size="2x"
+                />
               </a>
 
               <a
@@ -92,7 +112,11 @@ const Header: React.FC = () => {
                 rel="noopener noreferrer"
                 onClick={() => setIsModalOpen(false)}
               >
-                <FontAwesomeIcon icon={faSoundcloud} size="2x" />
+                <FontAwesomeIcon
+                  className="icon-hover"
+                  icon={faSoundcloud}
+                  size="2x"
+                />
               </a>
 
               <a
@@ -102,7 +126,11 @@ const Header: React.FC = () => {
                 rel="noopener noreferrer"
                 onClick={() => setIsModalOpen(false)}
               >
-                <FontAwesomeIcon icon={faYoutube} size="2x" />
+                <FontAwesomeIcon
+                  className="icon-hover"
+                  icon={faYoutube}
+                  size="2x"
+                />
               </a>
               <a
                 href="https://open.spotify.com/artist/0WNhjz2xncVcG10L5DyzxC"
@@ -111,7 +139,11 @@ const Header: React.FC = () => {
                 rel="noopener noreferrer"
                 onClick={() => setIsModalOpen(false)}
               >
-                <FontAwesomeIcon icon={faSpotify} size="2x" />
+                <FontAwesomeIcon
+                  className="icon-hover"
+                  icon={faSpotify}
+                  size="2x"
+                />
               </a>
             </nav>
           </Modal>
