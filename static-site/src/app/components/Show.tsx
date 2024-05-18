@@ -7,8 +7,12 @@ const Show: React.FC<{
   onClick: () => void;
 }> = ({ src, alt, buttonText, onClick }) => {
   return (
-    <div className="text-center">
-      <img src={src} alt={alt} className="mx-auto mb-4 rounded-3xl" />
+    <div className="text-center p-8 ">
+      <img
+        src={src}
+        alt={alt}
+        className="mx-auto mb-4 rounded-3xl max-w-full sm:max-w-xxl"
+      />
       <button
         onClick={onClick}
         className="bg-blue-500 text-white py-2 px-4 rounded-full"

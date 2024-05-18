@@ -3,7 +3,7 @@ import Hero from "./components/Hero";
 import Divider from "./components/Divider";
 import About from "./components/About";
 import Show from "./components/Show";
-
+import Releases from "./components/Releases";
 export default function Home() {
   const handleButtonClick = () => {
     console.log("clicked");
@@ -20,6 +20,7 @@ export default function Home() {
         buttonText="RSVP for free entry before 1030"
       />
       <Divider />
+      <Releases />
     </>
   );
 }
