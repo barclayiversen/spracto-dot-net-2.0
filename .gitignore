@@ -14,7 +14,8 @@ frontend/steel-acumen-408407-16297685b4fe.json
 backend-old
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
+/static-site/node_modules
+/static-site/.next/*
 # dependencies
 /app/node_modules
 
