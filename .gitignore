@@ -17,7 +17,9 @@ backend-old
 
 # dependencies
 /app/node_modules
+
 /app/.pnp
+
 /app/pnp.js
 /.pnp
 .pnp.js
@@ -29,6 +31,7 @@ backend-old
 # next.js
 /app/.next/
 /app/out/
+
 
 # production
 /app/build
@@ -55,3 +58,7 @@ backend-old
 *.pyc
 
 terraform/prod/budget_alert.zip
+
+/static-site/node_modules
+/static-site/.pnp
+/static-site/.next

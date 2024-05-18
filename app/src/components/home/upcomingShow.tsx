@@ -79,7 +79,7 @@ const upcomingShow: React.FC = () => {
         <img
           src={upcomingShow.flyerUrl}
           alt={`Album art for ${upcomingShow.flyerUrl}`}
-          className="mx-auto mb-4"
+          className="mx-auto mb-4 rounded-xl"
         />
       </a>
 

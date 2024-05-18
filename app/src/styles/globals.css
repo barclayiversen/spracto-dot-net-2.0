@@ -101,3 +101,9 @@ body {
     transform: translateY(-10px); /* Reduce bounce height */
   }
 }
+
+/* Add this to your CSS file */
+.icon-hover:hover {
+  transform: scale(1.2);
+  transition: transform 0.3s ease;
+}

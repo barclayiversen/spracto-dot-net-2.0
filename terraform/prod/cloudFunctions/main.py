@@ -41,6 +41,7 @@ def send_discord_message(event, context):
             print('COST HAS EXCEEDED 10 DOLLARS')
 
         if cost > 49:
+            # print('disable disabled')
             print('DISABLING BILLING DUE TO COST')
             disable_billing_for_project(prod_project_id)
             disable_billing_for_project(stage_project_id)
